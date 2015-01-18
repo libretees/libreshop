@@ -1,3 +1,6 @@
+# Cloud9 IDE configuration
+.c9/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
