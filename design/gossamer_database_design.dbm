@@ -3,11 +3,286 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.7.2" last-position="0,0" last-zoom="1">
+<dbmodel pgmodeler-ver="0.7.2" last-position="0,0" last-zoom="0.9">
 <database name="new_database">
 </database>
 
 <schema name="public" protected="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
+
+<table name="inventory">
+	<schema name="public"/>
+	<position x="412.615" y="46.3077"/>
+	<column name="id" not-null="true" sequence="public.inventory_seq">
+		<type name="integer"/>
+	</column>
+	<column name="product_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="quantity" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="cost" not-null="true">
+		<type name="money"/>
+	</column>
+	<constraint name="inventory_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.inventory">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="customers">
+	<schema name="public"/>
+	<position x="674.442" y="53.7692"/>
+	<column name="id" not-null="true" sequence="public.customers_seq">
+		<type name="integer"/>
+	</column>
+	<constraint name="customers_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.customers">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="orders">
+	<schema name="public"/>
+	<position x="473.942" y="207.019"/>
+	<column name="id" not-null="true" sequence="public.orders_seq">
+		<type name="integer"/>
+	</column>
+	<column name="customer_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<constraint name="orders_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.orders">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="shipments">
+	<schema name="public"/>
+	<position x="469.733" y="324.775"/>
+	<column name="id" not-null="true" sequence="public.shipments_seq">
+		<type name="integer"/>
+	</column>
+	<column name="invoice_id" not-null="true">
+		<type name="interval"/>
+	</column>
+	<constraint name="constraints_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.shipments">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="products">
+	<schema name="public"/>
+	<position x="25.5769" y="36.043"/>
+	<column name="id" not-null="true" sequence="public.products_seq">
+		<type name="integer"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar"/>
+	</column>
+	<column name="price" not-null="true">
+		<type name="money"/>
+	</column>
+	<column name="color" not-null="true">
+		<type name="varchar"/>
+	</column>
+	<column name="size" not-null="true">
+		<type name="varchar"/>
+	</column>
+	<column name="weight" not-null="true">
+		<type name="numeric"/>
+	</column>
+	<constraint name="products_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.products">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="invoices">
+	<schema name="public"/>
+	<position x="487.988" y="489.111"/>
+	<column name="id" not-null="true" sequence="public.invoices_seq">
+		<type name="integer"/>
+	</column>
+	<constraint name="invoices_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.invoices">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="products_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="inventory_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="customers_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="orders_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="transactions_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="invoices_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="communications_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="shipments_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="colors_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="order_fulfillment">
+	<schema name="public"/>
+	<position x="6.92308" y="275.769"/>
+	<column name="id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="order_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="product_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="product_price" not-null="true">
+		<type name="money"/>
+	</column>
+	<column name="shipment_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<constraint name="order_fullfillment_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.order_fulfillment">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<constraint name="inventory_products_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.products"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.inventory">
+	<columns names="product_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="orders_customers_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.customers"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.orders">
+	<columns names="customer_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="shipments_invoices_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.invoices"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.shipments">
+	<columns names="invoice_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="order_fulfillment_shipments_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.shipments"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.order_fulfillment">
+	<columns names="shipment_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="order_fulfillment_products_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.products"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.order_fulfillment">
+	<columns names="product_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="order_fulfillment_orders_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.orders"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.order_fulfillment">
+	<columns names="order_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<relationship name="rel_inventory_products" type="relfk"
+	 src-table="public.inventory"
+	 dst-table="public.products"
+	 src-required="true" dst-required="true">
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<relationship name="rel_order_fulfillment_shipments" type="relfk"
+	 src-table="public.order_fulfillment"
+	 dst-table="public.shipments"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_order_fulfillment_products" type="relfk"
+	 src-table="public.order_fulfillment"
+	 dst-table="public.products"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_order_fulfillment_orders" type="relfk"
+	 src-table="public.order_fulfillment"
+	 dst-table="public.orders"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_orders_customers" type="relfk"
+	 src-table="public.orders"
+	 dst-table="public.customers"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_shipments_invoices" type="relfk"
+	 src-table="public.shipments"
+	 dst-table="public.invoices"
+	 src-required="true" dst-required="true"/>
 
 </dbmodel>
