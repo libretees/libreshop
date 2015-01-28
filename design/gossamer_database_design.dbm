@@ -47,18 +47,27 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="products">
 	<schema name="public"/>
-	<position x="12" y="11.043"/>
+	<position x="920.71" y="2.53967"/>
 	<column name="id" not-null="true" sequence="public.products_seq">
+		<type name="serial"/>
+	</column>
+	<column name="licensor_id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="sku">
-		<type name="varchar"/>
+	<column name="enabled" not-null="true">
+		<type name="boolean"/>
 	</column>
 	<column name="name" not-null="true">
-		<type name="varchar"/>
+		<type name="varchar" length="32"/>
 	</column>
 	<column name="price" not-null="true">
-		<type name="money"/>
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="featured_product" not-null="true">
+		<type name="boolean"/>
+	</column>
+	<column name="sku">
+		<type name="varchar" length="8"/>
 	</column>
 	<column name="description_short">
 		<type name="varchar" length="128"/>
@@ -66,26 +75,32 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="description_long">
 		<type name="varchar" length="4096"/>
 	</column>
+	<column name="thumbnail">
+		<type name="varchar" length="128"/>
+	</column>
+	<column name="image">
+		<type name="varchar" length="128"/>
+	</column>
 	<column name="color">
-		<type name="varchar"/>
+		<type name="varchar" length="32"/>
 	</column>
 	<column name="size">
-		<type name="varchar"/>
+		<type name="varchar" length="8"/>
 	</column>
-	<column name="weight_units">
-		<type name="numeric" length="5"/>
+	<column name="weight">
+		<type name="decimal"/>
 	</column>
-	<column name="weight_unit_of_measurement">
-		<type name="varchar" length="5"/>
+	<column name="weight_unit">
+		<type name="varchar" length="8"/>
 	</column>
 	<column name="slug">
-		<type name="varchar" length="16"/>
+		<type name="varchar" length="32"/>
 	</column>
-	<column name="featured_product" not-null="true">
-		<type name="boolean"/>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
 	</column>
-	<column name="enabled" not-null="true">
-		<type name="boolean"/>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
 	</column>
 	<constraint name="products_pk" type="pk-constr"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
@@ -103,9 +118,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="inventory">
 	<schema name="public"/>
-	<position x="577.329" y="16.1966"/>
+	<position x="1388.76" y="76.641"/>
 	<column name="id" not-null="true" sequence="public.inventory_seq">
-		<type name="integer"/>
+		<type name="serial"/>
 	</column>
 	<column name="product_id" not-null="true">
 		<type name="integer"/>
@@ -114,13 +129,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="cost">
-		<type name="money"/>
+		<type name="decimal" length="8" precision="2"/>
 	</column>
 	<column name="date_added" not-null="true">
 		<type name="date"/>
 	</column>
 	<column name="date_exhausted">
 		<type name="date"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
 	</column>
 	<constraint name="inventory_pk" type="pk-constr"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
@@ -131,21 +152,24 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="customers">
 	<schema name="public"/>
-	<position x="999.359" y="28.1303"/>
+	<position x="34.9145" y="1.11111"/>
 	<column name="id" not-null="true" sequence="public.customers_seq">
-		<type name="integer"/>
+		<type name="serial"/>
 	</column>
 	<column name="username" not-null="true">
-		<type name="varchar"/>
+		<type name="varchar" length="64"/>
 	</column>
 	<column name="salt" not-null="true">
-		<type name="timestamp"/>
+		<type name="varchar" length="16"/>
 	</column>
 	<column name="password" not-null="true">
-		<type name="varchar" length="31"/>
+		<type name="varchar" length="64"/>
 	</column>
-	<column name="date_joined" not-null="true">
-		<type name="date"/>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
 	</column>
 	<constraint name="customers_pk" type="pk-constr"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
@@ -156,21 +180,24 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="orders">
 	<schema name="public"/>
-	<position x="561.819" y="188.813"/>
+	<position x="466.263" y="2.14622"/>
 	<column name="id" not-null="true" sequence="public.orders_seq">
-		<type name="integer"/>
+		<type name="serial"/>
 	</column>
 	<column name="customer_id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="shipping_address_id" not-null="true">
-		<type name="integer"/>
+	<column name="shipping_address" not-null="true">
+		<type name="varchar" length="4096"/>
 	</column>
-	<column name="billing_address_id" not-null="true">
-		<type name="integer"/>
+	<column name="billing_address" not-null="true">
+		<type name="varchar" length="4096"/>
 	</column>
-	<column name="purchase_date" not-null="true">
-		<type name="date"/>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
 	</column>
 	<constraint name="orders_pk" type="pk-constr"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
@@ -188,21 +215,30 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="invoices">
 	<schema name="public"/>
-	<position x="578.988" y="332.111"/>
+	<position x="169.682" y="579.888"/>
 	<column name="id" not-null="true" sequence="public.invoices_seq">
-		<type name="integer"/>
+		<type name="serial"/>
 	</column>
 	<column name="subtotal" not-null="true">
-		<type name="money"/>
+		<type name="decimal" length="8" precision="2"/>
 	</column>
 	<column name="tax_collected" not-null="true">
-		<type name="money"/>
+		<type name="decimal" length="8" precision="2"/>
 	</column>
-	<column name="shipping_cost" not-null="true">
-		<type name="money"/>
+	<column name="shipping_price" not-null="true">
+		<type name="decimal" length="8" precision="2"/>
 	</column>
 	<column name="total" not-null="true">
-		<type name="money"/>
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="pdf_copy" not-null="true">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
 	</column>
 	<constraint name="invoices_pk" type="pk-constr"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
@@ -220,24 +256,27 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="shipments">
 	<schema name="public"/>
-	<position x="550.804" y="462.561"/>
+	<position x="473.165" y="590.339"/>
 	<column name="id" not-null="true" sequence="public.shipments_seq">
-		<type name="integer"/>
-	</column>
-	<column name="invoice_id" not-null="true">
-		<type name="interval"/>
+		<type name="serial"/>
 	</column>
 	<column name="carrier">
-		<type name="varchar"/>
+		<type name="varchar" length="32"/>
 	</column>
 	<column name="tracking_number">
-		<type name="varchar" length="40"/>
+		<type name="varchar" length="64"/>
 	</column>
 	<column name="shipping_cost" not-null="true">
-		<type name="money"/>
+		<type name="decimal" length="8" precision="2"/>
 	</column>
-	<column name="shipment_date" not-null="true">
-		<type name="date"/>
+	<column name="label">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
 	</column>
 	<constraint name="constraints_pk" type="pk-constr"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
@@ -253,11 +292,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 </sequence>
 
-<table name="fulfillment">
+<table name="purchases">
 	<schema name="public"/>
-	<position x="76.4945" y="339.233"/>
+	<position x="488.717" y="279.317"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="serial"/>
 	</column>
 	<column name="order_id" not-null="true">
 		<type name="integer"/>
@@ -265,27 +304,30 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="product_id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="purchase_price" not-null="true">
-		<type name="money"/>
+	<column name="invoice_id">
+		<type name="integer"/>
 	</column>
-	<column name="shipping_price" not-null="true">
-		<type name="money"/>
+	<column name="shipment_id">
+		<type name="integer"/>
+	</column>
+	<column name="return_id">
+		<type name="integer"/>
+	</column>
+	<column name="product" not-null="true">
+		<type name="varchar" length="64"/>
 	</column>
 	<column name="gift_amount">
-		<type name="money"/>
+		<type name="decimal" length="8" precision="2"/>
 	</column>
-	<column name="sales_tax" not-null="true">
-		<type name="money"/>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
 	</column>
-	<column name="invoice_id" not-null="true">
-		<type name="integer"/>
-	</column>
-	<column name="shipment_id" not-null="true">
-		<type name="integer"/>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
 	</column>
 	<constraint name="order_fullfillment_pk" type="pk-constr"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
- factor="100" table="public.fulfillment">
+ factor="100" table="public.purchases">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
@@ -299,24 +341,36 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="addresses">
 	<schema name="public"/>
-	<position x="1020.58" y="467.528"/>
+	<position x="13.1944" y="277.528"/>
 	<column name="id" not-null="true" sequence="public.addresses_seq">
 		<type name="integer"/>
 	</column>
+	<column name="customer_id" not-null="true">
+		<type name="integer"/>
+	</column>
 	<column name="name">
-		<type name="varchar"/>
+		<type name="varchar" length="256"/>
 	</column>
 	<column name="location" not-null="true">
-		<type name="varchar"/>
+		<type name="varchar" length="2048"/>
 	</column>
 	<column name="postal_code">
-		<type name="varchar"/>
+		<type name="varchar" length="16"/>
 	</column>
 	<column name="state">
-		<type name="varchar"/>
+		<type name="varchar" length="16"/>
 	</column>
 	<column name="country" not-null="true">
-		<type name="varchar"/>
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="country_code">
+		<type name="varchar" length="8"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
 	</column>
 	<constraint name="addresses_pk" type="pk-constr"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
@@ -334,21 +388,30 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="returns">
 	<schema name="public"/>
-	<position x="1019" y="264.5"/>
+	<position x="792.194" y="582.972"/>
 	<column name="id" not-null="true" sequence="public.returns_seq">
-		<type name="integer"/>
-	</column>
-	<column name="order_id" not-null="true">
-		<type name="integer"/>
-	</column>
-	<column name="product_id" not-null="true">
-		<type name="integer"/>
-	</column>
-	<column name="quantity" not-null="true">
-		<type name="smallint"/>
+		<type name="serial"/>
 	</column>
 	<column name="return_date" not-null="true">
 		<type name="date"/>
+	</column>
+	<column name="return_reason">
+		<type name="varchar" length="512"/>
+	</column>
+	<column name="refund_amount">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="shipping_cost">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="label">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
 	</column>
 	<constraint name="returns_pk" type="pk-constr"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
@@ -371,26 +434,51 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 </sequence>
 
-<table name="customer_addresses">
+<table name="licensors">
 	<schema name="public"/>
-	<position x="1294.44" y="268.877"/>
-	<column name="id" not-null="true" sequence="public.customers_addresses_seq">
-		<type name="integer"/>
+	<position x="1389.31" y="268.869"/>
+	<column name="id" not-null="true" sequence="public.organizations_seq">
+		<type name="serial"/>
 	</column>
-	<column name="customer_id" not-null="true">
-		<type name="integer"/>
+	<column name="name" not-null="true">
+		<type name="varchar" length="64"/>
 	</column>
-	<column name="address_Id" not-null="true">
-		<type name="integer"/>
+	<column name="type">
+		<type name="varchar" length="16"/>
 	</column>
-	<column name="type" not-null="true">
-		<type name="varchar"/>
+	<column name="website">
+		<type name="varchar" length="64"/>
 	</column>
-	<column name="date_added" not-null="true">
-		<type name="date"/>
+	<column name="email_address">
+		<type name="varchar" length="128"/>
+	</column>
+	<column name="country">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="country_code">
+		<type name="varchar" length="8"/>
+	</column>
+	<column name="royalty_amount">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="royalty_percentage">
+		<type name="decimal" length="8" precision="7"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
 	</column>
 </table>
 
+<constraint name="products_licensors_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.licensors"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.products">
+	<columns names="licensor_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
 <constraint name="inventory_products_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.products"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
@@ -405,65 +493,44 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="customer_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="orders_addresses_fk1" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.addresses"
-	deferrable="true" defer-type="INITIALLY DEFERRED"
- table="public.orders">
-	<columns names="shipping_address_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-<constraint name="orders_addresses_fk2" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.addresses"
-	deferrable="true" defer-type="INITIALLY DEFERRED"
- table="public.orders">
-	<columns names="billing_address_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
 <constraint name="order_fulfillment_shipments_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.shipments"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
- table="public.fulfillment">
+ table="public.purchases">
 	<columns names="shipment_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="order_fulfillment_products_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.products"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
- table="public.fulfillment">
+ table="public.purchases">
 	<columns names="product_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="order_fulfillment_orders_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.orders"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
- table="public.fulfillment">
+ table="public.purchases">
 	<columns names="order_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="fulfillment_invoices_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.invoices" table="public.fulfillment">
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.invoices" table="public.purchases">
 	<columns names="invoice_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="returns_orders_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.orders"
+<constraint name="purchases_returns_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.returns"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
- table="public.returns">
-	<columns names="order_id" ref-type="src-columns"/>
+ table="public.purchases">
+	<columns names="return_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="customer_addresses_customers_fk" type="fk-constr" comparison-type="MATCH FULL"
+<constraint name="addresses_customers_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.customers"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
- table="public.customer_addresses">
+ table="public.addresses">
 	<columns names="customer_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-<constraint name="customer_addresses_addresses_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.addresses"
-	deferrable="true" defer-type="INITIALLY DEFERRED"
- table="public.customer_addresses">
-	<columns names="address_Id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <relationship name="rel_inventory_products" type="relfk"
@@ -471,7 +538,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.products"
 	 src-required="true" dst-required="true">
 	<label ref-type="name-label">
-		<position x="53.9194" y="-0.616723"/>
+		<position x="1.89021" y="2.36112"/>
 	</label>
 </relationship>
 
@@ -484,17 +551,20 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</label>
 </relationship>
 
-<relationship name="rel_fulfillment_shipments" type="relfk"
-	 src-table="public.fulfillment"
+<relationship name="rel_purchases_shipments" type="relfk"
+	 src-table="public.purchases"
 	 dst-table="public.shipments"
 	 src-required="true" dst-required="true">
+	<label ref-type="src-label">
+		<position x="-5.47814" y="0.255456"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="0" y="0"/>
+		<position x="-0.695618" y="3.74878"/>
 	</label>
 </relationship>
 
-<relationship name="rel_fulfillment_products" type="relfk"
-	 src-table="public.fulfillment"
+<relationship name="rel_purchases_products" type="relfk"
+	 src-table="public.purchases"
 	 dst-table="public.products"
 	 src-required="true" dst-required="true">
 	<label ref-type="name-label">
@@ -502,41 +572,49 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</label>
 </relationship>
 
-<relationship name="rel_fulfillment_orders" type="relfk"
-	 src-table="public.fulfillment"
+<relationship name="rel_purchases_orders" type="relfk"
+	 src-table="public.purchases"
 	 dst-table="public.orders"
-	 src-required="true" dst-required="true"/>
-
-<relationship name="rel_returns_orders" type="relfk"
-	 src-table="public.returns"
-	 dst-table="public.orders"
-	 src-required="true" dst-required="true"/>
-
-<relationship name="rel_orders_addresses" type="relfk"
-	 src-table="public.orders"
-	 dst-table="public.addresses"
-	 src-required="true" dst-required="true"/>
-
-<relationship name="rel_customer_addresses_customers" type="relfk"
-	 src-table="public.customer_addresses"
-	 dst-table="public.customers"
 	 src-required="true" dst-required="true">
-	<label ref-type="src-label">
-		<position x="2.60973" y="-1.45191"/>
-	</label>
 	<label ref-type="name-label">
-		<position x="-85.9071" y="1.28116"/>
+		<position x="80.4524" y="-45.655"/>
 	</label>
 </relationship>
 
-<relationship name="rel_customer_addresses_addresses" type="relfk"
-	 src-table="public.customer_addresses"
-	 dst-table="public.addresses"
-	 src-required="true" dst-required="true"/>
-
-<relationship name="rel_fulfillment_invoices" type="relfk"
-	 src-table="public.fulfillment"
+<relationship name="rel_purchases_invoices" type="relfk"
+	 src-table="public.purchases"
 	 dst-table="public.invoices"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-35.13" y="4.22388"/>
+	</label>
+</relationship>
+
+<relationship name="rel_addresses_customers" type="relfk"
+	 src-table="public.addresses"
+	 dst-table="public.customers"
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<relationship name="rel_products_licensors" type="relfk"
+	 src-table="public.products"
+	 dst-table="public.licensors"
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="85.2497" y="-31.8779"/>
+	</label>
+</relationship>
+
+<relationship name="rel_purchases_returns" type="relfk"
+	 src-table="public.purchases"
+	 dst-table="public.returns"
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="26.5165" y="1.80695"/>
+	</label>
+</relationship>
 
 </dbmodel>
