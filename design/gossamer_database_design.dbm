@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.7.2" last-position="0,0" last-zoom="0.8">
+<dbmodel pgmodeler-ver="0.7.2" last-position="0,0" last-zoom="0.4">
 <database name="gossamer">
 </database>
 
@@ -47,11 +47,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="products">
 	<schema name="public"/>
-	<position x="920.71" y="2.53967"/>
+	<position x="1347.5" y="602.5"/>
 	<column name="id" not-null="true" sequence="public.products_seq">
 		<type name="serial"/>
 	</column>
-	<column name="licensor_id" not-null="true">
+	<column name="promotion_id">
+		<type name="integer"/>
+	</column>
+	<column name="trademark_license_id">
 		<type name="integer"/>
 	</column>
 	<column name="enabled" not-null="true">
@@ -62,6 +65,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="price" not-null="true">
 		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="price_currency" not-null="true">
+		<type name="varchar" length="3"/>
 	</column>
 	<column name="featured_product" not-null="true">
 		<type name="boolean"/>
@@ -107,6 +113,21 @@ CAUTION: Do not modify this file unless you know what you are doing.
  factor="100" table="public.products">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="products_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.products">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="products_sku_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.products">
+		<columns names="sku" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="products_slug_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.products">
+		<columns names="slug" ref-type="src-columns"/>
+	</constraint>
 </table>
 
 <sequence name="invoices_seq"
@@ -118,7 +139,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="inventory">
 	<schema name="public"/>
-	<position x="1388.76" y="76.641"/>
+	<position x="1375" y="1052.5"/>
 	<column name="id" not-null="true" sequence="public.inventory_seq">
 		<type name="serial"/>
 	</column>
@@ -152,7 +173,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="customers">
 	<schema name="public"/>
-	<position x="34.9145" y="1.11111"/>
+	<position x="480" y="272"/>
 	<column name="id" not-null="true" sequence="public.customers_seq">
 		<type name="serial"/>
 	</column>
@@ -176,15 +197,23 @@ CAUTION: Do not modify this file unless you know what you are doing.
  factor="100" table="public.customers">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="customers_username_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.customers">
+		<columns names="username" ref-type="src-columns"/>
+	</constraint>
 </table>
 
 <table name="orders">
 	<schema name="public"/>
-	<position x="466.263" y="2.14622"/>
+	<position x="155.667" y="20.6667"/>
 	<column name="id" not-null="true" sequence="public.orders_seq">
 		<type name="serial"/>
 	</column>
 	<column name="customer_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="promotion_id">
 		<type name="integer"/>
 	</column>
 	<column name="shipping_address" not-null="true">
@@ -192,6 +221,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="billing_address" not-null="true">
 		<type name="varchar" length="4096"/>
+	</column>
+	<column name="payment_card">
+		<type name="varchar" length="4"/>
 	</column>
 	<column name="created" not-null="true">
 		<type name="timestamp"/>
@@ -215,11 +247,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="invoices">
 	<schema name="public"/>
-	<position x="169.682" y="579.888"/>
+	<position x="80" y="1020"/>
 	<column name="id" not-null="true" sequence="public.invoices_seq">
 		<type name="serial"/>
 	</column>
 	<column name="subtotal" not-null="true">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="discount">
 		<type name="decimal" length="8" precision="2"/>
 	</column>
 	<column name="tax_collected" not-null="true">
@@ -256,7 +291,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="shipments">
 	<schema name="public"/>
-	<position x="473.165" y="590.339"/>
+	<position x="460" y="1040"/>
 	<column name="id" not-null="true" sequence="public.shipments_seq">
 		<type name="serial"/>
 	</column>
@@ -294,7 +329,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="purchases">
 	<schema name="public"/>
-	<position x="488.717" y="279.317"/>
+	<position x="180" y="685"/>
 	<column name="id" not-null="true">
 		<type name="serial"/>
 	</column>
@@ -341,7 +376,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="addresses">
 	<schema name="public"/>
-	<position x="13.1944" y="277.528"/>
+	<position x="466.667" y="518.167"/>
 	<column name="id" not-null="true" sequence="public.addresses_seq">
 		<type name="integer"/>
 	</column>
@@ -388,7 +423,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="returns">
 	<schema name="public"/>
-	<position x="792.194" y="582.972"/>
+	<position x="855" y="1032.5"/>
 	<column name="id" not-null="true" sequence="public.returns_seq">
 		<type name="serial"/>
 	</column>
@@ -420,7 +455,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<sequence name="organizations_seq"
+<sequence name="trademark_licenses_seq"
 	 start="1" increment="1"
 	 min-value="0" max-value="2147483647"
 	 cache="1" cycle="false">
@@ -434,10 +469,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 </sequence>
 
-<table name="licensors">
+<table name="trademark_licenses">
 	<schema name="public"/>
-	<position x="1389.31" y="268.869"/>
-	<column name="id" not-null="true" sequence="public.organizations_seq">
+	<position x="1887.5" y="662.5"/>
+	<column name="id" not-null="true" sequence="public.trademark_licenses_seq">
 		<type name="serial"/>
 	</column>
 	<column name="name" not-null="true">
@@ -458,8 +493,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="country_code">
 		<type name="varchar" length="8"/>
 	</column>
-	<column name="royalty_amount">
+	<column name="royalty">
 		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="royalty_currency">
+		<type name="varchar" length="3"/>
 	</column>
 	<column name="royalty_percentage">
 		<type name="decimal" length="8" precision="7"/>
@@ -472,11 +510,171 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 </table>
 
-<constraint name="products_licensors_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.licensors"
+<sequence name="categories_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="categories">
+	<schema name="public"/>
+	<position x="1850" y="49.9999"/>
+	<column name="id" not-null="true" sequence="public.categories_seq">
+		<type name="serial"/>
+	</column>
+	<column name="parent_category_id">
+		<type name="integer"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="slug">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="promotion_id">
+		<type name="integer"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="categories_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.categories">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="categories_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.categories">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="categories_slug_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.categories">
+		<columns names="slug" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="promotions_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="promotions">
+	<schema name="public"/>
+	<position x="1344" y="11"/>
+	<column name="id" not-null="true" sequence="public.promotions_seq">
+		<type name="integer"/>
+	</column>
+	<column name="enabled" not-null="true">
+		<type name="boolean"/>
+	</column>
+	<column name="type" not-null="true">
+		<type name="varchar" length="8"/>
+	</column>
+	<column name="code" not-null="true">
+		<type name="varchar" length="8"/>
+	</column>
+	<column name="uses_allowed">
+		<type name="integer"/>
+	</column>
+	<column name="discount">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="discount_currency" not-null="true">
+		<type name="varchar" length="3"/>
+	</column>
+	<column name="discount_percentage">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="date_active" not-null="true">
+		<type name="date"/>
+	</column>
+	<column name="date_inactive">
+		<type name="date"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="promotions_code_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.promotions">
+		<columns names="code" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="categories_products">
+	<schema name="public"/>
+	<position x="1892.5" y="302.5"/>
+	<column name="id" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="product_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="category_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+</table>
+
+<table name="carts">
+	<schema name="public"/>
+	<position x="898" y="286"/>
+	<column name="id" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="customer_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="product_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="carts_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.carts">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="carts_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<constraint name="products_trademark_licenses_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.trademark_licenses"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
  table="public.products">
-	<columns names="licensor_id" ref-type="src-columns"/>
+	<columns names="trademark_license_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="products_promotions_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="NO ACTION" ref-table="public.promotions"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.products">
+	<columns names="promotion_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="inventory_products_fk" type="fk-constr" comparison-type="MATCH FULL"
@@ -491,6 +689,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	deferrable="true" defer-type="INITIALLY DEFERRED"
  table="public.orders">
 	<columns names="customer_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="orders_promotions_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="NO ACTION" ref-table="public.promotions"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.orders">
+	<columns names="promotion_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="order_fulfillment_shipments_fk" type="fk-constr" comparison-type="MATCH FULL"
@@ -533,12 +738,57 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="customer_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
+<constraint name="categories_categories_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.categories"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.categories">
+	<columns names="parent_category_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="categories_promotions_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.promotions"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.categories">
+	<columns names="promotion_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="products_categories_products_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="NO ACTION" ref-table="public.products"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.categories_products">
+	<columns names="product_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="products_categories_categories_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="NO ACTION" ref-table="public.categories"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.categories_products">
+	<columns names="category_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="carts_customers_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.customers"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.carts">
+	<columns names="customer_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="carts_products_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.products"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.carts">
+	<columns names="product_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
 <relationship name="rel_inventory_products" type="relfk"
 	 src-table="public.inventory"
 	 dst-table="public.products"
 	 src-required="true" dst-required="true">
+	<label ref-type="dst-label">
+		<position x="-16.2429" y="3.3937"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="1.89021" y="2.36112"/>
+		<position x="33.8383" y="1.80551"/>
 	</label>
 </relationship>
 
@@ -547,7 +797,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.customers"
 	 src-required="true" dst-required="true">
 	<label ref-type="name-label">
-		<position x="0" y="0"/>
+		<position x="82.9016" y="-38.8818"/>
 	</label>
 </relationship>
 
@@ -590,18 +840,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</label>
 </relationship>
 
-<relationship name="rel_addresses_customers" type="relfk"
-	 src-table="public.addresses"
-	 dst-table="public.customers"
-	 src-required="true" dst-required="true">
-	<label ref-type="name-label">
-		<position x="0" y="0"/>
-	</label>
-</relationship>
-
-<relationship name="rel_products_licensors" type="relfk"
+<relationship name="rel_products_trademark_licenses" type="relfk"
 	 src-table="public.products"
-	 dst-table="public.licensors"
+	 dst-table="public.trademark_licenses"
 	 src-required="true" dst-required="true">
 	<label ref-type="name-label">
 		<position x="85.2497" y="-31.8779"/>
@@ -614,6 +855,80 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-required="true" dst-required="true">
 	<label ref-type="name-label">
 		<position x="26.5165" y="1.80695"/>
+	</label>
+</relationship>
+
+<relationship name="rel_products_promotions" type="relfk"
+	 src-table="public.products"
+	 dst-table="public.promotions"
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="92.1688" y="-43.2826"/>
+	</label>
+</relationship>
+
+<relationship name="rel_orders_promotions" type="relfk"
+	 src-table="public.orders"
+	 dst-table="public.promotions"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_categories_products_products" type="relfk"
+	 src-table="public.categories_products"
+	 dst-table="public.products"
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="34.9236" y="-50.4374"/>
+	</label>
+</relationship>
+
+<relationship name="rel_categories_products_categories" type="relfk"
+	 src-table="public.categories_products"
+	 dst-table="public.categories"
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-125.606" y="-35.0486"/>
+	</label>
+</relationship>
+
+<relationship name="rel_categories_categories" type="relfk"
+	 src-table="public.categories"
+	 dst-table="public.categories"
+	 src-required="true" dst-required="true">
+	<line>
+		<position x="2156.69" y="101.76"/>
+	<position x="2156.69" y="39.9999"/>
+	<position x="2047.79" y="39.9999"/>
+	</line>
+</relationship>
+
+<relationship name="rel_categories_promotions" type="relfk"
+	 src-table="public.categories"
+	 dst-table="public.promotions"
+	 src-required="true" dst-required="true">
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="95.5668" y="-46.3481"/>
+	</label>
+</relationship>
+
+<relationship name="rel_carts_customers" type="relfk"
+	 src-table="public.carts"
+	 dst-table="public.customers"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_carts_products" type="relfk"
+	 src-table="public.carts"
+	 dst-table="public.products"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_addresses_customers" type="relfk"
+	 src-table="public.addresses"
+	 dst-table="public.customers"
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="98.1217" y="-37.2151"/>
 	</label>
 </relationship>
 
