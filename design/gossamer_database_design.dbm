@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.7.2" last-position="0,0" last-zoom="0.4">
+<dbmodel pgmodeler-ver="0.7.2" last-position="149,72" last-zoom="1">
 <database name="gossamer">
 </database>
 
@@ -376,12 +376,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="addresses">
 	<schema name="public"/>
-	<position x="466.667" y="518.167"/>
+	<position x="456.667" y="495.31"/>
 	<column name="id" not-null="true" sequence="public.addresses_seq">
 		<type name="integer"/>
 	</column>
 	<column name="customer_id" not-null="true">
 		<type name="integer"/>
+	</column>
+	<column name="country_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="embargo_score">
+		<type name="decimal" length="8" precision="2"/>
 	</column>
 	<column name="name">
 		<type name="varchar" length="256"/>
@@ -394,12 +400,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="state">
 		<type name="varchar" length="16"/>
-	</column>
-	<column name="country" not-null="true">
-		<type name="varchar" length="64"/>
-	</column>
-	<column name="country_code">
-		<type name="varchar" length="8"/>
 	</column>
 	<column name="created" not-null="true">
 		<type name="timestamp"/>
@@ -663,6 +663,90 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 </sequence>
 
+<sequence name="countries_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="countries">
+	<schema name="public"/>
+	<position x="910.952" y="465.476"/>
+	<column name="id" not-null="true" sequence="public.countries_seq">
+		<type name="serial"/>
+	</column>
+	<column name="country_code" not-null="true">
+		<type name="varchar" length="8"/>
+	</column>
+	<column name="country" not-null="true">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="embargoed" not-null="true">
+		<type name="boolean"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="countries_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.countries">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="embargo_list">
+	<schema name="public"/>
+	<position x="912.857" y="597.143"/>
+	<column name="id" not-null="true">
+		<type name="interval"/>
+	</column>
+	<column name="type" not-null="true">
+		<type name="varchar" length="8"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="256"/>
+	</column>
+	<column name="location">
+		<type name="varchar" length="2048"/>
+	</column>
+	<column name="program">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<index name="sdn_list_name_idx" table="public.embargo_list"
+		 concurrent="false" unique="false" fast-update="false" buffering="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="name"/>
+			<collation name="pg_catalog.default"/>
+		</idxelement>
+	</index>
+	<index name="sdn_list_location_idx" table="public.embargo_list"
+		 concurrent="false" unique="false" fast-update="false" buffering="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="location"/>
+			<collation name="pg_catalog.default"/>
+		</idxelement>
+	</index>
+</table>
+
+<sequence name="sdns_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
 <constraint name="products_trademark_licenses_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.trademark_licenses"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
@@ -738,6 +822,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="customer_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
+<constraint name="addresses_countries_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.countries"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.addresses">
+	<columns names="country_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
 <constraint name="categories_categories_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.categories"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
@@ -780,115 +871,65 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="product_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<relationship name="rel_inventory_products" type="relfk"
-	 src-table="public.inventory"
-	 dst-table="public.products"
-	 src-required="true" dst-required="true">
-	<label ref-type="dst-label">
-		<position x="-16.2429" y="3.3937"/>
-	</label>
-	<label ref-type="name-label">
-		<position x="33.8383" y="1.80551"/>
-	</label>
-</relationship>
-
-<relationship name="rel_orders_customers" type="relfk"
-	 src-table="public.orders"
-	 dst-table="public.customers"
-	 src-required="true" dst-required="true">
-	<label ref-type="name-label">
-		<position x="82.9016" y="-38.8818"/>
-	</label>
-</relationship>
-
-<relationship name="rel_purchases_shipments" type="relfk"
-	 src-table="public.purchases"
-	 dst-table="public.shipments"
-	 src-required="true" dst-required="true">
-	<label ref-type="src-label">
-		<position x="-5.47814" y="0.255456"/>
-	</label>
-	<label ref-type="name-label">
-		<position x="-0.695618" y="3.74878"/>
-	</label>
-</relationship>
-
-<relationship name="rel_purchases_products" type="relfk"
-	 src-table="public.purchases"
-	 dst-table="public.products"
-	 src-required="true" dst-required="true">
-	<label ref-type="name-label">
-		<position x="2.12302" y="-0.0617065"/>
-	</label>
-</relationship>
-
-<relationship name="rel_purchases_orders" type="relfk"
-	 src-table="public.purchases"
-	 dst-table="public.orders"
-	 src-required="true" dst-required="true">
-	<label ref-type="name-label">
-		<position x="80.4524" y="-45.655"/>
-	</label>
-</relationship>
-
-<relationship name="rel_purchases_invoices" type="relfk"
-	 src-table="public.purchases"
-	 dst-table="public.invoices"
-	 src-required="true" dst-required="true">
-	<label ref-type="name-label">
-		<position x="-35.13" y="4.22388"/>
-	</label>
-</relationship>
-
 <relationship name="rel_products_trademark_licenses" type="relfk"
 	 src-table="public.products"
 	 dst-table="public.trademark_licenses"
-	 src-required="true" dst-required="true">
-	<label ref-type="name-label">
-		<position x="85.2497" y="-31.8779"/>
-	</label>
-</relationship>
-
-<relationship name="rel_purchases_returns" type="relfk"
-	 src-table="public.purchases"
-	 dst-table="public.returns"
-	 src-required="true" dst-required="true">
-	<label ref-type="name-label">
-		<position x="26.5165" y="1.80695"/>
-	</label>
-</relationship>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_products_promotions" type="relfk"
 	 src-table="public.products"
 	 dst-table="public.promotions"
-	 src-required="true" dst-required="true">
-	<label ref-type="name-label">
-		<position x="92.1688" y="-43.2826"/>
-	</label>
-</relationship>
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_inventory_products" type="relfk"
+	 src-table="public.inventory"
+	 dst-table="public.products"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_orders_customers" type="relfk"
+	 src-table="public.orders"
+	 dst-table="public.customers"
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_orders_promotions" type="relfk"
 	 src-table="public.orders"
 	 dst-table="public.promotions"
 	 src-required="true" dst-required="true"/>
 
-<relationship name="rel_categories_products_products" type="relfk"
-	 src-table="public.categories_products"
-	 dst-table="public.products"
-	 src-required="true" dst-required="true">
-	<label ref-type="name-label">
-		<position x="34.9236" y="-50.4374"/>
-	</label>
-</relationship>
+<relationship name="rel_purchases_shipments" type="relfk"
+	 src-table="public.purchases"
+	 dst-table="public.shipments"
+	 src-required="true" dst-required="true"/>
 
-<relationship name="rel_categories_products_categories" type="relfk"
-	 src-table="public.categories_products"
-	 dst-table="public.categories"
-	 src-required="true" dst-required="true">
-	<label ref-type="name-label">
-		<position x="-125.606" y="-35.0486"/>
-	</label>
-</relationship>
+<relationship name="rel_purchases_products" type="relfk"
+	 src-table="public.purchases"
+	 dst-table="public.products"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_purchases_orders" type="relfk"
+	 src-table="public.purchases"
+	 dst-table="public.orders"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_purchases_invoices" type="relfk"
+	 src-table="public.purchases"
+	 dst-table="public.invoices"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_purchases_returns" type="relfk"
+	 src-table="public.purchases"
+	 dst-table="public.returns"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_addresses_customers" type="relfk"
+	 src-table="public.addresses"
+	 dst-table="public.customers"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_addresses_countries" type="relfk"
+	 src-table="public.addresses"
+	 dst-table="public.countries"
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_categories_categories" type="relfk"
 	 src-table="public.categories"
@@ -904,14 +945,17 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_categories_promotions" type="relfk"
 	 src-table="public.categories"
 	 dst-table="public.promotions"
-	 src-required="true" dst-required="true">
-	<label ref-type="src-label">
-		<position x="0" y="0"/>
-	</label>
-	<label ref-type="name-label">
-		<position x="95.5668" y="-46.3481"/>
-	</label>
-</relationship>
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_categories_products_products" type="relfk"
+	 src-table="public.categories_products"
+	 dst-table="public.products"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_categories_products_categories" type="relfk"
+	 src-table="public.categories_products"
+	 dst-table="public.categories"
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_carts_customers" type="relfk"
 	 src-table="public.carts"
@@ -922,14 +966,5 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="public.carts"
 	 dst-table="public.products"
 	 src-required="true" dst-required="true"/>
-
-<relationship name="rel_addresses_customers" type="relfk"
-	 src-table="public.addresses"
-	 dst-table="public.customers"
-	 src-required="true" dst-required="true">
-	<label ref-type="name-label">
-		<position x="98.1217" y="-37.2151"/>
-	</label>
-</relationship>
 
 </dbmodel>
