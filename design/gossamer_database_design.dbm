@@ -217,10 +217,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="shipping_address" not-null="true">
-		<type name="varchar" length="4096"/>
+		<type name="text" length="4096"/>
 	</column>
 	<column name="billing_address" not-null="true">
-		<type name="varchar" length="4096"/>
+		<type name="text" length="4096"/>
 	</column>
 	<column name="payment_card">
 		<type name="varchar" length="4"/>
@@ -519,7 +519,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="categories">
 	<schema name="public"/>
-	<position x="1850" y="49.9999"/>
+	<position x="1850" y="172.222"/>
 	<column name="id" not-null="true" sequence="public.categories_seq">
 		<type name="serial"/>
 	</column>
@@ -567,15 +567,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="promotions">
 	<schema name="public"/>
-	<position x="1344" y="11"/>
+	<position x="1339.56" y="147.667"/>
 	<column name="id" not-null="true" sequence="public.promotions_seq">
 		<type name="integer"/>
 	</column>
-	<column name="enabled" not-null="true">
-		<type name="boolean"/>
-	</column>
-	<column name="type" not-null="true">
-		<type name="varchar" length="8"/>
+	<column name="type_id" not-null="true">
+		<type name="integer" length="8"/>
 	</column>
 	<column name="code" not-null="true">
 		<type name="varchar" length="8"/>
@@ -609,11 +606,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
  factor="100" table="public.promotions">
 		<columns names="code" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="promotions_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.promotions">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
 </table>
 
 <table name="categories_products">
 	<schema name="public"/>
-	<position x="1892.5" y="302.5"/>
+	<position x="1891.39" y="423.611"/>
 	<column name="id" not-null="true">
 		<type name="serial"/>
 	</column>
@@ -704,6 +706,17 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 cache="1" cycle="false">
 	<schema name="public"/>
 </sequence>
+
+<table name="promotion_types">
+	<schema name="public"/>
+	<position x="1388.89" y="20"/>
+	<column name="id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="32"/>
+	</column>
+</table>
 
 <constraint name="products_trademark_licenses_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.trademark_licenses"
@@ -801,6 +814,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="promotion_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
+<constraint name="promotions_promotion_types_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.promotion_types"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.promotions">
+	<columns names="type_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
 <constraint name="products_categories_products_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="NO ACTION" ref-table="public.products"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
@@ -894,9 +914,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.categories"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="2156.69" y="101.76"/>
-	<position x="2156.69" y="39.9999"/>
-	<position x="2047.79" y="39.9999"/>
+		<position x="2156.69" y="223.982"/>
+	<position x="2156.69" y="162.222"/>
+	<position x="2047.79" y="162.222"/>
 	</line>
 </relationship>
 
@@ -923,6 +943,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_carts_products" type="relfk"
 	 src-table="public.carts"
 	 dst-table="public.products"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_promotions_promotion_types" type="relfk"
+	 src-table="public.promotions"
+	 dst-table="public.promotion_types"
 	 src-required="true" dst-required="true"/>
 
 </dbmodel>
