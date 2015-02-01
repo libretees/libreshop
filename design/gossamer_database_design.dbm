@@ -386,9 +386,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="country_id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="embargo_score">
-		<type name="decimal" length="8" precision="2"/>
-	</column>
 	<column name="name">
 		<type name="varchar" length="256"/>
 	</column>
@@ -471,15 +468,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="trademark_licenses">
 	<schema name="public"/>
-	<position x="1887.5" y="662.5"/>
+	<position x="1857.5" y="799.167"/>
 	<column name="id" not-null="true" sequence="public.trademark_licenses_seq">
 		<type name="serial"/>
 	</column>
+	<column name="trademark_license_type_id" not-null="true">
+		<type name="integer" length="16"/>
+	</column>
 	<column name="name" not-null="true">
 		<type name="varchar" length="64"/>
-	</column>
-	<column name="type">
-		<type name="varchar" length="16"/>
 	</column>
 	<column name="website">
 		<type name="varchar" length="64"/>
@@ -508,6 +505,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="updated" not-null="true">
 		<type name="timestamp"/>
 	</column>
+	<constraint name="trademark_licenses_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.trademark_licenses">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="trademark_licenses_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.trademark_licenses">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
 </table>
 
 <sequence name="categories_seq"
@@ -571,7 +578,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true" sequence="public.promotions_seq">
 		<type name="integer"/>
 	</column>
-	<column name="type_id" not-null="true">
+	<column name="promotion_type_id" not-null="true">
 		<type name="integer" length="8"/>
 	</column>
 	<column name="code" not-null="true">
@@ -674,7 +681,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="countries">
 	<schema name="public"/>
-	<position x="910.952" y="465.476"/>
+	<position x="894.285" y="516.587"/>
 	<column name="id" not-null="true" sequence="public.countries_seq">
 		<type name="serial"/>
 	</column>
@@ -709,13 +716,65 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="promotion_types">
 	<schema name="public"/>
-	<position x="1388.89" y="20"/>
-	<column name="id" not-null="true">
-		<type name="integer"/>
+	<position x="1384.44" y="7.77778"/>
+	<column name="id" not-null="true" sequence="public.promotion_types_seq">
+		<type name="serial"/>
 	</column>
 	<column name="name" not-null="true">
 		<type name="varchar" length="32"/>
 	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="promotion_types_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.promotion_types">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="promotion_types_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="trademark_license_types_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="trademark_license_types">
+	<schema name="public"/>
+	<position x="1902.22" y="646.667"/>
+	<column name="id" not-null="true" sequence="public.promotion_types_seq">
+		<type name="serial"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="trademark_license_types_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.trademark_license_types">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="trademark_license_types_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.trademark_license_types">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
 </table>
 
 <constraint name="products_trademark_licenses_fk" type="fk-constr" comparison-type="MATCH FULL"
@@ -800,6 +859,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="country_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
+<constraint name="trademark_licenses_trademark_license_types_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.trademark_license_types"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.trademark_licenses">
+	<columns names="trademark_license_type_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
 <constraint name="categories_categories_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.categories"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
@@ -818,7 +884,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.promotion_types"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
  table="public.promotions">
-	<columns names="type_id" ref-type="src-columns"/>
+	<columns names="promotion_type_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="products_categories_products_fk" type="fk-constr" comparison-type="MATCH FULL"
@@ -948,6 +1014,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_promotions_promotion_types" type="relfk"
 	 src-table="public.promotions"
 	 dst-table="public.promotion_types"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_trademark_licenses_trademark_license_types" type="relfk"
+	 src-table="public.trademark_licenses"
+	 dst-table="public.trademark_license_types"
 	 src-required="true" dst-required="true"/>
 
 </dbmodel>
