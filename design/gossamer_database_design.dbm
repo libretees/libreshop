@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.7.2" last-position="0,0" last-zoom="0.9">
+<dbmodel pgmodeler-ver="0.7.2" last-position="0,0" last-zoom="0.8">
 <database name="gossamer">
 </database>
 
@@ -63,6 +63,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="name" not-null="true">
 		<type name="varchar" length="32"/>
 	</column>
+	<column name="teaser">
+		<type name="varchar" length="128"/>
+	</column>
+	<column name="description">
+		<type name="text" length="4096"/>
+	</column>
+	<column name="attributes">
+		<type name="text"/>
+	</column>
 	<column name="price" not-null="true">
 		<type name="decimal" length="8" precision="2"/>
 	</column>
@@ -72,35 +81,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="featured_product" not-null="true">
 		<type name="boolean"/>
 	</column>
-	<column name="enabled" not-null="true">
-		<type name="boolean"/>
-	</column>
-	<column name="description_short">
-		<type name="varchar" length="128"/>
-	</column>
-	<column name="description_long">
-		<type name="varchar" length="4096"/>
-	</column>
-	<column name="thumbnail">
-		<type name="varchar" length="128"/>
-	</column>
-	<column name="image">
-		<type name="varchar" length="128"/>
-	</column>
-	<column name="color">
-		<type name="varchar" length="32"/>
-	</column>
-	<column name="size">
-		<type name="varchar" length="8"/>
-	</column>
-	<column name="weight">
-		<type name="decimal"/>
-	</column>
-	<column name="weight_unit">
-		<type name="varchar" length="8"/>
-	</column>
 	<column name="slug">
 		<type name="varchar" length="32"/>
+	</column>
+	<column name="enabled" not-null="true">
+		<type name="boolean"/>
 	</column>
 	<column name="created" not-null="true">
 		<type name="timestamp"/>
@@ -139,7 +124,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="inventory">
 	<schema name="public"/>
-	<position x="1375" y="1052.5"/>
+	<position x="1463.61" y="1116.67"/>
 	<column name="id" not-null="true" sequence="public.inventory_seq">
 		<type name="serial"/>
 	</column>
@@ -574,7 +559,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="promotions">
 	<schema name="public"/>
-	<position x="1339.56" y="147.667"/>
+	<position x="1467.06" y="168.917"/>
 	<column name="id" not-null="true" sequence="public.promotions_seq">
 		<type name="integer"/>
 	</column>
@@ -642,7 +627,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="carts">
 	<schema name="public"/>
-	<position x="898" y="286"/>
+	<position x="979.25" y="241"/>
 	<column name="id" not-null="true">
 		<type name="serial"/>
 	</column>
@@ -681,7 +666,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="countries">
 	<schema name="public"/>
-	<position x="894.285" y="516.587"/>
+	<position x="795.535" y="596.587"/>
 	<column name="id" not-null="true" sequence="public.countries_seq">
 		<type name="serial"/>
 	</column>
@@ -773,6 +758,131 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="trademark_license_types_name_uq" type="uq-constr"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
  factor="100" table="public.trademark_license_types">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="currencies_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="currencies">
+	<schema name="public"/>
+	<position x="577.222" y="797.083"/>
+	<column name="id" not-null="true" sequence="public.currencies_seq">
+		<type name="serial"/>
+	</column>
+	<column name="code" not-null="true">
+		<type name="varchar" length="8"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="currencies_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.currencies">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="currencies_code_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.currencies">
+		<columns names="code" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="currencies_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.currencies">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="product_images">
+	<schema name="public"/>
+	<position x="817.5" y="376.25"/>
+	<column name="id" not-null="true" sequence="public.product_images_seq">
+		<type name="serial"/>
+	</column>
+	<column name="product_image_type_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="product_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="customer_id">
+		<type name="integer"/>
+	</column>
+	<column name="file" not-null="true">
+		<type name="varchar" length="256"/>
+	</column>
+	<column name="caption">
+		<type name="text"/>
+	</column>
+	<column name="approved" not-null="true">
+		<type name="boolean"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="product_images_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.product_images">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="product_images_file_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.product_images">
+		<columns names="file" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="product_images_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="product_image_types_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="product_image_types">
+	<schema name="public"/>
+	<position x="1316.25" y="401.25"/>
+	<column name="id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="16"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="product_image_types_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.product_image_types">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="product_image_types_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.product_image_types">
 		<columns names="name" ref-type="src-columns"/>
 	</constraint>
 </table>
@@ -915,6 +1025,27 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="product_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
+<constraint name="product_images_products_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.products"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.product_images">
+	<columns names="product_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="product_images_product_image_types_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.product_image_types"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.product_images">
+	<columns names="product_image_type_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="product_images_customers_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.customers"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.product_images">
+	<columns names="customer_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
 <relationship name="rel_products_trademark_licenses" type="relfk"
 	 src-table="public.products"
 	 dst-table="public.trademark_licenses"
@@ -1019,6 +1150,21 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_trademark_licenses_trademark_license_types" type="relfk"
 	 src-table="public.trademark_licenses"
 	 dst-table="public.trademark_license_types"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_product_images_products" type="relfk"
+	 src-table="public.product_images"
+	 dst-table="public.products"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_product_images_product_image_types" type="relfk"
+	 src-table="public.product_images"
+	 dst-table="public.product_image_types"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_product_images_customers" type="relfk"
+	 src-table="public.product_images"
+	 dst-table="public.customers"
 	 src-required="true" dst-required="true"/>
 
 </dbmodel>
