@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.7.2" last-position="0,0" last-zoom="0.8">
+<dbmodel pgmodeler-ver="0.7.2" last-position="0,0" last-zoom="0.4">
 <database name="gossamer">
 </database>
 
@@ -47,7 +47,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="products">
 	<schema name="public"/>
-	<position x="1347.5" y="602.5"/>
+	<position x="2849" y="571.667"/>
 	<column name="id" not-null="true" sequence="public.products_seq">
 		<type name="serial"/>
 	</column>
@@ -63,26 +63,20 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="name" not-null="true">
 		<type name="varchar" length="32"/>
 	</column>
+	<column name="slug">
+		<type name="varchar" length="32"/>
+	</column>
 	<column name="teaser">
 		<type name="varchar" length="128"/>
 	</column>
 	<column name="description">
 		<type name="text" length="4096"/>
 	</column>
-	<column name="attributes">
+	<column name="attributes" not-null="true">
 		<type name="text"/>
 	</column>
-	<column name="price" not-null="true">
-		<type name="decimal" length="8" precision="2"/>
-	</column>
-	<column name="price_currency" not-null="true">
-		<type name="varchar" length="3"/>
-	</column>
-	<column name="featured_product" not-null="true">
+	<column name="featured" not-null="true">
 		<type name="boolean"/>
-	</column>
-	<column name="slug">
-		<type name="varchar" length="32"/>
 	</column>
 	<column name="enabled" not-null="true">
 		<type name="boolean"/>
@@ -124,12 +118,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="inventory">
 	<schema name="public"/>
-	<position x="1463.61" y="1116.67"/>
+	<position x="2874.67" y="1118.92"/>
 	<column name="id" not-null="true" sequence="public.inventory_seq">
 		<type name="serial"/>
 	</column>
 	<column name="product_id" not-null="true">
 		<type name="integer"/>
+	</column>
+	<column name="attributes" not-null="true">
+		<type name="text"/>
 	</column>
 	<column name="quantity" not-null="true">
 		<type name="integer"/>
@@ -158,7 +155,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="customers">
 	<schema name="public"/>
-	<position x="480" y="272"/>
+	<position x="901.5" y="1142.67"/>
 	<column name="id" not-null="true" sequence="public.customers_seq">
 		<type name="serial"/>
 	</column>
@@ -191,7 +188,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="orders">
 	<schema name="public"/>
-	<position x="155.667" y="20.6667"/>
+	<position x="888.667" y="56.6667"/>
 	<column name="id" not-null="true" sequence="public.orders_seq">
 		<type name="serial"/>
 	</column>
@@ -232,7 +229,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="invoices">
 	<schema name="public"/>
-	<position x="80" y="1020"/>
+	<position x="1153.33" y="631.333"/>
 	<column name="id" not-null="true" sequence="public.invoices_seq">
 		<type name="serial"/>
 	</column>
@@ -265,6 +262,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
  factor="100" table="public.invoices">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="invoices_pdf_copy_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.invoices">
+		<columns names="pdf_copy" ref-type="src-columns"/>
+	</constraint>
 </table>
 
 <sequence name="shipments_seq"
@@ -276,7 +278,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="shipments">
 	<schema name="public"/>
-	<position x="460" y="1040"/>
+	<position x="1472" y="652.666"/>
 	<column name="id" not-null="true" sequence="public.shipments_seq">
 		<type name="serial"/>
 	</column>
@@ -303,6 +305,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
  factor="100" table="public.shipments">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="shipments_label_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.shipments">
+		<columns names="label" ref-type="src-columns"/>
+	</constraint>
 </table>
 
 <sequence name="colors_seq"
@@ -314,7 +321,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="purchases">
 	<schema name="public"/>
-	<position x="180" y="685"/>
+	<position x="1945" y="308.333"/>
 	<column name="id" not-null="true">
 		<type name="serial"/>
 	</column>
@@ -334,7 +341,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="product" not-null="true">
-		<type name="varchar" length="64"/>
+		<type name="text" length="64"/>
 	</column>
 	<column name="gift_amount">
 		<type name="decimal" length="8" precision="2"/>
@@ -361,7 +368,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="addresses">
 	<schema name="public"/>
-	<position x="456.667" y="495.31"/>
+	<position x="884.413" y="1426.46"/>
 	<column name="id" not-null="true" sequence="public.addresses_seq">
 		<type name="integer"/>
 	</column>
@@ -405,12 +412,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="returns">
 	<schema name="public"/>
-	<position x="855" y="1032.5"/>
+	<position x="1799.33" y="640.166"/>
 	<column name="id" not-null="true" sequence="public.returns_seq">
 		<type name="serial"/>
 	</column>
 	<column name="return_date" not-null="true">
 		<type name="date"/>
+	</column>
+	<column name="salable" not-null="true">
+		<type name="boolean"/>
 	</column>
 	<column name="return_reason">
 		<type name="varchar" length="512"/>
@@ -435,6 +445,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
  factor="100" table="public.returns">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="returns_label_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.returns">
+		<columns names="label" ref-type="src-columns"/>
+	</constraint>
 </table>
 
 <sequence name="trademark_licenses_seq"
@@ -453,7 +468,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="trademark_licenses">
 	<schema name="public"/>
-	<position x="1857.5" y="799.167"/>
+	<position x="3392.16" y="1096.5"/>
 	<column name="id" not-null="true" sequence="public.trademark_licenses_seq">
 		<type name="serial"/>
 	</column>
@@ -462,6 +477,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="name" not-null="true">
 		<type name="varchar" length="64"/>
+	</column>
+	<column name="effective_date" not-null="true">
+		<type name="date"/>
+	</column>
+	<column name="expiration_date">
+		<type name="date"/>
 	</column>
 	<column name="website">
 		<type name="varchar" length="64"/>
@@ -511,7 +532,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="categories">
 	<schema name="public"/>
-	<position x="1850" y="172.222"/>
+	<position x="3390.34" y="339.222"/>
 	<column name="id" not-null="true" sequence="public.categories_seq">
 		<type name="serial"/>
 	</column>
@@ -559,7 +580,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="promotions">
 	<schema name="public"/>
-	<position x="1467.06" y="168.917"/>
+	<position x="2836.06" y="37.25"/>
 	<column name="id" not-null="true" sequence="public.promotions_seq">
 		<type name="integer"/>
 	</column>
@@ -607,7 +628,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="categories_products">
 	<schema name="public"/>
-	<position x="1891.39" y="423.611"/>
+	<position x="3440.73" y="639.278"/>
 	<column name="id" not-null="true">
 		<type name="serial"/>
 	</column>
@@ -627,7 +648,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="carts">
 	<schema name="public"/>
-	<position x="979.25" y="241"/>
+	<position x="1789.94" y="913.381"/>
 	<column name="id" not-null="true">
 		<type name="serial"/>
 	</column>
@@ -636,6 +657,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="product_id" not-null="true">
 		<type name="integer"/>
+	</column>
+	<column name="product" not-null="true">
+		<type name="text"/>
 	</column>
 	<column name="created" not-null="true">
 		<type name="timestamp"/>
@@ -666,14 +690,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="countries">
 	<schema name="public"/>
-	<position x="795.535" y="596.587"/>
+	<position x="1336.67" y="1446.67"/>
 	<column name="id" not-null="true" sequence="public.countries_seq">
 		<type name="serial"/>
 	</column>
-	<column name="country_code" not-null="true">
+	<column name="code" not-null="true">
 		<type name="varchar" length="8"/>
 	</column>
-	<column name="country" not-null="true">
+	<column name="name" not-null="true">
 		<type name="varchar" length="64"/>
 	</column>
 	<column name="embargoed" not-null="true">
@@ -690,6 +714,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
  factor="100" table="public.countries">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="countries_code_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.countries">
+		<columns names="code" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="countries_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.countries">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
 </table>
 
 <sequence name="sdns_seq"
@@ -699,9 +733,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 </sequence>
 
+<sequence name="promotion_types_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
 <table name="promotion_types">
 	<schema name="public"/>
-	<position x="1384.44" y="7.77778"/>
+	<position x="3437.77" y="97.1112"/>
 	<column name="id" not-null="true" sequence="public.promotion_types_seq">
 		<type name="serial"/>
 	</column>
@@ -721,13 +762,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<sequence name="promotion_types_seq"
-	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
-	 cache="1" cycle="false">
-	<schema name="public"/>
-</sequence>
-
 <sequence name="trademark_license_types_seq"
 	 start="1" increment="1"
 	 min-value="0" max-value="2147483647"
@@ -737,7 +771,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="trademark_license_types">
 	<schema name="public"/>
-	<position x="1902.22" y="646.667"/>
+	<position x="3447.23" y="844.333"/>
 	<column name="id" not-null="true" sequence="public.promotion_types_seq">
 		<type name="serial"/>
 	</column>
@@ -771,7 +805,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="currencies">
 	<schema name="public"/>
-	<position x="577.222" y="797.083"/>
+	<position x="1937.05" y="1309.06"/>
 	<column name="id" not-null="true" sequence="public.currencies_seq">
 		<type name="serial"/>
 	</column>
@@ -804,9 +838,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
+<sequence name="product_images_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
 <table name="product_images">
 	<schema name="public"/>
-	<position x="817.5" y="376.25"/>
+	<position x="2336.38" y="1095.94"/>
 	<column name="id" not-null="true" sequence="public.product_images_seq">
 		<type name="serial"/>
 	</column>
@@ -823,9 +864,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="varchar" length="256"/>
 	</column>
 	<column name="caption">
-		<type name="text"/>
+		<type name="varchar" length="512"/>
 	</column>
 	<column name="approved" not-null="true">
+		<type name="boolean"/>
+	</column>
+	<column name="enabled" not-null="true">
 		<type name="boolean"/>
 	</column>
 	<column name="created" not-null="true">
@@ -846,13 +890,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<sequence name="product_images_seq"
-	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
-	 cache="1" cycle="false">
-	<schema name="public"/>
-</sequence>
-
 <sequence name="product_image_types_seq"
 	 start="1" increment="1"
 	 min-value="0" max-value="2147483647"
@@ -862,7 +899,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="product_image_types">
 	<schema name="public"/>
-	<position x="1316.25" y="401.25"/>
+	<position x="2385.92" y="1400.31"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -884,6 +921,137 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	deferrable="true" defer-type="INITIALLY DEFERRED"
  factor="100" table="public.product_image_types">
 		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="communications">
+	<schema name="public"/>
+	<position x="473.869" y="1588.09"/>
+	<column name="id" not-null="true" sequence="public.communications_seq">
+		<type name="serial"/>
+	</column>
+	<column name="mailing_list_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="content" not-null="true">
+		<type name="text"/>
+	</column>
+	<column name="distribution_cost" not-null="true">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="communications_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.communications">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="mailing_list_types_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="mailing_list_types">
+	<schema name="public"/>
+	<position x="222.333" y="1593"/>
+	<column name="id" not-null="true" sequence="public.mailing_list_types_seq">
+		<type name="serial"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="16"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="mailing_list_types_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.mailing_list_types">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="mailing_list_types_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.mailing_list_types">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="mailing_lists_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="mailing_lists">
+	<schema name="public"/>
+	<position x="325.103" y="1383.56"/>
+	<column name="id" not-null="true" sequence="public.mailing_lists_seq">
+		<type name="serial"/>
+	</column>
+	<column name="mailing_list_type_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="mailing_lists_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.mailing_lists">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="mailing_lists_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.mailing_lists">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="customers_mailing_lists_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="customers_mailing_lists">
+	<schema name="public"/>
+	<position x="351.857" y="1132.31"/>
+	<column name="id" not-null="true" sequence="public.customers_mailing_lists_seq">
+		<type name="serial"/>
+	</column>
+	<column name="customer_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="mailing_list_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<constraint name="customers_mailing_lists_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.customers_mailing_lists">
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -1046,6 +1214,34 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="customer_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
+<constraint name="communications_mailing_lists_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.mailing_lists"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.communications">
+	<columns names="mailing_list_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="mailing_lists_mailing_list_types_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.mailing_list_types"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.mailing_lists">
+	<columns names="mailing_list_type_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="customers_mailing_lists_customers" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.customers"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.customers_mailing_lists">
+	<columns names="customer_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="customers_mailing_lists_mailing_lists_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.mailing_lists"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.customers_mailing_lists">
+	<columns names="mailing_list_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
 <relationship name="rel_products_trademark_licenses" type="relfk"
 	 src-table="public.products"
 	 dst-table="public.trademark_licenses"
@@ -1106,20 +1302,30 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.countries"
 	 src-required="true" dst-required="true"/>
 
+<relationship name="rel_trademark_licenses_trademark_license_types" type="relfk"
+	 src-table="public.trademark_licenses"
+	 dst-table="public.trademark_license_types"
+	 src-required="true" dst-required="true"/>
+
 <relationship name="rel_categories_categories" type="relfk"
 	 src-table="public.categories"
 	 dst-table="public.categories"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="2156.69" y="223.982"/>
-	<position x="2156.69" y="162.222"/>
-	<position x="2047.79" y="162.222"/>
+		<position x="3697.03" y="390.982"/>
+	<position x="3697.03" y="329.222"/>
+	<position x="3588.13" y="329.222"/>
 	</line>
 </relationship>
 
 <relationship name="rel_categories_promotions" type="relfk"
 	 src-table="public.categories"
 	 dst-table="public.promotions"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_promotions_promotion_types" type="relfk"
+	 src-table="public.promotions"
+	 dst-table="public.promotion_types"
 	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_categories_products_products" type="relfk"
@@ -1142,16 +1348,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.products"
 	 src-required="true" dst-required="true"/>
 
-<relationship name="rel_promotions_promotion_types" type="relfk"
-	 src-table="public.promotions"
-	 dst-table="public.promotion_types"
-	 src-required="true" dst-required="true"/>
-
-<relationship name="rel_trademark_licenses_trademark_license_types" type="relfk"
-	 src-table="public.trademark_licenses"
-	 dst-table="public.trademark_license_types"
-	 src-required="true" dst-required="true"/>
-
 <relationship name="rel_product_images_products" type="relfk"
 	 src-table="public.product_images"
 	 dst-table="public.products"
@@ -1165,6 +1361,26 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_product_images_customers" type="relfk"
 	 src-table="public.product_images"
 	 dst-table="public.customers"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_customers_mailing_lists_customers" type="relfk"
+	 src-table="public.customers_mailing_lists"
+	 dst-table="public.customers"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_customers_mailing_lists_mailing_lists" type="relfk"
+	 src-table="public.customers_mailing_lists"
+	 dst-table="public.mailing_lists"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_communications_mailing_lists" type="relfk"
+	 src-table="public.communications"
+	 dst-table="public.mailing_lists"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_mailing_lists_mailing_list_types" type="relfk"
+	 src-table="public.mailing_lists"
+	 dst-table="public.mailing_list_types"
 	 src-required="true" dst-required="true"/>
 
 </dbmodel>
