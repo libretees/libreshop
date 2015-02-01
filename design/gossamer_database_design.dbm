@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.7.2" last-position="149,72" last-zoom="1">
+<dbmodel pgmodeler-ver="0.7.2" last-position="0,0" last-zoom="0.9">
 <database name="gossamer">
 </database>
 
@@ -57,8 +57,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="trademark_license_id">
 		<type name="integer"/>
 	</column>
-	<column name="enabled" not-null="true">
-		<type name="boolean"/>
+	<column name="sku">
+		<type name="varchar" length="8"/>
 	</column>
 	<column name="name" not-null="true">
 		<type name="varchar" length="32"/>
@@ -72,8 +72,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="featured_product" not-null="true">
 		<type name="boolean"/>
 	</column>
-	<column name="sku">
-		<type name="varchar" length="8"/>
+	<column name="enabled" not-null="true">
+		<type name="boolean"/>
 	</column>
 	<column name="description_short">
 		<type name="varchar" length="128"/>
@@ -696,48 +696,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
  factor="100" table="public.countries">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
-</table>
-
-<table name="embargo_list">
-	<schema name="public"/>
-	<position x="912.857" y="597.143"/>
-	<column name="id" not-null="true">
-		<type name="interval"/>
-	</column>
-	<column name="type" not-null="true">
-		<type name="varchar" length="8"/>
-	</column>
-	<column name="name" not-null="true">
-		<type name="varchar" length="256"/>
-	</column>
-	<column name="location">
-		<type name="varchar" length="2048"/>
-	</column>
-	<column name="program">
-		<type name="varchar" length="32"/>
-	</column>
-	<column name="created" not-null="true">
-		<type name="timestamp"/>
-	</column>
-	<column name="updated" not-null="true">
-		<type name="timestamp"/>
-	</column>
-	<index name="sdn_list_name_idx" table="public.embargo_list"
-		 concurrent="false" unique="false" fast-update="false" buffering="false"
-		 index-type="btree" factor="0">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="name"/>
-			<collation name="pg_catalog.default"/>
-		</idxelement>
-	</index>
-	<index name="sdn_list_location_idx" table="public.embargo_list"
-		 concurrent="false" unique="false" fast-update="false" buffering="false"
-		 index-type="btree" factor="0">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="location"/>
-			<collation name="pg_catalog.default"/>
-		</idxelement>
-	</index>
 </table>
 
 <sequence name="sdns_seq"
