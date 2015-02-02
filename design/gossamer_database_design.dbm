@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.7.2" last-position="0,0" last-zoom="0.4">
+<dbmodel pgmodeler-ver="0.7.2" last-position="565,144" last-zoom="0.5">
 <database name="gossamer">
 </database>
 
@@ -118,7 +118,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="inventory">
 	<schema name="public"/>
-	<position x="2874.67" y="1118.92"/>
+	<position x="3348" y="1128.92"/>
 	<column name="id" not-null="true" sequence="public.inventory_seq">
 		<type name="serial"/>
 	</column>
@@ -155,7 +155,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="customers">
 	<schema name="public"/>
-	<position x="901.5" y="1142.67"/>
+	<position x="941.5" y="1386"/>
 	<column name="id" not-null="true" sequence="public.customers_seq">
 		<type name="serial"/>
 	</column>
@@ -188,7 +188,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="orders">
 	<schema name="public"/>
-	<position x="888.667" y="56.6667"/>
+	<position x="920.096" y="276.667"/>
 	<column name="id" not-null="true" sequence="public.orders_seq">
 		<type name="serial"/>
 	</column>
@@ -229,7 +229,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="invoices">
 	<schema name="public"/>
-	<position x="1153.33" y="631.333"/>
+	<position x="1206" y="910"/>
 	<column name="id" not-null="true" sequence="public.invoices_seq">
 		<type name="serial"/>
 	</column>
@@ -278,7 +278,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="shipments">
 	<schema name="public"/>
-	<position x="1472" y="652.666"/>
+	<position x="1498.67" y="925.999"/>
 	<column name="id" not-null="true" sequence="public.shipments_seq">
 		<type name="serial"/>
 	</column>
@@ -321,7 +321,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="purchases">
 	<schema name="public"/>
-	<position x="1945" y="308.333"/>
+	<position x="1518.33" y="585"/>
 	<column name="id" not-null="true">
 		<type name="serial"/>
 	</column>
@@ -368,7 +368,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="addresses">
 	<schema name="public"/>
-	<position x="884.413" y="1426.46"/>
+	<position x="931.08" y="1689.79"/>
 	<column name="id" not-null="true" sequence="public.addresses_seq">
 		<type name="integer"/>
 	</column>
@@ -412,7 +412,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="returns">
 	<schema name="public"/>
-	<position x="1799.33" y="640.166"/>
+	<position x="1802.66" y="916.833"/>
 	<column name="id" not-null="true" sequence="public.returns_seq">
 		<type name="serial"/>
 	</column>
@@ -468,7 +468,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="trademark_licenses">
 	<schema name="public"/>
-	<position x="3392.16" y="1096.5"/>
+	<position x="3428.83" y="319.833"/>
 	<column name="id" not-null="true" sequence="public.trademark_licenses_seq">
 		<type name="serial"/>
 	</column>
@@ -532,7 +532,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="categories">
 	<schema name="public"/>
-	<position x="3390.34" y="339.222"/>
+	<position x="2850.34" y="45.8886"/>
 	<column name="id" not-null="true" sequence="public.categories_seq">
 		<type name="serial"/>
 	</column>
@@ -580,7 +580,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="promotions">
 	<schema name="public"/>
-	<position x="2836.06" y="37.25"/>
+	<position x="1846.06" y="20.5833"/>
 	<column name="id" not-null="true" sequence="public.promotions_seq">
 		<type name="integer"/>
 	</column>
@@ -628,7 +628,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="categories_products">
 	<schema name="public"/>
-	<position x="3440.73" y="639.278"/>
+	<position x="2877.4" y="322.611"/>
 	<column name="id" not-null="true">
 		<type name="serial"/>
 	</column>
@@ -648,7 +648,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="carts">
 	<schema name="public"/>
-	<position x="1789.94" y="913.381"/>
+	<position x="2416.61" y="1136.71"/>
 	<column name="id" not-null="true">
 		<type name="serial"/>
 	</column>
@@ -690,7 +690,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="countries">
 	<schema name="public"/>
-	<position x="1336.67" y="1446.67"/>
+	<position x="486.67" y="1703.34"/>
 	<column name="id" not-null="true" sequence="public.countries_seq">
 		<type name="serial"/>
 	</column>
@@ -742,7 +742,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="promotion_types">
 	<schema name="public"/>
-	<position x="3437.77" y="97.1112"/>
+	<position x="1890" y="340"/>
 	<column name="id" not-null="true" sequence="public.promotion_types_seq">
 		<type name="serial"/>
 	</column>
@@ -771,7 +771,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="trademark_license_types">
 	<schema name="public"/>
-	<position x="3447.23" y="844.333"/>
+	<position x="3483.9" y="50.9995"/>
 	<column name="id" not-null="true" sequence="public.promotion_types_seq">
 		<type name="serial"/>
 	</column>
@@ -805,7 +805,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="currencies">
 	<schema name="public"/>
-	<position x="1937.05" y="1309.06"/>
+	<position x="3800.38" y="932.393"/>
 	<column name="id" not-null="true" sequence="public.currencies_seq">
 		<type name="serial"/>
 	</column>
@@ -847,7 +847,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="product_images">
 	<schema name="public"/>
-	<position x="2336.38" y="1095.94"/>
+	<position x="2843.05" y="1369.27"/>
 	<column name="id" not-null="true" sequence="public.product_images_seq">
 		<type name="serial"/>
 	</column>
@@ -899,7 +899,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="product_image_types">
 	<schema name="public"/>
-	<position x="2385.92" y="1400.31"/>
+	<position x="2882.59" y="1676.98"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -926,11 +926,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="communications">
 	<schema name="public"/>
-	<position x="473.869" y="1588.09"/>
+	<position x="489.583" y="66.6613"/>
 	<column name="id" not-null="true" sequence="public.communications_seq">
 		<type name="serial"/>
 	</column>
 	<column name="mailing_list_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="promotion_id">
 		<type name="integer"/>
 	</column>
 	<column name="content" not-null="true">
@@ -961,7 +964,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="mailing_list_types">
 	<schema name="public"/>
-	<position x="222.333" y="1593"/>
+	<position x="37.571" y="623.952"/>
 	<column name="id" not-null="true" sequence="public.mailing_list_types_seq">
 		<type name="serial"/>
 	</column>
@@ -995,7 +998,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="mailing_lists">
 	<schema name="public"/>
-	<position x="325.103" y="1383.56"/>
+	<position x="473.198" y="614.989"/>
 	<column name="id" not-null="true" sequence="public.mailing_lists_seq">
 		<type name="serial"/>
 	</column>
@@ -1032,7 +1035,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="customers_mailing_lists">
 	<schema name="public"/>
-	<position x="351.857" y="1132.31"/>
+	<position x="495.667" y="1041.36"/>
 	<column name="id" not-null="true" sequence="public.customers_mailing_lists_seq">
 		<type name="serial"/>
 	</column>
@@ -1221,6 +1224,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="mailing_list_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
+<constraint name="communications_promotions_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.promotions"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.communications">
+	<columns names="promotion_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
 <constraint name="mailing_lists_mailing_list_types_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.mailing_list_types"
 	deferrable="true" defer-type="INITIALLY DEFERRED"
@@ -1312,9 +1322,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.categories"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="3697.03" y="390.982"/>
-	<position x="3697.03" y="329.222"/>
-	<position x="3588.13" y="329.222"/>
+		<position x="3157.03" y="97.6486"/>
+	<position x="3157.03" y="35.8886"/>
+	<position x="3048.13" y="35.8886"/>
 	</line>
 </relationship>
 
@@ -1381,6 +1391,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_mailing_lists_mailing_list_types" type="relfk"
 	 src-table="public.mailing_lists"
 	 dst-table="public.mailing_list_types"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_communications_promotions" type="relfk"
+	 src-table="public.communications"
+	 dst-table="public.promotions"
 	 src-required="true" dst-required="true"/>
 
 </dbmodel>
