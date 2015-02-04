@@ -1,3 +1,23 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
+from jsonfield import JSONField
+
+class Product(models.Model):
+    sku = models.CharField(max_length=8
+                          ,blank=True
+                          ,unique=True)
+    name = models.CharField(max_length=32
+                           ,blank=False
+                           ,unique=True)
+    slug = models.SlugField(max_length=32
+                           ,blank=True
+                           ,unique=True
+                           ,db_index=True)
+    teaser = models.CharField(max_length=128
+                             ,blank=True
+                             ,unique=False) 
+    description = models.TextField()
+    attributes = JSONField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
