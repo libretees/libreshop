@@ -21,3 +21,12 @@ class Product(models.Model):
     attributes = JSONField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+
+class Cart(models.Model):
+    customer = models.ForeignKey(User)
+    product = models.ForeignKey('Product'
+                               ,null=False)
+    product = JSONField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
