@@ -15,8 +15,7 @@ class Product(models.Model):
                            ,unique=True
                            ,db_index=True)
     teaser = models.CharField(max_length=128
-                             ,blank=True
-                             ,unique=False) 
+                             ,blank=True) 
     description = models.TextField()
     attributes = JSONField()
     created = models.DateTimeField(auto_now_add=True)
@@ -27,6 +26,6 @@ class Cart(models.Model):
     customer = models.ForeignKey(User)
     product = models.ForeignKey('Product'
                                ,null=False)
-    product = JSONField()
+    saved_product = JSONField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
