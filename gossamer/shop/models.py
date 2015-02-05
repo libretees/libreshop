@@ -6,16 +6,18 @@ User = settings.AUTH_USER_MODEL
 
 class Product(models.Model):
     sku = models.CharField(max_length=8
+                          ,null=True
                           ,blank=True
                           ,unique=True)
     name = models.CharField(max_length=32
-                           ,blank=False
-                           ,unique=True)
+                           ,null=False
+                           ,blank=False)
     slug = models.SlugField(max_length=32
+                           ,null=True
                            ,blank=True
-                           ,unique=True
                            ,db_index=True)
     teaser = models.CharField(max_length=128
+                             ,null=True
                              ,blank=True) 
     description = models.TextField(null=True
                                   ,blank=True)
@@ -40,8 +42,8 @@ class Cart(models.Model):
 
 
 class Customer(models.Model):
-    user = models.OneToOneField(User)
-    #other fields here
+    user = models.OneToOneField(User
+                               ,primary_key=True)
     selected_products = models.ManyToManyField(Product, through='Cart', through_fields=('customer', 'product'))
 
     def __str__(self):
