@@ -1,5 +1,5 @@
+from django.conf import settings
 from django.db import models
-from django.contrib.auth.models import User
 
 from jsonfield import JSONField
 
@@ -26,9 +26,20 @@ class Product(models.Model):
 
 
 class Cart(models.Model):
-    customer = models.ForeignKey(User)
+    customer = models.ForeignKey('Customer'
+                                ,null=False)
     product = models.ForeignKey('Product'
                                ,null=False)
     saved_product = JSONField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+
+class Customer(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    #other fields here
+    selected_products = models.ManyToManyField(Product, through='Cart', through_fields=('customer', 'product'))
+
+    def __str__(self):
+          return "%s's profile" % self.user
+
