@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 
 from jsonfield import JSONField
+User = settings.AUTH_USER_MODEL
 
 class Product(models.Model):
     sku = models.CharField(max_length=8
@@ -16,8 +17,10 @@ class Product(models.Model):
                            ,db_index=True)
     teaser = models.CharField(max_length=128
                              ,blank=True) 
-    description = models.TextField()
-    attributes = JSONField()
+    description = models.TextField(null=True
+                                  ,blank=True)
+    attributes = JSONField(null=True
+                          ,blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     
@@ -30,13 +33,14 @@ class Cart(models.Model):
                                 ,null=False)
     product = models.ForeignKey('Product'
                                ,null=False)
-    saved_product = JSONField()
+    saved_product = JSONField(null=True
+                             ,blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
 
 class Customer(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    user = models.OneToOneField(User)
     #other fields here
     selected_products = models.ManyToManyField(Product, through='Cart', through_fields=('customer', 'product'))
 
