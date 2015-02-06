@@ -81,3 +81,20 @@ class Address(models.Model):
 
     class Meta():
         verbose_name_plural = 'addresses'
+        
+        
+class Order(models.Model):
+    customer = models.ForeignKey('Customer'
+                                ,null=False)
+    shipping_address = models.CharField(max_length=1024
+                                       ,null=True
+                                       ,blank=True)
+    billing_addresss = models.CharField(max_length=1024
+                                       ,null=True
+                                       ,blank=True) 
+    payment_card = models.CharField(max_length=4
+                                   ,null=True
+                                   ,blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
