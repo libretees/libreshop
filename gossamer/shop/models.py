@@ -98,3 +98,15 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+
+class Purchase(models.Model):
+    order = models.ForeignKey('Order'
+                             ,null=False)
+    product = models.ForeignKey('Product'
+                               ,null=False)
+    saved_product = JSONField(null=True
+                             ,blank=True)
+    gift_amount = models.DecimalField(max_digits=8
+                                     ,decimal_places=2)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
