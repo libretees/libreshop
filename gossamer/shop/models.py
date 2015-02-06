@@ -1,17 +1,18 @@
-from django.conf import settings
 from django.db import models
-
+from django.db.models.signals import post_save
+from django.conf import settings
 from jsonfield import JSONField
+
 User = settings.AUTH_USER_MODEL
 
 class Product(models.Model):
     sku = models.CharField(max_length=8
                           ,null=True
-                          ,blank=True
-                          ,unique=True)
+                          ,blank=True)
     name = models.CharField(max_length=32
                            ,null=False
-                           ,blank=False)
+                           ,blank=False
+                           ,unique=True)
     slug = models.SlugField(max_length=32
                            ,null=True
                            ,blank=True
@@ -42,10 +43,19 @@ class Cart(models.Model):
 
 
 class Customer(models.Model):
-    user = models.OneToOneField(User
-                               ,primary_key=True)
+    id = models.OneToOneField(User
+                             ,primary_key=True)
     selected_products = models.ManyToManyField(Product, through='Cart', through_fields=('customer', 'product'))
 
     def __str__(self):
-          return "%s's profile" % self.user
+          return "%s's profile" % self.id
 
+
+def create_customer(sender, **kw):
+    user = kw['instance']
+    if kw['created']:
+        customer = Customer(id=user)
+        customer.save()
+
+
+post_save.connect(create_customer, sender=User)

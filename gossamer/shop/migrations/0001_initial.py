@@ -9,15 +9,15 @@ import jsonfield.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('auth', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
             name='Cart',
             fields=[
-                ('id', models.AutoField(primary_key=True, verbose_name='ID', auto_created=True, serialize=False)),
-                ('saved_product', jsonfield.fields.JSONField()),
+                ('id', models.AutoField(verbose_name='ID', auto_created=True, serialize=False, primary_key=True)),
+                ('saved_product', jsonfield.fields.JSONField(null=True, blank=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
             ],
@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Customer',
             fields=[
-                ('id', models.AutoField(primary_key=True, verbose_name='ID', auto_created=True, serialize=False)),
+                ('id', models.OneToOneField(to=settings.AUTH_USER_MODEL, serialize=False, primary_key=True)),
             ],
             options={
             },
@@ -37,13 +37,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Product',
             fields=[
-                ('id', models.AutoField(primary_key=True, verbose_name='ID', auto_created=True, serialize=False)),
-                ('sku', models.CharField(max_length=8, unique=True, blank=True)),
+                ('id', models.AutoField(verbose_name='ID', auto_created=True, serialize=False, primary_key=True)),
+                ('sku', models.CharField(max_length=8, null=True, blank=True)),
                 ('name', models.CharField(max_length=32, unique=True)),
-                ('slug', models.SlugField(max_length=32, unique=True, blank=True)),
-                ('teaser', models.CharField(max_length=128, blank=True)),
-                ('description', models.TextField()),
-                ('attributes', jsonfield.fields.JSONField()),
+                ('slug', models.SlugField(max_length=32, null=True, blank=True)),
+                ('teaser', models.CharField(max_length=128, null=True, blank=True)),
+                ('description', models.TextField(null=True, blank=True)),
+                ('attributes', jsonfield.fields.JSONField(null=True, blank=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
             ],
@@ -54,13 +54,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='customer',
             name='selected_products',
-            field=models.ManyToManyField(to='shop.Product', through='shop.Cart'),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='customer',
-            name='user',
-            field=models.OneToOneField(to=settings.AUTH_USER_MODEL),
+            field=models.ManyToManyField(through='shop.Cart', to='shop.Product'),
             preserve_default=True,
         ),
         migrations.AddField(
