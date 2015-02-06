@@ -59,3 +59,25 @@ def create_customer(sender, **kw):
 
 
 post_save.connect(create_customer, sender=User)
+
+
+class Address(models.Model):
+    customer = models.ForeignKey('Customer'
+                                ,null=False)   
+    name = models.CharField(max_length=64
+                           ,null=True
+                           ,blank=True)
+    location = models.CharField(max_length=1024
+                               ,null=True
+                               ,blank=True)
+    state = models.CharField(max_length=16
+                            ,null=True
+                            ,blank=True)
+    postal_code = models.CharField(max_length=16
+                                  ,null=True
+                                  ,blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta():
+        verbose_name_plural = 'addresses'
