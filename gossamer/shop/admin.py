@@ -37,7 +37,6 @@ class CustomerChangeForm(UserChangeForm):
                 if product not in [customer_cart.product for customer_cart in Cart.objects.filter(customer__pk=self.instance.pk)]:
                     # add newly-selected products
                     customer = Customer.objects.get(pk=instance.pk)
-                    print('here!!!!', customer)
                     Cart.objects.create(customer=customer, product=product)
         return instance
 
