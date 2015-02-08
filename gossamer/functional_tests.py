@@ -1,5 +1,7 @@
 import unittest
 import os
+import string
+import random
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions
@@ -59,11 +61,34 @@ class AdminUserTest(unittest.TestCase):
         inputbox.send_keys(ADMIN_USER)
         inputbox = self.browser.find_element_by_id('id_password')
         inputbox.send_keys(ADMIN_PASSWORD)
+        submit_button = self.browser.find_element_by_xpath("//input[@type='submit']")
+        submit_button.click()
+        self.assertIn('Site administration | Django site admin', self.browser.title)
+
+    def test_can_add_product(self):
+        self.browser.get('http://localhost:8000/admin')
+        self.assertIn('Log in | Django site admin', self.browser.title)
+        inputbox = self.browser.find_element_by_id('id_username')
+        inputbox.send_keys(ADMIN_USER)
+        inputbox = self.browser.find_element_by_id('id_password')
+        inputbox.send_keys(ADMIN_PASSWORD)
         button = self.browser.find_element_by_xpath("//input[@type='submit']")
         button.submit()
         self.assertIn('Site administration | Django site admin', self.browser.title)
+        link = self.browser.find_element_by_link_text('Products')
+        link.click()
+        self.assertIn('Select product to change | Django site admin', self.browser.title)
+        link = self.browser.find_element_by_link_text('Add product')
+        link.click()
+        self.assertIn('Add product | Django site admin', self.browser.title)
+        inputbox = self.browser.find_element_by_id('id_name')
+        inputbox.send_keys(''.join(random.choice(string.ascii_uppercase) for i in range(64)))
+        submit_button = self.browser.find_element_by_xpath("//input[@class='default']")
+        submit_button.click()
         self.browser.save_screenshot('screenshot.png')
+        self.assertIn('Select product to change | Django site admin', self.browser.title)
 
+        self.fail('Finish the test!')
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
