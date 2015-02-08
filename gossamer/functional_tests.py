@@ -42,7 +42,7 @@ class AdminUserTest(unittest.TestCase):
             self.display = Display(visible=0, size=(800, 600))
             self.display.start()
         self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)
+        self.browser.implicitly_wait(1)
 
     def tearDown(self):
         self.browser.quit()
@@ -65,6 +65,36 @@ class AdminUserTest(unittest.TestCase):
         submit_button.click()
         self.assertIn('Site administration | Django site admin', self.browser.title)
 
+    def test_can_add_user(self):
+        self.browser.get('http://localhost:8000/admin')
+        self.assertIn('Log in | Django site admin', self.browser.title)
+        inputbox = self.browser.find_element_by_id('id_username')
+        inputbox.send_keys(ADMIN_USER)
+        inputbox = self.browser.find_element_by_id('id_password')
+        inputbox.send_keys(ADMIN_PASSWORD)
+        button = self.browser.find_element_by_xpath("//input[@type='submit']")
+        button.submit()
+        self.assertIn('Site administration | Django site admin', self.browser.title)
+        link = self.browser.find_element_by_link_text('Users')
+        link.click()
+        self.assertIn('Select user to change | Django site admin', self.browser.title)
+        link = self.browser.find_element_by_link_text('Add user')
+        link.click()
+        inputbox = self.browser.find_element_by_id('id_username')
+        inputbox.send_keys(''.join(random.choice(string.ascii_uppercase) for i in range(30)))
+        random_password = ''.join(random.choice(string.ascii_letters+string.digits) for i in range(8))
+        inputbox = self.browser.find_element_by_id('id_password1')
+        inputbox.send_keys(random_password)
+        inputbox = self.browser.find_element_by_id('id_password2')
+        inputbox.send_keys(random_password)
+        submit_button = self.browser.find_element_by_xpath("//input[@class='default']")
+        submit_button.click()
+        self.assertIn('Change user | Django site admin', self.browser.title)
+        submit_button = self.browser.find_element_by_xpath("//input[@class='default']")
+        submit_button.click()
+        self.assertIn('Select user to change | Django site admin', self.browser.title)
+        self.browser.save_screenshot('screenshot.png')
+
     def test_can_add_product(self):
         self.browser.get('http://localhost:8000/admin')
         self.assertIn('Log in | Django site admin', self.browser.title)
@@ -85,10 +115,7 @@ class AdminUserTest(unittest.TestCase):
         inputbox.send_keys(''.join(random.choice(string.ascii_uppercase) for i in range(64)))
         submit_button = self.browser.find_element_by_xpath("//input[@class='default']")
         submit_button.click()
-        self.browser.save_screenshot('screenshot.png')
         self.assertIn('Select product to change | Django site admin', self.browser.title)
-
-        self.fail('Finish the test!')
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
