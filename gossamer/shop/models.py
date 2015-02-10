@@ -46,7 +46,7 @@ class Customer(TimeStampedModel):
     selected_products = models.ManyToManyField(Product, through='Cart', through_fields=('customer', 'product'))
 
     def __str__(self):
-          return "%s's profile" % self.id
+          return "%s's profile" % self.user
 
 
 def create_customer(sender, **kw):
