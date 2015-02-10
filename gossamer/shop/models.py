@@ -15,6 +15,9 @@ class Product(TimeStampedModel):
                            ,null=False
                            ,blank=False
                            ,unique=True)
+    featured = models.BooleanField(null=False
+                                  ,blank=False
+                                  ,default=False)
     slug = models.SlugField(max_length=32
                            ,null=True
                            ,blank=True
