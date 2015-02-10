@@ -20,7 +20,7 @@ class CustomerChangeForm(UserChangeForm):
         super(CustomerChangeForm, self).__init__(*args, **kwargs)
         
         if self.instance.pk:
-            self.initial['selected_products'] = [customer_cart.product for customer_cart in Cart.objects.filter(customer__pk=self.instance.pk)]
+            self.initial['selected_products'] = [customer_cart.product for customer_cart in Cart.objects.filter(customer__user=self.instance.pk)]
             self.fields['selected_products'].widget = admin.widgets.RelatedFieldWidgetWrapper(self.fields['selected_products'].widget
                                                                                              ,ManyToManyRel(Product)
                                                                                              ,admin.site)
@@ -29,16 +29,16 @@ class CustomerChangeForm(UserChangeForm):
         instance = super(CustomerChangeForm, self).save(*args, **kwargs)
 
         if instance.pk:
-            for selected_product in [customer_cart.product for customer_cart in Cart.objects.filter(customer__pk=self.instance.pk)]:
+            for selected_product in [customer_cart.product for customer_cart in Cart.objects.filter(customer__user=self.instance.pk)]:
                 if selected_product not in self.cleaned_data['selected_products']:
                     # remove a product that has been unselected
                     customer = Customer.objects.get(pk=instance.pk)
                     Cart.objects.filter(customer__pk=customer.pk, product__pk=selected_product.pk)[0].delete()
                     
             for product in self.cleaned_data['selected_products']:
-                if product not in [customer_cart.product for customer_cart in Cart.objects.filter(customer__pk=self.instance.pk)]:
+                if product not in [customer_cart.product for customer_cart in Cart.objects.filter(customer__user=self.instance.pk)]:
                     # add newly-selected products
-                    customer = Customer.objects.get(pk=instance.pk)
+                    customer = Customer.objects.get(user=instance.pk)
                     saved_product = serializers.serialize('json', [product], fields=('name', 'attributes'))
                     Cart.objects.create(customer=customer, product=product, saved_product=saved_product)
         return instance
