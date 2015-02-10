@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from .models import Product, Address, Order, Purchase
+from .models import Product, Address, Order, Purchase, Category
 from .forms import CustomerAdmin
 
 # Register your models here.
+admin.site.register(Category)
 admin.site.register(Product)
 admin.site.register(Address)
 admin.site.register(Order)

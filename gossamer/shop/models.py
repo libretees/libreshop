@@ -102,3 +102,26 @@ class Purchase(TimeStampedModel):
                              ,blank=True)
     gift_amount = models.DecimalField(max_digits=8
                                      ,decimal_places=2)
+
+
+class Category(TimeStampedModel):
+    parent_category = models.ForeignKey('self'
+                                       ,null=True
+                                       ,blank=True)
+    name = models.CharField(max_length=32
+                           ,null=False
+                           ,blank=False
+                           ,unique=True)
+    slug = models.SlugField(max_length=32
+                           ,null=True
+                           ,blank=True
+                           ,db_index=True)
+    products = models.ManyToManyField(Product
+                                     ,null=True
+                                     ,blank=True)
+
+    def __str__(self):
+          return self.name
+
+    class Meta():
+        verbose_name_plural = 'categories'
