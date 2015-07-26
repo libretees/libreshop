@@ -40,9 +40,11 @@ DEFAULT_APPS = (
 )
 
 THIRD_PARTY_APPS = (
+    'django_behave',
 )
 
 LOCAL_APPS = (
+    'bdd_tests',
 )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -108,3 +110,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Custom Test Runner
+TEST_RUNNER = 'django_behave.runner.DjangoBehaveTestSuiteRunner'
