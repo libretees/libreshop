@@ -45,6 +45,7 @@ THIRD_PARTY_APPS = (
 
 LOCAL_APPS = (
     'bdd_tests',
+    'storefront',
 )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -113,3 +114,11 @@ STATIC_URL = '/static/'
 
 # Custom Test Runner
 TEST_RUNNER = 'django_behave.runner.DjangoBehaveTestSuiteRunner'
+
+# Cloud9 Environment variables
+IP = os.environ.get('IP')
+PORT = os.environ.get('PORT')
+
+# Determine the Django Live Test Server address.
+if (IP and PORT) and not os.environ.get('DJANGO_LIVE_TEST_SERVER_ADDRESS'):
+    os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'] = '%s:%s' % (IP, PORT)
