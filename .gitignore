@@ -1,5 +1,6 @@
 # Project-specific files
 *.sqlite3
+browser.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
