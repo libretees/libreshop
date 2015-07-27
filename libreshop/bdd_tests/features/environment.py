@@ -7,6 +7,8 @@ except ImportError:
 
 HEADLESS_TEST = 'Display' in globals().keys()
 
+os.environ['DJANGO_SETTINGS_MODULE'] = 'libreshop.settings'
+
 
 def before_all(context):
     if HEADLESS_TEST:
@@ -19,7 +21,7 @@ def before_all(context):
     context.browser.implicitly_wait(3)
 
     # Store Live Server URL.
-    context.server_url = 'http://%s' % os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS']
+    context.server_url = 'http://%s' % os.environ.get('DJANGO_LIVE_TEST_SERVER_ADDRESS', 'localhost:8081')
 
 
 def after_all(context):
