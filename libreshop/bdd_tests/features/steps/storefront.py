@@ -1,5 +1,5 @@
 from behave import when, given, then
-
+from custom.django import DjangoStep
 
 @given('I am a new user')
 def impl(context):
@@ -12,7 +12,8 @@ def impl(context):
 
 
 @then('I will see the text "{text}"')
-def impl(context, text):
-    page_text = context.browser.find_element_by_tag_name('body').text
-    print(text, page_text)
-    assert text in page_text
+class impl(DjangoStep):
+    def impl(self, context, text):
+        page_text = context.browser.find_element_by_tag_name('body').text
+        self.assertIn(text, page_text)
+    __code__= impl.__code__
