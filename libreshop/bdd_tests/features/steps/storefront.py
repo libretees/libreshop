@@ -1,7 +1,13 @@
 from behave import when, given, then
 from custom.django import DjangoStep
 
+
 @given('I am a new user')
+def impl(context):
+    pass
+
+
+@given('I am an authenticated user')
 def impl(context):
     pass
 
