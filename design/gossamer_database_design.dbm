@@ -1,0 +1,1655 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.7.2" last-position="0,0" last-zoom="0.55">
+<database name="gossamer">
+</database>
+
+<schema name="public" protected="true" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<sequence name="products_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="inventory_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="customers_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="orders_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="transactions_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="products">
+	<schema name="public"/>
+	<position x="3189" y="604.111"/>
+	<column name="id" not-null="true" sequence="public.products_seq">
+		<type name="serial"/>
+	</column>
+	<column name="project_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="promotion_id">
+		<type name="integer"/>
+	</column>
+	<column name="trademark_license_id">
+		<type name="integer"/>
+	</column>
+	<column name="sku">
+		<type name="varchar" length="8"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="slug">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="teaser">
+		<type name="varchar" length="128"/>
+	</column>
+	<column name="description">
+		<type name="text" length="4096"/>
+	</column>
+	<column name="attributes" not-null="true">
+		<type name="text"/>
+	</column>
+	<column name="featured" not-null="true">
+		<type name="boolean"/>
+	</column>
+	<column name="enabled" not-null="true">
+		<type name="boolean"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="products_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.products">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="products_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.products">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="products_sku_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.products">
+		<columns names="sku" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="products_slug_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.products">
+		<columns names="slug" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="invoices_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="inventory">
+	<schema name="public"/>
+	<position x="3970.5" y="614.42"/>
+	<column name="id" not-null="true" sequence="public.inventory_seq">
+		<type name="serial"/>
+	</column>
+	<column name="product_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="attributes" not-null="true">
+		<type name="text"/>
+	</column>
+	<column name="quantity" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="cost">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="date_added" not-null="true">
+		<type name="date"/>
+	</column>
+	<column name="date_exhausted">
+		<type name="date"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="inventory_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.inventory">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="customers">
+	<schema name="public"/>
+	<position x="1025.42" y="1712.17"/>
+	<column name="id" not-null="true" sequence="public.customers_seq">
+		<type name="serial"/>
+	</column>
+	<column name="username" not-null="true">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="salt" not-null="true">
+		<type name="varchar" length="16"/>
+	</column>
+	<column name="password" not-null="true">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="customers_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.customers">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="customers_username_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.customers">
+		<columns names="username" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="orders">
+	<schema name="public"/>
+	<position x="1006.73" y="611.429"/>
+	<column name="id" not-null="true" sequence="public.orders_seq">
+		<type name="serial"/>
+	</column>
+	<column name="customer_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="promotion_id">
+		<type name="integer"/>
+	</column>
+	<column name="shipping_address" not-null="true">
+		<type name="text" length="4096"/>
+	</column>
+	<column name="billing_address" not-null="true">
+		<type name="text" length="4096"/>
+	</column>
+	<column name="payment_card">
+		<type name="varchar" length="4"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="orders_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.orders">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="communications_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="invoices">
+	<schema name="public"/>
+	<position x="1489.54" y="945.095"/>
+	<column name="id" not-null="true" sequence="public.invoices_seq">
+		<type name="serial"/>
+	</column>
+	<column name="subtotal" not-null="true">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="discount">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="tax_collected" not-null="true">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="shipping_price" not-null="true">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="total" not-null="true">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="pdf_copy" not-null="true">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="invoices_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.invoices">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="invoices_pdf_copy_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.invoices">
+		<columns names="pdf_copy" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="shipments_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="shipments">
+	<schema name="public"/>
+	<position x="1762.2" y="961.734"/>
+	<column name="id" not-null="true" sequence="public.shipments_seq">
+		<type name="serial"/>
+	</column>
+	<column name="carrier">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="tracking_number">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="shipping_cost" not-null="true">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="label">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="constraints_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.shipments">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="shipments_label_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.shipments">
+		<columns names="label" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="colors_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="purchases">
+	<schema name="public"/>
+	<position x="1911.22" y="587.163"/>
+	<column name="id" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="order_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="product_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="invoice_id">
+		<type name="integer"/>
+	</column>
+	<column name="shipment_id">
+		<type name="integer"/>
+	</column>
+	<column name="return_id">
+		<type name="integer"/>
+	</column>
+	<column name="donation_id">
+		<type name="integer"/>
+	</column>
+	<column name="product" not-null="true">
+		<type name="text" length="64"/>
+	</column>
+	<column name="gift_amount">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="order_fullfillment_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.purchases">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="addresses_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="addresses">
+	<schema name="public"/>
+	<position x="1349.36" y="1372.18"/>
+	<column name="id" not-null="true" sequence="public.addresses_seq">
+		<type name="integer"/>
+	</column>
+	<column name="customer_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="country_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="name">
+		<type name="varchar" length="256"/>
+	</column>
+	<column name="location" not-null="true">
+		<type name="varchar" length="2048"/>
+	</column>
+	<column name="postal_code">
+		<type name="varchar" length="16"/>
+	</column>
+	<column name="state">
+		<type name="varchar" length="16"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="addresses_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.addresses">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="returns_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="returns">
+	<schema name="public"/>
+	<position x="2045.5" y="947.306"/>
+	<column name="id" not-null="true" sequence="public.returns_seq">
+		<type name="serial"/>
+	</column>
+	<column name="return_date" not-null="true">
+		<type name="date"/>
+	</column>
+	<column name="salable" not-null="true">
+		<type name="boolean"/>
+	</column>
+	<column name="return_reason">
+		<type name="varchar" length="512"/>
+	</column>
+	<column name="refund_amount">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="shipping_cost">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="label">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="returns_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.returns">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="returns_label_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.returns">
+		<columns names="label" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="trademark_licenses_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="customers_addresses_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="trademark_licenses">
+	<schema name="public"/>
+	<position x="3921.83" y="311.833"/>
+	<column name="id" not-null="true" sequence="public.trademark_licenses_seq">
+		<type name="serial"/>
+	</column>
+	<column name="trademark_license_type_id" not-null="true">
+		<type name="integer" length="16"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="effective_date" not-null="true">
+		<type name="date"/>
+	</column>
+	<column name="expiration_date">
+		<type name="date"/>
+	</column>
+	<column name="website">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="email_address">
+		<type name="varchar" length="128"/>
+	</column>
+	<column name="country">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="country_code">
+		<type name="varchar" length="8"/>
+	</column>
+	<column name="royalty">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="royalty_currency">
+		<type name="varchar" length="3"/>
+	</column>
+	<column name="royalty_percentage">
+		<type name="decimal" length="8" precision="7"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="trademark_licenses_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.trademark_licenses">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="trademark_licenses_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.trademark_licenses">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="categories_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="categories">
+	<schema name="public"/>
+	<position x="2557.45" y="279.666"/>
+	<column name="id" not-null="true" sequence="public.categories_seq">
+		<type name="serial"/>
+	</column>
+	<column name="parent_category_id">
+		<type name="integer"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="slug">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="promotion_id">
+		<type name="integer"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="categories_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.categories">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="categories_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.categories">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="categories_slug_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.categories">
+		<columns names="slug" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="promotions_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="promotions">
+	<schema name="public"/>
+	<position x="1880.08" y="247.085"/>
+	<column name="id" not-null="true" sequence="public.promotions_seq">
+		<type name="integer"/>
+	</column>
+	<column name="promotion_type_id" not-null="true">
+		<type name="integer" length="8"/>
+	</column>
+	<column name="code" not-null="true">
+		<type name="varchar" length="8"/>
+	</column>
+	<column name="uses_allowed">
+		<type name="integer"/>
+	</column>
+	<column name="discount">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="discount_currency" not-null="true">
+		<type name="varchar" length="3"/>
+	</column>
+	<column name="discount_percentage">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="date_active" not-null="true">
+		<type name="date"/>
+	</column>
+	<column name="date_inactive">
+		<type name="date"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="promotions_code_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.promotions">
+		<columns names="code" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="promotions_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.promotions">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="categories_products">
+	<schema name="public"/>
+	<position x="3217.4" y="278.611"/>
+	<column name="id" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="product_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="category_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+</table>
+
+<table name="carts">
+	<schema name="public"/>
+	<position x="3226.3" y="1467.08"/>
+	<column name="id" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="customer_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="product_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="product" not-null="true">
+		<type name="text"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="carts_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.carts">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="carts_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="countries_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="countries">
+	<schema name="public"/>
+	<position x="1794.45" y="1393.98"/>
+	<column name="id" not-null="true" sequence="public.countries_seq">
+		<type name="serial"/>
+	</column>
+	<column name="code" not-null="true">
+		<type name="varchar" length="8"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="embargoed" not-null="true">
+		<type name="boolean"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="countries_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.countries">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="countries_code_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.countries">
+		<columns names="code" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="countries_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.countries">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="sdns_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<sequence name="promotion_types_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="promotion_types">
+	<schema name="public"/>
+	<position x="1917.91" y="21.7516"/>
+	<column name="id" not-null="true" sequence="public.promotion_types_seq">
+		<type name="serial"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="promotion_types_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.promotion_types">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="trademark_license_types_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="trademark_license_types">
+	<schema name="public"/>
+	<position x="3979.4" y="60.4996"/>
+	<column name="id" not-null="true" sequence="public.promotion_types_seq">
+		<type name="serial"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="trademark_license_types_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.trademark_license_types">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="trademark_license_types_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.trademark_license_types">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="currencies_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="currencies">
+	<schema name="public"/>
+	<position x="3980.38" y="940.393"/>
+	<column name="id" not-null="true" sequence="public.currencies_seq">
+		<type name="serial"/>
+	</column>
+	<column name="code" not-null="true">
+		<type name="varchar" length="8"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="currencies_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.currencies">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="currencies_code_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.currencies">
+		<columns names="code" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="currencies_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.currencies">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="product_images_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="product_images">
+	<schema name="public"/>
+	<position x="3898.27" y="1662.68"/>
+	<column name="id" not-null="true" sequence="public.product_images_seq">
+		<type name="serial"/>
+	</column>
+	<column name="product_image_type_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="product_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="customer_id">
+		<type name="integer"/>
+	</column>
+	<column name="file" not-null="true">
+		<type name="varchar" length="256"/>
+	</column>
+	<column name="caption">
+		<type name="varchar" length="512"/>
+	</column>
+	<column name="approved" not-null="true">
+		<type name="boolean"/>
+	</column>
+	<column name="enabled" not-null="true">
+		<type name="boolean"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="product_images_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.product_images">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="product_images_file_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.product_images">
+		<columns names="file" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="product_image_types_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="product_image_types">
+	<schema name="public"/>
+	<position x="3960.66" y="1208.5"/>
+	<column name="id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="16"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="product_image_types_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.product_image_types">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="product_image_types_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.product_image_types">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="communications">
+	<schema name="public"/>
+	<position x="498.432" y="281.813"/>
+	<column name="id" not-null="true" sequence="public.communications_seq">
+		<type name="serial"/>
+	</column>
+	<column name="mailing_list_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="promotion_id">
+		<type name="integer"/>
+	</column>
+	<column name="content" not-null="true">
+		<type name="text"/>
+	</column>
+	<column name="distribution_cost" not-null="true">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="communications_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.communications">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="mailing_list_types_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="mailing_list_types">
+	<schema name="public"/>
+	<position x="23.0407" y="1338.18"/>
+	<column name="id" not-null="true" sequence="public.mailing_list_types_seq">
+		<type name="serial"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="16"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="mailing_list_types_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.mailing_list_types">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="mailing_list_types_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.mailing_list_types">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="mailing_lists_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="mailing_lists">
+	<schema name="public"/>
+	<position x="489.748" y="1331.96"/>
+	<column name="id" not-null="true" sequence="public.mailing_lists_seq">
+		<type name="serial"/>
+	</column>
+	<column name="mailing_list_type_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="mailing_lists_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.mailing_lists">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="mailing_lists_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.mailing_lists">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="customers_mailing_lists_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="customers_mailing_lists">
+	<schema name="public"/>
+	<position x="509.424" y="1720.04"/>
+	<column name="id" not-null="true" sequence="public.customers_mailing_lists_seq">
+		<type name="serial"/>
+	</column>
+	<column name="customer_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="mailing_list_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<constraint name="customers_mailing_lists_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.customers_mailing_lists">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="donations_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="donations">
+	<schema name="public"/>
+	<position x="2327.82" y="955.236"/>
+	<column name="id" not-null="true" sequence="public.donations_seq">
+		<type name="serial"/>
+	</column>
+	<column name="project_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="project" not-null="true">
+		<type name="text"/>
+	</column>
+	<column name="gift_amount" not-null="true">
+		<type name="decimal" length="8" precision="2"/>
+	</column>
+	<column name="date_sent" not-null="true">
+		<type name="date"/>
+	</column>
+	<column name="date_received">
+		<type name="date"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="donations_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.donations">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="entities_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="entities">
+	<schema name="public"/>
+	<position x="2206.71" y="1373"/>
+	<column name="id" not-null="true" sequence="public.entities_seq">
+		<type name="serial"/>
+	</column>
+	<column name="entity_type_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="country_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="location" not-null="true">
+		<type name="varchar" length="2048"/>
+	</column>
+	<column name="postal_code">
+		<type name="varchar" length="16"/>
+	</column>
+	<column name="state">
+		<type name="varchar" length="16"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="entities_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.entities">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="entities_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.entities">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="entity_types_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="entity_types">
+	<schema name="public"/>
+	<position x="2226.24" y="1159.15"/>
+	<column name="id" not-null="true" sequence="public.entity_types_seq">
+		<type name="serial"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="16"/>
+	</column>
+	<column name="non_profit" not-null="true">
+		<type name="boolean"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="entity_types_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.entity_types">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="entity_types_name_uq" type="uq-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.entity_types">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="projects_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="projects">
+	<schema name="public"/>
+	<position x="2735.52" y="1393.11"/>
+	<column name="id" not-null="true" sequence="public.projects_seq">
+		<type name="serial"/>
+	</column>
+	<column name="entity_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="url">
+		<type name="varchar" length="32"/>
+	</column>
+	<column name="created" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="updated" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="projects_pk" type="pk-constr"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ factor="100" table="public.projects">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<constraint name="products_trademark_licenses_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.trademark_licenses"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.products">
+	<columns names="trademark_license_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="products_promotions_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="NO ACTION" ref-table="public.promotions"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.products">
+	<columns names="promotion_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="products_projects_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.projects"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.products">
+	<columns names="project_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="inventory_products_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.products"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.inventory">
+	<columns names="product_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="orders_customers_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.customers"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.orders">
+	<columns names="customer_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="orders_promotions_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="NO ACTION" ref-table="public.promotions"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.orders">
+	<columns names="promotion_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="order_fulfillment_shipments_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.shipments"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.purchases">
+	<columns names="shipment_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="order_fulfillment_products_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.products"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.purchases">
+	<columns names="product_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="order_fulfillment_orders_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.orders"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.purchases">
+	<columns names="order_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="fulfillment_invoices_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.invoices" table="public.purchases">
+	<columns names="invoice_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="purchases_returns_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.returns"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.purchases">
+	<columns names="return_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="purchases_donations_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.donations" table="public.purchases">
+	<columns names="donation_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="addresses_customers_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.customers"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.addresses">
+	<columns names="customer_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="addresses_countries_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.countries"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.addresses">
+	<columns names="country_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="trademark_licenses_trademark_license_types_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.trademark_license_types"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.trademark_licenses">
+	<columns names="trademark_license_type_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="categories_categories_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.categories"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.categories">
+	<columns names="parent_category_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="categories_promotions_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.promotions"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.categories">
+	<columns names="promotion_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="promotions_promotion_types_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.promotion_types"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.promotions">
+	<columns names="promotion_type_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="products_categories_products_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="NO ACTION" ref-table="public.products"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.categories_products">
+	<columns names="product_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="products_categories_categories_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="NO ACTION" ref-table="public.categories"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.categories_products">
+	<columns names="category_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="carts_customers_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.customers"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.carts">
+	<columns names="customer_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="carts_products_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.products"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.carts">
+	<columns names="product_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="product_images_products_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.products"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.product_images">
+	<columns names="product_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="product_images_product_image_types_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.product_image_types"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.product_images">
+	<columns names="product_image_type_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="product_images_customers_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.customers"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.product_images">
+	<columns names="customer_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="communications_mailing_lists_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.mailing_lists"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.communications">
+	<columns names="mailing_list_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="communications_promotions_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.promotions"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.communications">
+	<columns names="promotion_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="mailing_lists_mailing_list_types_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.mailing_list_types"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.mailing_lists">
+	<columns names="mailing_list_type_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="customers_mailing_lists_customers" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.customers"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.customers_mailing_lists">
+	<columns names="customer_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="customers_mailing_lists_mailing_lists_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.mailing_lists"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.customers_mailing_lists">
+	<columns names="mailing_list_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="donations_projects_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.projects"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.donations">
+	<columns names="project_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="entities_entity_types_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.entity_types"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.entities">
+	<columns names="entity_type_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="entities_countries_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.countries"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.entities">
+	<columns names="country_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="projects_entities_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.entities"
+	deferrable="true" defer-type="INITIALLY DEFERRED"
+ table="public.projects">
+	<columns names="entity_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<relationship name="rel_products_trademark_licenses" type="relfk"
+	 src-table="public.products"
+	 dst-table="public.trademark_licenses"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_products_promotions" type="relfk"
+	 src-table="public.products"
+	 dst-table="public.promotions"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_inventory_products" type="relfk"
+	 src-table="public.inventory"
+	 dst-table="public.products"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_orders_customers" type="relfk"
+	 src-table="public.orders"
+	 dst-table="public.customers"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_orders_promotions" type="relfk"
+	 src-table="public.orders"
+	 dst-table="public.promotions"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_purchases_shipments" type="relfk"
+	 src-table="public.purchases"
+	 dst-table="public.shipments"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_purchases_products" type="relfk"
+	 src-table="public.purchases"
+	 dst-table="public.products"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_purchases_orders" type="relfk"
+	 src-table="public.purchases"
+	 dst-table="public.orders"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_purchases_invoices" type="relfk"
+	 src-table="public.purchases"
+	 dst-table="public.invoices"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_purchases_returns" type="relfk"
+	 src-table="public.purchases"
+	 dst-table="public.returns"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_addresses_customers" type="relfk"
+	 src-table="public.addresses"
+	 dst-table="public.customers"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_addresses_countries" type="relfk"
+	 src-table="public.addresses"
+	 dst-table="public.countries"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_trademark_licenses_trademark_license_types" type="relfk"
+	 src-table="public.trademark_licenses"
+	 dst-table="public.trademark_license_types"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_categories_categories" type="relfk"
+	 src-table="public.categories"
+	 dst-table="public.categories"
+	 src-required="true" dst-required="true">
+	<line>
+		<position x="2864.14" y="331.426"/>
+	<position x="2864.14" y="269.666"/>
+	<position x="2755.24" y="269.666"/>
+	</line>
+</relationship>
+
+<relationship name="rel_categories_promotions" type="relfk"
+	 src-table="public.categories"
+	 dst-table="public.promotions"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_promotions_promotion_types" type="relfk"
+	 src-table="public.promotions"
+	 dst-table="public.promotion_types"
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="112.988" y="-43.0698"/>
+	</label>
+</relationship>
+
+<relationship name="rel_categories_products_products" type="relfk"
+	 src-table="public.categories_products"
+	 dst-table="public.products"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_categories_products_categories" type="relfk"
+	 src-table="public.categories_products"
+	 dst-table="public.categories"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_carts_customers" type="relfk"
+	 src-table="public.carts"
+	 dst-table="public.customers"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_carts_products" type="relfk"
+	 src-table="public.carts"
+	 dst-table="public.products"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_product_images_products" type="relfk"
+	 src-table="public.product_images"
+	 dst-table="public.products"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_product_images_product_image_types" type="relfk"
+	 src-table="public.product_images"
+	 dst-table="public.product_image_types"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_product_images_customers" type="relfk"
+	 src-table="public.product_images"
+	 dst-table="public.customers"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_customers_mailing_lists_customers" type="relfk"
+	 src-table="public.customers_mailing_lists"
+	 dst-table="public.customers"
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="4.92249" y="1.6222"/>
+	</label>
+</relationship>
+
+<relationship name="rel_customers_mailing_lists_mailing_lists" type="relfk"
+	 src-table="public.customers_mailing_lists"
+	 dst-table="public.mailing_lists"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_communications_mailing_lists" type="relfk"
+	 src-table="public.communications"
+	 dst-table="public.mailing_lists"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_mailing_lists_mailing_list_types" type="relfk"
+	 src-table="public.mailing_lists"
+	 dst-table="public.mailing_list_types"
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-16.7657" y="3.13029"/>
+	</label>
+</relationship>
+
+<relationship name="rel_communications_promotions" type="relfk"
+	 src-table="public.communications"
+	 dst-table="public.promotions"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_entities_entity_types" type="relfk"
+	 src-table="public.entities"
+	 dst-table="public.entity_types"
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="85.4594" y="-45.602"/>
+	</label>
+</relationship>
+
+<relationship name="rel_entities_countries" type="relfk"
+	 src-table="public.entities"
+	 dst-table="public.countries"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_projects_entities" type="relfk"
+	 src-table="public.projects"
+	 dst-table="public.entities"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_donations_projects" type="relfk"
+	 src-table="public.donations"
+	 dst-table="public.projects"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_purchases_donations" type="relfk"
+	 src-table="public.purchases"
+	 dst-table="public.donations"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_products_projects" type="relfk"
+	 src-table="public.products"
+	 dst-table="public.projects"
+	 src-required="true" dst-required="true"/>
+
+</dbmodel>
