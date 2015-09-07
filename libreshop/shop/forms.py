@@ -15,16 +15,19 @@ class CustomerChangeForm(UserChangeForm):
     selected_products = forms.ModelMultipleChoiceField(Product.objects.all()
                                                       ,widget=admin.widgets.FilteredSelectMultiple('Products', False)
                                                       ,required=False)
-    
+
     def __init__(self, *args, **kwargs):
         super(CustomerChangeForm, self).__init__(*args, **kwargs)
-        
+
         if self.instance.pk:
             self.initial['selected_products'] = [customer_cart.product for customer_cart in Cart.objects.filter(customer__user=self.instance.pk)]
-            self.fields['selected_products'].widget = admin.widgets.RelatedFieldWidgetWrapper(self.fields['selected_products'].widget
-                                                                                             ,ManyToManyRel(Product)
-                                                                                             ,admin.site)
-    
+            relation = ManyToManyRel(field=Customer,
+                                     to=Product,
+                                     through=Cart)
+            self.fields['selected_products'].widget = admin.widgets.RelatedFieldWidgetWrapper(self.fields['selected_products'].widget,
+                                                                                              relation,
+                                                                                              admin.site)
+
     def save(self, *args, **kwargs):
         instance = super(CustomerChangeForm, self).save(*args, **kwargs)
 
