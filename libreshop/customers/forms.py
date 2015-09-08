@@ -6,15 +6,16 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.db.models.fields.related import ManyToManyRel
 
-from .models import Customer, Product, Cart
+from .models import Customer
+from shop.models import Product, Cart
 
 class CustomerChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
         model = Customer
-    
-    selected_products = forms.ModelMultipleChoiceField(Product.objects.all()
-                                                      ,widget=admin.widgets.FilteredSelectMultiple('Products', False)
-                                                      ,required=False)
+
+    selected_products = forms.ModelMultipleChoiceField(Product.objects.all(),
+                                                       widget=admin.widgets.FilteredSelectMultiple('Products', False),
+                                                       required=False)
 
     def __init__(self, *args, **kwargs):
         super(CustomerChangeForm, self).__init__(*args, **kwargs)
@@ -37,7 +38,7 @@ class CustomerChangeForm(UserChangeForm):
                     # remove a product that has been unselected
                     customer = Customer.objects.get(pk=instance.pk)
                     Cart.objects.filter(customer__pk=customer.pk, product__pk=selected_product.pk)[0].delete()
-                    
+
             for product in self.cleaned_data['selected_products']:
                 if product not in [customer_cart.product for customer_cart in Cart.objects.filter(customer__user=self.instance.pk)]:
                     # add newly-selected products
@@ -63,5 +64,3 @@ class CustomerAdmin(UserAdmin):
         (('Important dates'), {'classes': ('collapse',)
                               ,'fields': ('last_login', 'date_joined')}),
     )
-    
-    
