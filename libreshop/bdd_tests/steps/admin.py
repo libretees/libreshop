@@ -25,5 +25,4 @@ def step_impl(context):
     inputbox.send_keys(ADMIN_PASSWORD)
     button = context.browser.find_element_by_xpath("//input[@type='submit']")
     button.submit()
-    context.browser.save_screenshot('login_page.png')
     context.test.assertIn('Site administration | Django site admin', context.browser.title)

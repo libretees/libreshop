@@ -1,2 +1,2 @@
 [behave]
-paths=bdd_tests/features/
+paths=bdd_tests/
