@@ -1,0 +1,2 @@
+[behave]
+paths=bdd_tests/features/

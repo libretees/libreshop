@@ -1,5 +1,4 @@
 from behave import when, given, then
-from custom.django import DjangoStep
 
 
 @then(u'I will see the text "{text}"')

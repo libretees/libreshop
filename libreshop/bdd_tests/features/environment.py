@@ -4,6 +4,7 @@ try:
     from pyvirtualdisplay import Display
 except ImportError:
     pass
+import factories
 
 HEADLESS_TEST = 'Display' in globals().keys()
 
@@ -35,13 +36,15 @@ def after_all(context):
 def before_feature(context, feature):
     pass
 
+
 def after_feature(context, feature):
     pass
 
+
 def before_scenario(context, scenario):
     if scenario.name == 'log in to the admin panel':
-        print(40*'loading... ')
-        context.fixtures = ['admin/asd.json']
+        admin = factories.AdminFactory()
+
 
 def after_scenario(context, scenario):
     pass

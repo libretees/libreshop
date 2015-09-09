@@ -1,6 +1,5 @@
 import os
 from behave import when, given, then
-from custom.django import DjangoStep
 
 
 ADMIN_USER = os.environ.get('ADMIN_USER') or 'admin'
@@ -28,4 +27,3 @@ def step_impl(context):
     button.submit()
     context.browser.save_screenshot('login_page.png')
     context.test.assertIn('Site administration | Django site admin', context.browser.title)
-    context.browser.save_screenshot('admin_page.png')

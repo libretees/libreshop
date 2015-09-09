@@ -1,5 +1,4 @@
 from behave import when, given, then
-from custom.django import DjangoStep
 
 
 @given(u'I am a new user')
