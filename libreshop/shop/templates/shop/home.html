@@ -20,12 +20,14 @@
     <![endif]-->
   </head>
   <body>
-    <h1>LibreShop</h1>
-    <ol>
-      {% for product in products %}
-      <li>{{ product.name }}</li>
-      {% endfor %}
-    </ol>
+    <div class='container'>
+      <h1>LibreShop</h1>
+      <ol>
+        {% for product in products %}
+        <li>{{ product.name }}</li>
+        {% endfor %}
+      </ol>
+    </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{% static 'jquery/1.11.3/jquery.min.js' %}"></script>

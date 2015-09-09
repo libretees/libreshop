@@ -34,3 +34,14 @@ def after_all(context):
 
 def before_feature(context, feature):
     pass
+
+def after_feature(context, feature):
+    pass
+
+def before_scenario(context, scenario):
+    if scenario.name == 'log in to the admin panel':
+        print(40*'loading... ')
+        context.fixtures = ['admin/asd.json']
+
+def after_scenario(context, scenario):
+    pass

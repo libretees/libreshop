@@ -40,12 +40,12 @@ DEFAULT_APPS = (
 )
 
 THIRD_PARTY_APPS = (
+    'behave_django',
 )
 
 LOCAL_APPS = (
     'customers',
     'shop',
-    'tests',
 )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -112,7 +112,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Serve project-wide static files
+# Location to which `./manage.py collectstatic` will move files.
+STATIC_ROOT = ''
+
+# Serve project-wide static files.
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
