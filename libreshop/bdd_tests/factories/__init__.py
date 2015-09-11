@@ -3,7 +3,7 @@ import factory
 
 class AdminFactory(factory.DjangoModelFactory):
     class Meta:
-        model =User
+        model = User
 
     email = 'admin@admin.com'
     username = 'admin'

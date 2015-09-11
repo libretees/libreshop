@@ -42,7 +42,9 @@ def after_feature(context, feature):
 
 
 def before_scenario(context, scenario):
-    if scenario.name == 'log in to the admin panel':
+    if scenario.name in ['log in to the admin panel',
+                         'add a user via the admin panel',
+                         'add a product via the admin panel']:
         admin = factories.AdminFactory()
 
 
