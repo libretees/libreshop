@@ -62,3 +62,29 @@ def step_impl(context, text):
     # Click the save button on the Add Product page.
     submit_button = context.browser.find_element_by_xpath("//input[@class='default']")
     submit_button.click()
+
+
+@when(u'I enter "{text}" in the "{label}" field')
+def step_impl(context, text, label):
+
+    inputbox = context.browser.find_element_by_id('id_%s' % label.lower())
+    inputbox.send_keys(text)
+
+
+@when(u'I click the plus icon next to the "{field}" field')
+def step_impl(context, field):
+
+    field = field.replace(' ', '_').lower()
+    link = context.browser.find_element_by_id('add_id_%s' % field)
+    link.click()
+
+
+@then(u'I will see "{text}" in the "{field}" select box')
+def step_impl(context, text, field):
+
+    field = field.replace(' ', '_').lower()
+    options = context.browser.find_elements_by_xpath("//select[@name='%s']/option" % field)
+
+    selected_products = [option.text for option in options]
+
+    context.test.assertIn(text, selected_products)
