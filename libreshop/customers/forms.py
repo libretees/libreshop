@@ -9,6 +9,7 @@ from django.db.models.fields.related import ManyToManyRel
 from .models import Customer
 from shop.models import Product, Cart
 
+
 class CustomerChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
         model = Customer
@@ -54,13 +55,11 @@ class CustomerAdmin(UserAdmin):
     def __init__(self, *args, **kwargs):
         super(CustomerAdmin, self).__init__(*args, **kwargs)
 
-    fieldsets = (
-        (None, {'fields': ('username', 'password')}),
+        # Collapse all auth.User fields except for the Username and Password fields.
+        UserAdmin.fieldsets = ([(name, field_options.update({'classes': ('collapse',)}) if name else field_options)
+                              for (name, field_options)
+                               in UserAdmin.fieldsets])
+
+    fieldsets = UserAdmin.fieldsets + (
         (('Cart'), {'fields': ('selected_products',)}),
-        (('Personal info'), {'classes': ('collapse',)
-                            ,'fields': ('first_name', 'last_name', 'email')}),
-        (('Permissions'), {'classes': ('collapse',)
-                          ,'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        (('Important dates'), {'classes': ('collapse',)
-                              ,'fields': ('last_login', 'date_joined')}),
     )

@@ -28,11 +28,9 @@ class Customer(TimeStampedModel):
           return "%s's profile" % self.user
 
 
-def create_customer(sender, **kw):
-    user = kw['instance']
-    if kw['created']:
-        customer = Customer(user=user)
-        customer.save()
+def create_customer(sender, instance, created, **kwargs):
+    if created:
+        customer = Customer.objects.create(user=instance)
 
 
 post_save.connect(create_customer, sender=User)
