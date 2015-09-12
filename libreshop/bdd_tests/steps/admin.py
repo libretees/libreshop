@@ -90,10 +90,8 @@ def step_impl(context, text, field):
     context.test.assertIn(text, selected_products)
 
 
-@when(u'I click the "Add" link next to "{name}"')
-def step_impl(context, name):
+@when(u'I click the "{link}" link next to "{name}"')
+def step_impl(context, link, name):
 
-    name = name.replace(' ', '_').lower()[:-1]
-    link = context.browser.find_element_by_xpath("//tbody/tr[@class='model-%s']/td/a[@class='addlink']" % name)
-
+    link = context.browser.find_element_by_xpath("//th[a='%s']/following-sibling::td[a='%s']/a" % (name, link))
     link.click()
