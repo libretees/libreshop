@@ -20,7 +20,7 @@ User = settings.AUTH_USER_MODEL
 class Customer(TimeStampedModel):
     user = models.OneToOneField(User,
                                 primary_key=True)
-    selected_products = models.ManyToManyField('shop.Product',
+    selected_products = models.ManyToManyField('products.Product',
                                                through='shop.Cart',
                                                through_fields=('customer', 'product'))
 
