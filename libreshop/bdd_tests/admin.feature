@@ -18,8 +18,7 @@ Feature: admin
      Given I am a staff member
       When I visit the admin login page
        And I log in to the site admin page
-       And I click the "Users" link
-       And I click the "Add user" link
+       And I click the "Add" link next to "Users"
        And I add a user named "new_user"
       Then I will see a link for "new_user"
 
@@ -27,18 +26,15 @@ Feature: admin
      Given I am a staff member
       When I visit the admin login page
        And I log in to the site admin page
-       And I click the "Products" link
-       And I click the "Add product" link
+       And I click the "Add" link next to "Products"
        And I add a product called "new_product"
       Then I will see a link for "new_product"
 
-  @wip
   Scenario: add a product via the change user page
      Given I am a staff member
       When I visit the admin login page
        And I log in to the site admin page
-       And I click the "Users" link
-       And I click the "Add user" link
+       And I click the "Add" link next to "Users"
        And I add a user named "new_user"
        And I click the "new_user" link
        And I click the plus icon next to the "Selected products" field

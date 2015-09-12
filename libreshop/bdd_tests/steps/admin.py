@@ -88,3 +88,12 @@ def step_impl(context, text, field):
     selected_products = [option.text for option in options]
 
     context.test.assertIn(text, selected_products)
+
+
+@when(u'I click the "Add" link next to "{name}"')
+def step_impl(context, name):
+
+    name = name.replace(' ', '_').lower()[:-1]
+    link = context.browser.find_element_by_xpath("//tbody/tr[@class='model-%s']/td/a[@class='addlink']" % name)
+
+    link.click()
