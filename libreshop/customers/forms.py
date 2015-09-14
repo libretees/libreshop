@@ -7,6 +7,7 @@ import hashlib
 import logging
 
 from django import forms
+from django.conf import settings
 from django.core import serializers
 from django.contrib import admin
 #from django.contrib.auth import get_user_model
@@ -83,9 +84,16 @@ class CustomerRegistrationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(CustomerRegistrationForm, self).__init__(*args, **kwargs)
-        seed = random.Random(int(round(time.time() * 1000)))
-        random.seed(seed)
-        self.token = ''.join(random.choice(string.ascii_letters+string.digits) for i in range(6))
+
+        token = None
+        if not settings.DEBUG:
+            seed = random.Random(int(round(time.time() * 1000)))
+            random.seed(seed)
+            token = ''.join(random.choice(string.ascii_letters+string.digits) for i in range(6))
+        else:
+            token = 'test'
+            
+        self.token = token
         hash_object = hashlib.sha256(self.token.encode())
         hex_dig = hash_object.hexdigest()
 
