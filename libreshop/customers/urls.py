@@ -1,4 +1,4 @@
-"""libreshop URL Configuration
+"""customers URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.8/topics/http/urls/
@@ -15,10 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-import customers.urls
+from .views import CustomerCreateView
 
 urlpatterns = [
-    url(r'^$', 'shop.views.home_page', name='home'),
-    url(r'^user/', include(customers.urls)),
-    url(r'^admin/', include(admin.site.urls)),
+    url('^register/', CustomerCreateView.as_view(), name='create'),
+    url('^accounts/', include('django.contrib.auth.urls')),
 ]
