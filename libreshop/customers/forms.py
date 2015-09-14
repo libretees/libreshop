@@ -1,24 +1,22 @@
 # Import Python module(s)
-import string
-import time
-import random
-import base64
 import hashlib
 import logging
+from operator import itemgetter
 
 from django import forms
-from django.conf import settings
+from django import http
 from django.core import serializers
+from django.core.exceptions import ValidationError
 from django.contrib import admin
 #from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.db.models.fields.related import ManyToManyRel
 
-from captcha.image import ImageCaptcha
-
 from .models import Customer
 from shop.models import Product, Cart
+
+from .widgets import CaptchaWidget
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -77,44 +75,38 @@ class CustomerAdmin(UserAdmin):
         (('Cart'), {'fields': ('selected_products',)}),
     )
 
+class CaptchaField(forms.MultiValueField):
+    widget = CaptchaWidget
+
+    def __init__(self, *args, **kwargs):
+        fields_ = (
+            forms.CharField(),
+            forms.CharField()
+        )
+        super(CaptchaField, self).__init__(fields_, *args, **kwargs)
+
+    def compress(self, values):
+        return ':'.join(values)
 
 class CustomerRegistrationForm(UserCreationForm):
 
-    captcha_response = forms.CharField()
+    captcha = CaptchaField()
 
     def __init__(self, *args, **kwargs):
         super(CustomerRegistrationForm, self).__init__(*args, **kwargs)
 
-        token = None
-        if not settings.DEBUG:
-            seed = random.Random(int(round(time.time() * 1000)))
-            random.seed(seed)
-            token = ''.join(random.choice(string.ascii_letters+string.digits) for i in range(6))
-        else:
-            token = 'test'
-            
-        self.token = token
-        hash_object = hashlib.sha256(self.token.encode())
-        hex_dig = hash_object.hexdigest()
-
-        captcha = ImageCaptcha()
-        image = captcha.generate(self.token)
-        encoding = base64.b64encode(image.getvalue()).decode()
-        self.image = 'data:image/png;base64,%s' % encoding
-
-        self.fields['registration_token'] = forms.CharField(initial=hex_dig, widget=forms.HiddenInput())
-
     def clean(self):
         cleaned_data = super(CustomerRegistrationForm, self).clean()
 
-        registration_token = cleaned_data.get("registration_token")
-        captcha_response = cleaned_data.get("captcha_response")
+        captcha_data = self.cleaned_data.get("captcha")
+        captcha_hash, captcha_response = itemgetter(0, 1)(captcha_data.split(':'))
+        response_hash = hashlib.sha256(captcha_response.encode()).hexdigest()
 
-        captcha_hash = hashlib.sha256(captcha_response.encode())
-        captcha_hash = captcha_hash.hexdigest()
-        print(registration_token, captcha_hash)
-
-        if captcha_hash != registration_token:
-            forms.ValidationError('Captcha is incorrect')
+        if captcha_hash != response_hash:
+            # See: https://docs.djangoproject.com/en/1.8/ref/forms/validation/#raising-validation-error
+            self.add_error('captcha', ValidationError('Invalid value', code='invalid'))
 
         return cleaned_data
+
+    def form_invalid(self, form):
+        return http.HttpResponse(form.errors)
