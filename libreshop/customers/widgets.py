@@ -11,6 +11,7 @@ from django.forms import widgets
 from django.utils.safestring import mark_safe
 
 from captcha.image import ImageCaptcha
+from captcha.audio import AudioCaptcha
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -29,22 +30,35 @@ class TokenInput(widgets.HiddenInput):
         final_attrs = ' '.join(['%s="%s"' % (key, value) for (key, value) in attrs.items()])
         html = '<input type="hidden" name="%s" value="%s" %s/>' % (name, hashed_value, final_attrs)
 
-        html += self.render_image(name, value, attrs)
+        html += self.render_image(name, value, attrs) + self.render_audio(name, value, attrs)
 
         return mark_safe(html)
 
     def render_image(self, name, value, attrs=None):
         # Create an encoded image CAPTCHA.
         captcha_generator = ImageCaptcha()
-        encoded_image = captcha_generator.generate(value)
-        value = ('data:image/png;base64,%s' %
-                    base64.b64encode(encoded_image.getvalue()).decode())
+        image_buffer = captcha_generator.generate(value)
+        encoded_image = ('data:image/png;base64,%s' %
+                    base64.b64encode(image_buffer.getvalue()).decode())
 
         # Convert 'attrs' dict into HTML attributes.
         final_attrs = ' '.join(['%s="%s"' % (key, value) for (key, value) in attrs.items()])
-        html = '<img name="%s" src="%s" %s/>' % (name, value, final_attrs)
+        html = '<img name="%s" src="%s" %s/>' % (name, encoded_image, final_attrs)
         return mark_safe(html)
 
+    def render_audio(self, name, value, attrs=None):
+        # Create an encoded audio CAPTCHA.
+        captcha_generator = AudioCaptcha()
+        audio_buffer = captcha_generator.generate(value)
+
+        encoded_audio = ('data:audio/wav;base64,%s' %
+                            base64.encodestring(audio_buffer).decode())
+
+        # Convert 'attrs' dict into HTML attributes.
+        final_attrs = ' '.join(['%s="%s"' % (key, value) for (key, value) in attrs.items()])
+        html = '<audio name="%s" src="%s" %s controls></audio>' % (name, encoded_audio, final_attrs)
+
+        return mark_safe(html)
 
 class CaptchaWidget(widgets.MultiWidget):
     def __init__(self, attrs=None):
@@ -56,7 +70,7 @@ class CaptchaWidget(widgets.MultiWidget):
             random.seed(seed)
             self.token = ''.join(random.choice(string.ascii_letters+string.digits) for i in range(6))
         else:
-            self.token = 'test'
+            self.token = '1234'
 
         widgets_ = (
             TokenInput(attrs=attrs),
