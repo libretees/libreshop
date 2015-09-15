@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>LibreShop</title>
+    <title>LibreShop | User Registration</title>
 
     <!-- Bootstrap -->
     <link href="{% static 'bootstrap/3.3.5/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -24,7 +24,6 @@
     <form action="" method="post">
       {% csrf_token %}
       {{ form.as_ul }}
-      <img src="{{ form.image }}" />
       <input type="submit" value="Submit" />
     </form>
   </div>

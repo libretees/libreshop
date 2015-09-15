@@ -23,6 +23,13 @@
     <div class='container'>
       <h1>LibreShop</h1>
       <ol>
+      {% if request.user.is_authenticated %}
+          <li><a href="user/logout">Log Out {{request.user.username}}</a></li>
+      {% else %}
+          <li><a href="user/login">Log In</a></li>
+      {% endif %}
+      </ol>
+      <ol>
         {% for product in products %}
         <li>{{ product.name }}</li>
         {% endfor %}

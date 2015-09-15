@@ -64,13 +64,6 @@ def step_impl(context, text):
     submit_button.click()
 
 
-@when(u'I enter "{text}" in the "{label}" field')
-def step_impl(context, text, label):
-
-    inputbox = context.browser.find_element_by_id('id_%s' % label.lower())
-    inputbox.send_keys(text)
-
-
 @when(u'I click the plus icon next to the "{field}" field')
 def step_impl(context, field):
 

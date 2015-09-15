@@ -9,6 +9,7 @@ from django.core import serializers
 from django.core.exceptions import ValidationError
 from django.contrib import admin
 #from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.db.models.fields.related import ManyToManyRel
@@ -99,14 +100,11 @@ class CustomerRegistrationForm(UserCreationForm):
         cleaned_data = super(CustomerRegistrationForm, self).clean()
 
         captcha_data = self.cleaned_data.get("captcha")
-        captcha_hash, captcha_response = itemgetter(0, 1)(captcha_data.split(':'))
+        captcha_response, captcha_hash = itemgetter(0, 1)(captcha_data.split(':'))
         response_hash = hashlib.sha256(captcha_response.encode()).hexdigest()
 
         if captcha_hash != response_hash:
-            # See: https://docs.djangoproject.com/en/1.8/ref/forms/validation/#raising-validation-error
+            # From: https://docs.djangoproject.com/en/1.8/ref/forms/validation/#raising-validation-error
             self.add_error('captcha', ValidationError('Invalid value', code='invalid'))
 
         return cleaned_data
-
-    def form_invalid(self, form):
-        return http.HttpResponse(form.errors)

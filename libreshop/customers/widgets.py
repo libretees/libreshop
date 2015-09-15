@@ -73,8 +73,8 @@ class CaptchaWidget(widgets.MultiWidget):
             self.token = '1234'
 
         widgets_ = (
-            TokenInput(attrs=attrs),
             widgets.TextInput(attrs=attrs),
+            TokenInput(attrs=attrs),
         )
         super(CaptchaWidget, self).__init__(widgets_, attrs)
 
@@ -107,7 +107,7 @@ class CaptchaWidget(widgets.MultiWidget):
     def decompress(self, value):
         if value:
             raise NotImplementedError("This should not happen.")
-        return [self.token, None]
+        return [None, self.token]
 
     def compress(self, data_list):
         return ' '.join(data_list)
