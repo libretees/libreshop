@@ -1,10 +1,15 @@
 behave==1.2.5
+behave-django==0.2.3
+captcha==0.2
 Django==1.8.4
 django-model-utils==2.3.1
+djangorestframework==3.2.3
 EasyProcess==0.1.9
+factory-boy==2.5.2
 jsonfield==1.0.3
 parse==1.6.6
 parse-type==0.3.4
+Pillow==2.9.0
 PyVirtualDisplay==0.1.5
 selenium==2.47.1
 six==1.9.0
