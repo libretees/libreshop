@@ -16,61 +16,77 @@ from captcha.audio import AudioCaptcha
 # Initialize logger
 logger = logging.getLogger(__name__)
 
-class TokenInput(widgets.HiddenInput):
 
-    def __init__(self, attrs=None):
-        super(TokenInput, self).__init__(attrs)
+class RegistrationToken(object):
+    """
+    This creates a registration token that permits a stateless user registration
+    with image and audio CAPTCHAs.
+    """
 
-    def render(self, name, value, attrs=None):
+    def __init__(self):
+        super(RegistrationToken, self).__init__()
+        self._generate_token()
+        self._generate_image()
+        self._generate_audio()
 
-        token_hash_object = hashlib.sha256(value.encode())
-        hashed_value = token_hash_object.hexdigest()
-
-        # Convert 'attrs' dict into HTML attributes.
-        final_attrs = ' '.join(['%s="%s"' % (key, value) for (key, value) in attrs.items()])
-        html = '<input type="hidden" name="%s" value="%s" %s/>' % (name, hashed_value, final_attrs)
-
-        html += self.render_image(name, value, attrs) + self.render_audio(name, value, attrs)
-
-        return mark_safe(html)
-
-    def render_image(self, name, value, attrs=None):
-        # Create an encoded image CAPTCHA.
-        captcha_generator = ImageCaptcha()
-        image_buffer = captcha_generator.generate(value)
-        encoded_image = ('data:image/png;base64,%s' %
-                    base64.b64encode(image_buffer.getvalue()).decode())
-
-        # Convert 'attrs' dict into HTML attributes.
-        final_attrs = ' '.join(['%s="%s"' % (key, value) for (key, value) in attrs.items()])
-        html = '<img name="%s" src="%s" %s/>' % (name, encoded_image, final_attrs)
-        return mark_safe(html)
-
-    def render_audio(self, name, value, attrs=None):
-        # Create an encoded audio CAPTCHA.
-        captcha_generator = AudioCaptcha()
-        audio_buffer = captcha_generator.generate(value)
-
-        encoded_audio = ('data:audio/wav;base64,%s' %
-                            base64.encodestring(audio_buffer).decode())
-
-        # Convert 'attrs' dict into HTML attributes.
-        final_attrs = ' '.join(['%s="%s"' % (key, value) for (key, value) in attrs.items()])
-        html = '<audio name="%s" src="%s" %s controls></audio>' % (name, encoded_audio, final_attrs)
-
-        return mark_safe(html)
-
-class CaptchaWidget(widgets.MultiWidget):
-    def __init__(self, attrs=None):
-
+    def _generate_token(self):
         # Create the secret token.
         token = None
         if not settings.DEBUG:
             seed = random.Random(int(round(time.time() * 1000)))
             random.seed(seed)
-            self.token = ''.join(random.choice(string.ascii_letters+string.digits) for i in range(6))
+            token = ''.join(random.choice(string.ascii_letters+string.digits) for i in range(6))
         else:
-            self.token = '1234'
+            token = '1234'
+
+        token_hash_object = hashlib.sha256(token.encode())
+        hashed_value = token_hash_object.hexdigest()
+
+        self.token = token
+        self.value = hashed_value
+
+    def _generate_image(self):
+        # Create an encoded image CAPTCHA.
+        captcha_generator = ImageCaptcha()
+        image_buffer = captcha_generator.generate(self.token)
+        encoded_image = ('data:image/png;base64,%s' %
+                            base64.b64encode(image_buffer.getvalue()).decode())
+
+        self.image = encoded_image
+
+    def _generate_audio(self):
+        # Create an encoded audio CAPTCHA.
+        captcha_generator = AudioCaptcha()
+        audio_buffer = captcha_generator.generate(self.token)
+        encoded_audio = ('data:audio/wav;base64,%s' %
+                            base64.encodestring(audio_buffer).decode())
+
+        self.audio = encoded_audio
+
+
+class TokenInput(widgets.HiddenInput):
+
+    def __init__(self, attrs=None):
+        super(TokenInput, self).__init__(attrs)
+        self.token = RegistrationToken()
+
+    def render(self, name, value, attrs=None):
+        # Convert 'attrs' dict into HTML attributes.
+        final_attrs = ' '.join(['%s="%s"' % (key, value) for (key, value) in attrs.items()])
+
+        # Render HTML.
+        html = '''<input type="hidden" name="%s" value="%s" %s/>
+                  <img name="%s" src="%s" %s/>
+                  <audio name="%s" src="%s" %s controls></audio>
+               ''' % (name, self.token.value, final_attrs,
+                      name, self.token.image, final_attrs,
+                      name, self.token.audio, final_attrs)
+
+        return mark_safe(html)
+
+
+class CaptchaWidget(widgets.MultiWidget):
+    def __init__(self, attrs=None):
 
         widgets_ = (
             widgets.TextInput(attrs=attrs),
@@ -106,8 +122,8 @@ class CaptchaWidget(widgets.MultiWidget):
 
     def decompress(self, value):
         if value:
-            raise NotImplementedError("This should not happen.")
-        return [None, self.token]
+            value.split(':')
+        return [None, None]
 
     def compress(self, data_list):
         return ' '.join(data_list)
