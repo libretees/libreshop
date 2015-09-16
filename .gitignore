@@ -3,6 +3,7 @@
 
 # Project-specific files
 *.sqlite3
+docs/build
 browser.png
 
 # Byte-compiled / optimized / DLL files
