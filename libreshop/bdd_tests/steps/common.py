@@ -1,6 +1,30 @@
 from behave import when, given, then
 
 
+@given(u'I am an admin')
+def step_impl(context):
+    context.username = 'admin'
+    context.password = 'admin'
+    
+
+@given(u'I am a staff member')
+def step_impl(context):
+    context.username = 'staff'
+    context.password = 'staff'
+
+
+@given(u'I am a regular user')
+def step_impl(context):
+    context.username = 'user'
+    context.password = 'user'
+
+
+@given(u'I am an anonymous user')
+def step_impl(context):
+    context.username = None
+    context.password = None
+
+
 @then(u'I will see the text "{text}"')
 def step_impl(context, text):
 

@@ -8,11 +8,6 @@ ADMIN_USER = os.environ.get('ADMIN_USER') or 'admin'
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD') or 'admin'
 
 
-@given(u'I am a staff member')
-def step_impl(context):
-    pass
-
-
 @when(u'I visit the admin login page')
 def step_impl(context):
     context.browser.get(context.server_url + '/admin')

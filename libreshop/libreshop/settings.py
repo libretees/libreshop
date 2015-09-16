@@ -41,15 +41,22 @@ DEFAULT_APPS = (
 
 THIRD_PARTY_APPS = (
     'behave_django',
+    'rest_framework',
 )
 
 LOCAL_APPS = (
+    'api',
     'shop',
     'customers',
     'products',
 )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+    'PAGE_SIZE': 10
+}
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

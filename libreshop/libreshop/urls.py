@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+import api.urls
 import customers.urls
 
 urlpatterns = [
     url(r'^$', 'shop.views.home_page', name='home'),
+    url(r'^api/', include(api.urls)),
     url(r'^user/', include(customers.urls)),
     url(r'^admin/', include(admin.site.urls)),
 ]
