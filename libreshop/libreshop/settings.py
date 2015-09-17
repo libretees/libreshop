@@ -147,4 +147,4 @@ LOGGING = {
 
 
 # Detect whether or not we are in a testing mode.
-TESTING = next(iter(sys.argv[1:2]), None) in ['test', 'behave',]
+TESTING = (sys.argv[1] if len(sys.argv) > 1 else None) in ['test', 'behave']
