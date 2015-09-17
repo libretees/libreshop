@@ -127,20 +127,20 @@ class RegistrationToken(object):
 
     def __init__(self):
         super(RegistrationToken, self).__init__()
-        print('regular_'*40, settings.DEBUG)
         self._generate_token()
         self._generate_image()
         self._generate_audio()
 
     def _generate_token(self):
+
         # Create the secret token.
         token = None
-        if not settings.TESTING:
+        if settings.DEBUG or settings.TESTING:
+            token = '1234'
+        else:
             seed = random.Random(int(round(time.time() * 1000)))
             random.seed(seed)
             token = ''.join(random.choice(string.ascii_letters+string.digits) for i in range(6))
-        else:
-            token = '1234'
 
         token_hash_object = hashlib.sha256(token.encode())
         hashed_value = token_hash_object.hexdigest()

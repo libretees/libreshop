@@ -43,7 +43,11 @@ def after_feature(context, feature):
 
 
 def before_scenario(context, scenario):
-    pass
+    if scenario.name in ['get a list of users as an admin',
+                         'get a list of users as a regular user',
+                         'get a list of users as an anonymous user',]:
+        # Create 3 users.
+        users = [factories.UserFactory(username='user%s' % i) for i in range(3)]
 
 
 def after_scenario(context, scenario):
