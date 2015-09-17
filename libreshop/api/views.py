@@ -1,6 +1,11 @@
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from .serializers import UserSerializer, GroupSerializer
+from rest_framework import status
+
+from customers.forms import RegistrationToken
+from .serializers import UserSerializer, GroupSerializer, RegistrationTokenSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -17,3 +22,21 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+
+
+class RegistrationTokenView(APIView):
+    """
+    API endpoint to obtain a user registration token.
+    """
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request, format=None):
+        """
+        Return a list of all users.
+        """
+
+        registration_token = RegistrationToken()
+        serializer = RegistrationTokenSerializer(registration_token)
+
+        return Response(serializer.data)

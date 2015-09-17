@@ -1,4 +1,5 @@
 import os
+from django.conf import settings
 from selenium import webdriver
 try:
     from pyvirtualdisplay import Display

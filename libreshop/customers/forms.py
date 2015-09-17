@@ -1,10 +1,15 @@
 # Import Python module(s)
+import string
+import time
+import random
+import base64
 import hashlib
 import logging
 from operator import itemgetter
-
+from django.conf import settings
 from django import forms
 from django import http
+
 from django.core import serializers
 from django.core.exceptions import ValidationError
 from django.contrib import admin
@@ -14,9 +19,11 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.db.models.fields.related import ManyToManyRel
 
-from .models import Customer
-from shop.models import Product, Cart
+from captcha.image import ImageCaptcha
+from captcha.audio import AudioCaptcha
 
+from shop.models import Product, Cart
+from .models import Customer
 from .widgets import CaptchaWidget
 
 # Initialize logger
@@ -76,6 +83,7 @@ class CustomerAdmin(UserAdmin):
         (('Cart'), {'fields': ('selected_products',)}),
     )
 
+
 class CaptchaField(forms.MultiValueField):
     widget = CaptchaWidget
 
@@ -88,6 +96,7 @@ class CaptchaField(forms.MultiValueField):
 
     def compress(self, values):
         return ':'.join(values)
+
 
 class CustomerRegistrationForm(UserCreationForm):
 
@@ -108,3 +117,51 @@ class CustomerRegistrationForm(UserCreationForm):
             self.add_error('captcha', ValidationError('Invalid value', code='invalid'))
 
         return cleaned_data
+
+
+class RegistrationToken(object):
+    """
+    This creates a registration token that permits a stateless user registration
+    with image and audio CAPTCHAs.
+    """
+
+    def __init__(self):
+        super(RegistrationToken, self).__init__()
+        print('regular_'*40, settings.DEBUG)
+        self._generate_token()
+        self._generate_image()
+        self._generate_audio()
+
+    def _generate_token(self):
+        # Create the secret token.
+        token = None
+        if not settings.TESTING:
+            seed = random.Random(int(round(time.time() * 1000)))
+            random.seed(seed)
+            token = ''.join(random.choice(string.ascii_letters+string.digits) for i in range(6))
+        else:
+            token = '1234'
+
+        token_hash_object = hashlib.sha256(token.encode())
+        hashed_value = token_hash_object.hexdigest()
+
+        self._secret = token
+        self.token = hashed_value
+
+    def _generate_image(self):
+        # Create an encoded image CAPTCHA.
+        captcha_generator = ImageCaptcha()
+        image_buffer = captcha_generator.generate(self._secret)
+        encoded_image = ('data:image/png;base64,%s' %
+                            base64.b64encode(image_buffer.getvalue()).decode())
+
+        self.image = encoded_image
+
+    def _generate_audio(self):
+        # Create an encoded audio CAPTCHA.
+        captcha_generator = AudioCaptcha()
+        audio_buffer = captcha_generator.generate(self._secret)
+        encoded_audio = ('data:audio/wav;base64,%s' %
+                            base64.encodestring(audio_buffer).decode())
+
+        self.audio = encoded_audio

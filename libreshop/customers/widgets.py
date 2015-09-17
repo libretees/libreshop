@@ -1,76 +1,24 @@
 # Import Python module(s)
-import string
-import time
-import random
-import base64
-import hashlib
+
 import logging
 
-from django.conf import settings
 from django.forms import widgets
 from django.utils.safestring import mark_safe
 
-from captcha.image import ImageCaptcha
-from captcha.audio import AudioCaptcha
-
 # Initialize logger
 logger = logging.getLogger(__name__)
-
-
-class RegistrationToken(object):
-    """
-    This creates a registration token that permits a stateless user registration
-    with image and audio CAPTCHAs.
-    """
-
-    def __init__(self):
-        super(RegistrationToken, self).__init__()
-        self._generate_token()
-        self._generate_image()
-        self._generate_audio()
-
-    def _generate_token(self):
-        # Create the secret token.
-        token = None
-        if not settings.DEBUG:
-            seed = random.Random(int(round(time.time() * 1000)))
-            random.seed(seed)
-            token = ''.join(random.choice(string.ascii_letters+string.digits) for i in range(6))
-        else:
-            token = '1234'
-
-        token_hash_object = hashlib.sha256(token.encode())
-        hashed_value = token_hash_object.hexdigest()
-
-        self.token = token
-        self.value = hashed_value
-
-    def _generate_image(self):
-        # Create an encoded image CAPTCHA.
-        captcha_generator = ImageCaptcha()
-        image_buffer = captcha_generator.generate(self.token)
-        encoded_image = ('data:image/png;base64,%s' %
-                            base64.b64encode(image_buffer.getvalue()).decode())
-
-        self.image = encoded_image
-
-    def _generate_audio(self):
-        # Create an encoded audio CAPTCHA.
-        captcha_generator = AudioCaptcha()
-        audio_buffer = captcha_generator.generate(self.token)
-        encoded_audio = ('data:audio/wav;base64,%s' %
-                            base64.encodestring(audio_buffer).decode())
-
-        self.audio = encoded_audio
 
 
 class TokenInput(widgets.HiddenInput):
 
     def __init__(self, attrs=None):
         super(TokenInput, self).__init__(attrs)
-        self.token = RegistrationToken()
 
     def render(self, name, value, attrs=None):
+        # Defer import of RegistrationToken to resolve interdependency with forms module.
+        from .forms import RegistrationToken
+        self.registration_token = RegistrationToken()
+
         # Convert 'attrs' dict into HTML attributes.
         final_attrs = ' '.join(['%s="%s"' % (key, value) for (key, value) in attrs.items()])
 
@@ -78,9 +26,9 @@ class TokenInput(widgets.HiddenInput):
         html = '''<input type="hidden" name="%s" value="%s" %s/>
                   <img name="%s" src="%s" %s/>
                   <audio name="%s" src="%s" %s controls></audio>
-               ''' % (name, self.token.value, final_attrs,
-                      name, self.token.image, final_attrs,
-                      name, self.token.audio, final_attrs)
+               ''' % (name, self.registration_token.token, final_attrs,
+                      name, self.registration_token.image, final_attrs,
+                      name, self.registration_token.audio, final_attrs)
 
         return mark_safe(html)
 
