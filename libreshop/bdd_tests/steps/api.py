@@ -32,8 +32,8 @@ def step_impl(context, model):
 
     data = None
     if model == 'User':
-        data = {'username': 'user',
-                'password': 'user',}
+        data = {'username': 'new_user',
+                'password': 'new_user',}
         token = getattr(context, 'token', None)
         if token:
             data['token'] = token
@@ -45,6 +45,47 @@ def step_impl(context, model):
     data = json.dumps(data)
     auth = (context.username, context.password) if context.username else None
     context.response = requests.post(endpoint, headers=headers, params=params, data=data, auth=auth)
+
+
+@when(u'I update the "{field}" field on a "{model}" object to "{value}"')
+def step_impl(context, field, model, value):
+    # Set up request parameters.
+    endpoint = context.server_url + '/api/%ss/' % model.lower()
+    headers = {
+        'Accept': 'application/json; indent=4',
+        'Content-type': 'application/json',
+    }
+    params = None
+
+    data = None
+    if model == 'User':
+        data = {'username': 'user',
+                'password': 'user',}
+        token = getattr(context, 'token', None)
+        if token:
+            data['token'] = token
+
+        captcha = getattr(context, 'captcha', None)
+        if captcha:
+            data['captcha'] = captcha
+
+    data[field] = value
+
+    data = json.dumps(data)
+    auth = (context.username, context.password) if context.username else None
+
+    response = requests.get(endpoint, headers=headers, params=params, auth=auth)
+    response = response.json()
+    urls = [result['url'] for result in response['results']]
+
+    response = None
+    for endpoint in urls:
+        response = requests.put(endpoint, headers=headers, params=params, data=data, auth=auth)
+
+    if not response:
+        response = requests.put(endpoint + '1/', headers=headers, params=params, data=data, auth=auth)
+
+    context.response = response
 
 
 @when(u'I fail the CAPTCHA')
@@ -130,7 +171,7 @@ def step_impl(context):
     response_content = response.json()
     username = response_content.get('username', None)
 
-    context.test.assertEqual(username, 'user')
+    context.test.assertEqual(username, 'new_user')
 
 
 @then(u'The response will contain an error description')
@@ -141,6 +182,16 @@ def step_impl(context):
     description = response_content.get('description', None)
 
     assert description
+
+
+@then(u'The "{field}" field will equal "{value}"')
+def step_impl(context, field, value):
+
+    response = context.response
+    response_content = response.json()
+    field = response_content.get(field, None)
+
+    context.test.assertEqual(field, value)
 
 
 @step(u'I get a Registration Token')

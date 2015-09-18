@@ -62,9 +62,12 @@ def before_step(context, step):
         # Create an Admin account.
         admin = factories.AdminFactory()
     elif step.name in ['I am a staff member',]:
-        # Create a User account.
+        # Create a Staff Member account.
         staff = factories.StaffMemberFactory()
     elif step.name in ['I am a regular user',]:
+        # Create a User account.
+        user = factories.UserFactory()
+    elif step.name in ['I am an anonymous user',]:
         # Create a User account.
         user = factories.UserFactory()
 

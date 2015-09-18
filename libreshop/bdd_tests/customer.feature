@@ -18,7 +18,7 @@ Feature: customer
        And I click the "Submit" button
       Then I will see the text "captcha"
 
-  Scenario: create an account with a good CAPTCHA
+  Scenario: create an account with a solved CAPTCHA
      Given I am an anonymous user
       When I visit the user registration page
        And I enter "new_user" in the "Username" field
