@@ -1,3 +1,4 @@
+import json
 import hashlib
 import requests
 from django.contrib.auth import get_user_model
@@ -9,7 +10,7 @@ User = get_user_model()
 @when(u'I query the "{text}" API')
 def step_impl(context, text):
     # Set up request parameters.
-    endpoint = context.server_url + '/api/%s' % text.lower()
+    endpoint = context.server_url + '/api/%s/' % text.lower()
     headers = {
         'Accept': 'application/json; indent=4',
     }
@@ -17,6 +18,43 @@ def step_impl(context, text):
     
     auth = (context.username, context.password) if context.username else None
     context.response = requests.get(endpoint, headers=headers, params=params, auth=auth)
+
+
+@when(u'I create a new "{model}"')
+def step_impl(context, model):
+    # Set up request parameters.
+    endpoint = context.server_url + '/api/%ss/' % model.lower()
+    headers = {
+        'Accept': 'application/json; indent=4',
+        'Content-type': 'application/json',
+    }
+    params = None
+
+    data = None
+    if model == 'User':
+        data = {'username': 'user',
+                'password': 'user',}
+        token = getattr(context, 'token', None)
+        if token:
+            data['token'] = token
+
+        captcha = getattr(context, 'captcha', None)
+        if captcha:
+            data['captcha'] = captcha
+
+    data = json.dumps(data)
+    auth = (context.username, context.password) if context.username else None
+    context.response = requests.post(endpoint, headers=headers, params=params, data=data, auth=auth)
+
+
+@when(u'I fail the CAPTCHA')
+def step_impl(context):
+    context.captcha = '4321'
+
+
+@when(u'I solve the CAPTCHA')
+def step_impl(context):
+    context.captcha = '1234'
 
 
 @then(u'I will be presented with an authentication error')
@@ -75,13 +113,45 @@ def step_impl(context):
     context.test.assertEqual(count, 0)
 
 
-@then(u'I get a Registration Token')
+@then(u'I will receive a "{http_status}" response')
+def step_impl(context, http_status):
+
+    response = context.response
+    status_name = 'HTTP_%s' % http_status.upper().replace(' ', '_')
+    status_code = getattr(status, status_name, None)
+
+    context.test.assertEqual(response.status_code, status_code)
+
+
+@then(u'The response will contain my username')
 def step_impl(context):
 
     response = context.response
     response_content = response.json()
+    username = response_content.get('username', None)
+
+    context.test.assertEqual(username, 'user')
+
+
+@then(u'The response will contain an error description')
+def step_impl(context):
+
+    response = context.response
+    response_content = response.json()
+    description = response_content.get('description', None)
+
+    assert description
+
+
+@step(u'I get a Registration Token')
+def step_impl(context):
+
+    response = context.response
+    response_content = response.json()
+    token = response_content['token']
 
     token_hash = hashlib.sha256('1234'.encode()).hexdigest()
+    context.token = token
 
     context.test.assertEqual(response.status_code, status.HTTP_200_OK)
-    context.test.assertEqual(response_content['token'], token_hash)
+    context.test.assertEqual(token, token_hash)

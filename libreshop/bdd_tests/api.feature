@@ -1,3 +1,4 @@
+@api
 Feature: api
   As a user
   I want to query the website via an API
@@ -37,3 +38,35 @@ Feature: api
      Given I am an anonymous user
       When I query the "Token" API
       Then I get a Registration Token
+
+  Scenario: register a new user without a token
+     Given I am an anonymous user
+      When I create a new "User"
+      Then I will receive a "400 BAD REQUEST" response
+       And the response will contain an error description
+
+  Scenario: register a new user without a CAPTCHA
+     Given I am an anonymous user
+      When I query the "Token" API
+       And I get a Registration Token
+       And I create a new "User"
+      Then I will receive a "400 BAD REQUEST" response
+       And the response will contain an error description
+
+  Scenario: register a new user with a failed CAPTCHA
+     Given I am an anonymous user
+      When I query the "Token" API
+       And I get a Registration Token
+       And I fail the CAPTCHA
+       And I create a new "User"
+      Then I will receive a "400 BAD REQUEST" response
+       And the response will contain an error description
+
+  Scenario: register a new user with a solved CAPTCHA
+     Given I am an anonymous user
+      When I query the "Token" API
+       And I get a Registration Token
+       And I solve the CAPTCHA
+       And I create a new "User"
+      Then I will receive a "201 CREATED" response
+       And the response will contain my username
