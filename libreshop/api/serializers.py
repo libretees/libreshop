@@ -19,6 +19,11 @@ class UserSerializer(serializers.ModelSerializer):
     def to_internal_value(self, data):
         native_fields = self.Meta.fields
         non_native_fields = self.Meta.non_native_fields
+        extra_fields = [field for field in data if field not in native_fields + non_native_fields]
+
+        for field in extra_fields:
+            error = {'%s' % field: ['Field is not recognized.'], 'description': ['The `%s` field is not permitted.' % field]}
+            raise exceptions.ValidationError(error)
 
         native_data = {key:value for (key, value) in data.items() if key in native_fields}
         super(UserSerializer, self).to_internal_value(native_data)
