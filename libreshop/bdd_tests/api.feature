@@ -22,7 +22,8 @@ Feature: api
   Scenario: get a list of users as an anonymous user
      Given I am an anonymous user
       When I query the "Users" API
-      Then I get an empty list
+      Then I will receive a "403 FORBIDDEN" response
+       And the response will contain an authentication error
 
   Scenario: get a registration token as an admin
      Given I am an admin
@@ -43,7 +44,7 @@ Feature: api
      Given I am an anonymous user
       When I create a new "User"
       Then I will receive a "400 BAD REQUEST" response
-       And The response will contain an error description
+       And the response will contain an error description
 
   Scenario: register a new user without a CAPTCHA
      Given I am an anonymous user
@@ -51,7 +52,7 @@ Feature: api
        And I get a Registration Token
        And I create a new "User"
       Then I will receive a "400 BAD REQUEST" response
-       And The response will contain an error description
+       And the response will contain an error description
 
   Scenario: register a new user with a failed CAPTCHA
      Given I am an anonymous user
@@ -60,7 +61,7 @@ Feature: api
        And I fail the CAPTCHA
        And I create a new "User"
       Then I will receive a "400 BAD REQUEST" response
-       And The response will contain an error description
+       And the response will contain an error description
 
   Scenario: register a new user with a solved CAPTCHA
      Given I am an anonymous user
@@ -69,27 +70,52 @@ Feature: api
        And I solve the CAPTCHA
        And I create a new "User"
       Then I will receive a "201 CREATED" response
-       And The response will contain my username
+       And the response will contain my username
 
-  Scenario: update a user as an anonymous user
+  Scenario: update someone else's email as an anonymous user
      Given I am an anonymous user
       When I update the "email" field on a "User" object to "test@test.com"
-      Then I will receive a "404 NOT FOUND" response
+      Then I will receive a "403 FORBIDDEN" response
+       And the response will contain an authentication error
 
-  Scenario: update a user as a regular user
+  Scenario: update my email as a regular user
      Given I am a regular user
       When I update the "email" field on a "User" object to "test@test.com"
       Then I will receive a "200 OK" response
-       And The "email" field will equal "test@test.com"
+       And the "email" field will equal "test@test.com"
 
-  Scenario: update a user as a staff member
+  Scenario: update my email as a staff member
      Given I am a staff member
       When I update the "email" field on a "User" object to "test@test.com"
       Then I will receive a "200 OK" response
-       And The "email" field will equal "test@test.com"
+       And the "email" field will equal "test@test.com"
 
-  Scenario: update a user as an admin
+  Scenario: update my email as an admin
      Given I am an admin
       When I update the "email" field on a "User" object to "test@test.com"
       Then I will receive a "200 OK" response
-       And The "email" field will equal "test@test.com"
+       And the "email" field will equal "test@test.com"
+
+  Scenario: update someone else's password as an anonymous user
+     Given I am an anonymous user
+      When I update the "password" field on a "User" object to "test"
+      Then I will receive a "403 FORBIDDEN" response
+       And the response will contain an authentication error
+
+  Scenario: update my password as a regular user
+     Given I am a regular user
+      When I update the "password" field on a "User" object to "test"
+      Then I will receive a "200 OK" response
+       And the "password" field will equal "test"
+
+  Scenario: update my password as a staff member
+     Given I am a staff member
+      When I update the "password" field on a "User" object to "test"
+      Then I will receive a "200 OK" response
+       And the "password" field will equal "test"
+
+  Scenario: update my password as an admin
+     Given I am an admin
+      When I update the "password" field on a "User" object to "test"
+      Then I will receive a "200 OK" response
+       And the "password" field will equal "test"

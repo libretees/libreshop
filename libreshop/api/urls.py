@@ -2,8 +2,8 @@ from django.conf.urls import url, include
 from rest_framework import routers
 from .views import UserViewSet, GroupViewSet, RegistrationTokenView
 
-router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
+router = routers.DefaultRouter(trailing_slash=False)
+router.register(r'users', UserViewSet, base_name='user')
 router.register(r'groups', GroupViewSet)
 
 # Wire up our API using automatic URL routing.

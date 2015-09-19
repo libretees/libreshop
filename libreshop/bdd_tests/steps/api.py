@@ -2,6 +2,7 @@ import json
 import hashlib
 import requests
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import check_password
 from rest_framework import status
 from behave import when, given, then
 
@@ -10,7 +11,7 @@ User = get_user_model()
 @when(u'I query the "{text}" API')
 def step_impl(context, text):
     # Set up request parameters.
-    endpoint = context.server_url + '/api/%s/' % text.lower()
+    endpoint = context.server_url + '/api/%s' % text.lower()
     headers = {
         'Accept': 'application/json; indent=4',
     }
@@ -23,7 +24,7 @@ def step_impl(context, text):
 @when(u'I create a new "{model}"')
 def step_impl(context, model):
     # Set up request parameters.
-    endpoint = context.server_url + '/api/%ss/' % model.lower()
+    endpoint = context.server_url + '/api/%ss' % model.lower()
     headers = {
         'Accept': 'application/json; indent=4',
         'Content-type': 'application/json',
@@ -50,7 +51,7 @@ def step_impl(context, model):
 @when(u'I update the "{field}" field on a "{model}" object to "{value}"')
 def step_impl(context, field, model, value):
     # Set up request parameters.
-    endpoint = context.server_url + '/api/%ss/' % model.lower()
+    endpoint = context.server_url + '/api/%ss' % model.lower()
     headers = {
         'Accept': 'application/json; indent=4',
         'Content-type': 'application/json',
@@ -74,16 +75,18 @@ def step_impl(context, field, model, value):
     data = json.dumps(data)
     auth = (context.username, context.password) if context.username else None
 
+    # Get a list of objects available to this user.
     response = requests.get(endpoint, headers=headers, params=params, auth=auth)
-    response = response.json()
-    urls = [result['url'] for result in response['results']]
+    response_content = response.json()
+
+    if response.status_code == status.HTTP_200_OK:
+        urls = [result['url'] for result in response_content['results']]
+    else:
+        urls = [endpoint + '/1']
 
     response = None
     for endpoint in urls:
         response = requests.put(endpoint, headers=headers, params=params, data=data, auth=auth)
-
-    if not response:
-        response = requests.put(endpoint + '1/', headers=headers, params=params, data=data, auth=auth)
 
     context.response = response
 
@@ -98,13 +101,14 @@ def step_impl(context):
     context.captcha = '1234'
 
 
-@then(u'I will be presented with an authentication error')
+@then(u'The response will contain an authentication error')
 def step_impl(context):
 
     response = context.response
     response_content = response.json()
 
     authentication_errors = ['You do not have permission to perform this action.',
+                             'Authentication credentials were not provided.',
                              'Invalid username/password.',]
 
     context.test.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -189,9 +193,13 @@ def step_impl(context, field, value):
 
     response = context.response
     response_content = response.json()
-    field = response_content.get(field, None)
+    field_content = response_content.get(field, None)
 
-    context.test.assertEqual(field, value)
+    if field.lower() == 'password':
+        valid_password = check_password(value, field_content)
+        context.test.assertTrue(valid_password)
+    else:
+        context.test.assertEqual(value, field_content)
 
 
 @step(u'I get a Registration Token')
