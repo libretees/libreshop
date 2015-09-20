@@ -3,6 +3,7 @@ import hashlib
 import requests
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
+from django.core import mail
 from rest_framework import status
 from behave import when, given, then
 
@@ -38,14 +39,21 @@ def step_impl(context, model):
         token = getattr(context, 'token', None)
         if token:
             data['token'] = token
-
         captcha = getattr(context, 'captcha', None)
         if captcha:
             data['captcha'] = captcha
+        email_address = getattr(context, 'email_address', None)
+        if token:
+            data['email'] = email_address
 
     data = json.dumps(data)
     auth = (context.username, context.password) if context.username else None
     context.response = requests.post(endpoint, headers=headers, params=params, data=data, auth=auth)
+
+
+@when(u'I provide an email address of "{email_address}"')
+def step_impl(context, email_address):
+    context.email_address = email_address
 
 
 @when(u'I update the "{field}" field on a "{model}" object to "{value}"')
@@ -65,7 +73,6 @@ def step_impl(context, field, model, value):
         token = getattr(context, 'token', None)
         if token:
             data['token'] = token
-
         captcha = getattr(context, 'captcha', None)
         if captcha:
             data['captcha'] = captcha
@@ -99,6 +106,18 @@ def step_impl(context):
 @when(u'I solve the CAPTCHA')
 def step_impl(context):
     context.captcha = '1234'
+
+
+@then(u'I will receive an email with the subject "{subject}"')
+def step_impl(context, subject):
+    # The `outbox` attribute is only create if a message has been sent, so use `getattr` to provide a default.
+    outbox = getattr(mail, 'outbox', None)
+    email_address = getattr(context, 'email_address', None)
+    if outbox:
+        received_messages = [message for message in outbox if email_address in message.to and message.subject == subject]
+        context.test.assertEqual(len(received_messages), 1)
+    else:
+        assert False
 
 
 @then(u'The response will contain an authentication error')

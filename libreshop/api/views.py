@@ -1,7 +1,9 @@
 import hashlib
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
-from django.contrib.auth.hashers import make_password
+
+from django.core.mail import EmailMessage
 from django.db import transaction
 
 from rest_framework.views import APIView
@@ -42,28 +44,36 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return permissions
 
-    def update(self, request, *args, **kwargs):
-        data = request.data
-
-        password = data.get('password', None)
-        if password:
-            data['password'] = make_password(password)
-
-        return super(UserViewSet, self).update(request, *args, **kwargs)
-
 
     def create(self, request, *args, **kwargs):
         data = request.data
 
         self._validate_captcha(request, *args, **kwargs)
 
+        # Get an email address, if one was specified.
+        user_email_address = data.get('email', None)
+
         with transaction.atomic():
 
             user = User.objects.create_user(
-                username=data['username']
+                username=data['username'],
+                password=data['password'],
+                email=user_email_address
             )
-            user.set_password(data['password'])
             user.save()
+
+        if user_email_address:
+            email = EmailMessage(subject='Welcome to LibreShop!',
+                                 body='Test',
+                                 from_email=settings.DEFAULT_FROM_EMAIL,
+                                 to=[user_email_address],
+                                 bcc=[],
+                                 connection=None,
+                                 attachments=None,
+                                 headers=None,
+                                 cc=None,
+                                 reply_to=None)
+            email.send()
 
         serializer = UserSerializer(user, context={'request': request})
         headers = self.get_success_headers(serializer.data)

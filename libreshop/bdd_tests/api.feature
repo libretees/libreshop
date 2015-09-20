@@ -72,6 +72,17 @@ Feature: api
       Then I will receive a "201 CREATED" response
        And the response will contain my username
 
+  Scenario: register a new user with a solved CAPTCHA and email address
+     Given I am an anonymous user
+      When I query the "Token" API
+       And I get a Registration Token
+       And I solve the CAPTCHA
+       And I provide an email address of "user@test.com"
+       And I create a new "User"
+      Then I will receive a "201 CREATED" response
+       And the response will contain my username
+       And I will receive an email with the subject "Welcome to LibreShop!"
+
   Scenario: update someone else's email as an anonymous user
      Given I am an anonymous user
       When I update the "email" field on a "User" object to "test@test.com"

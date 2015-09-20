@@ -149,3 +149,9 @@ LOGGING = {
 
 # Detect whether or not we are in a testing mode.
 TESTING = (sys.argv[1] if len(sys.argv) > 1 else None) in ['test', 'behave']
+
+# Set up an in-memory email backend for development and testing.
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+
+# Declare the default `from` email.
+DEFAULT_FROM_EMAIL = 'LibreShop <contact@libreshop.org>'

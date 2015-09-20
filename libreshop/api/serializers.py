@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
 from rest_framework import serializers
 from rest_framework import exceptions
@@ -15,6 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
         write_only_fields = ('password',)
         read_only_fields = ('is_staff', 'is_superuser', 'is_active', 'date_joined',)
 
+
     def to_internal_value(self, data):
         native_fields = self.Meta.fields
         non_native_fields = self.Meta.non_native_fields
@@ -27,6 +29,10 @@ class UserSerializer(serializers.ModelSerializer):
 
         native_data = {key:value for (key, value) in data.items() if key in native_fields}
         super(UserSerializer, self).to_internal_value(native_data)
+
+        password = data.get('password', None)
+        if password:
+            data['password'] = make_password(password)
 
         return data
 
