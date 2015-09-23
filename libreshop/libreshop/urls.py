@@ -20,6 +20,7 @@ import customers.urls
 
 urlpatterns = [
     url(r'^$', 'shop.views.home_page', name='home'),
+    url(r'', include('social.apps.django_app.urls', namespace='social')),
     url(r'^api/', include(api.urls)),
     url(r'^user/', include(customers.urls)),
     url(r'^oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),

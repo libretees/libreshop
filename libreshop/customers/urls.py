@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from .views import CustomerCreateView
+from . import views
 
 urlpatterns = [
-    url('^register/', CustomerCreateView.as_view(), name='create'),
+    url('^register/', views.CustomerCreateView.as_view(), name='create'),
+    url(r'^register-by-token/(?P<backend>[^/]+)/$', views.register_by_access_token),
     url('^accounts/', include('django.contrib.auth.urls')),
 ]

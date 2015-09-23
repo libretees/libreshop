@@ -21,6 +21,12 @@
   </head>
   <body>
   <div>
+    <a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Login with Facebook</a>
+  </div>
+  <div>
+    <a href="{% url 'social:begin' 'github' %}?next={{ request.path }}">Login with GitHub</a>
+  </div>
+  <div>
     <form action="" method="post">
       {% csrf_token %}
       {{ form.as_ul }}
