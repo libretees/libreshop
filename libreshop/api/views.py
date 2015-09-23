@@ -38,8 +38,9 @@ class UserViewSet(viewsets.ModelViewSet):
         permissions = None
         if self.request.method in ['GET', 'PUT', 'PATCH']:
             permissions = (IsAuthenticated(),)
-        if self.request.method == 'POST':
-        # allow non-authenticated user to create via POST
+        if self.request.method in ['POST', 'OPTIONS']:
+        # allow non-authenticated users to create via POST
+        # and allow API capabilities to be described via OPTIONS
             permissions = (AllowAny(),)
 
         return permissions

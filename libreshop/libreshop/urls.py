@@ -22,6 +22,6 @@ urlpatterns = [
     url(r'^$', 'shop.views.home_page', name='home'),
     url(r'^api/', include(api.urls)),
     url(r'^user/', include(customers.urls)),
-    url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    url(r'^oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     url(r'^admin/', include(admin.site.urls)),
 ]
