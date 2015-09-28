@@ -30,6 +30,10 @@
     <a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">Login with Twitter</a>
   </div>
   <div>
+  <div>
+    <a href="{% url 'social:begin' 'reddit' %}?next={{ request.path }}">Login with Reddit</a>
+  </div>
+  <div>
     <form action="" method="post">
       {% csrf_token %}
       {{ form.as_ul }}

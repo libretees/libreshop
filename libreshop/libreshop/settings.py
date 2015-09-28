@@ -59,6 +59,7 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.facebook.FacebookOAuth2',
     'social.backends.twitter.TwitterOAuth',
     'social.backends.github.GithubOAuth2',
+    'social.backends.reddit.RedditOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -88,6 +89,9 @@ SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('GITHUB_SECRET')
 
 SOCIAL_AUTH_TWITTER_KEY = os.environ.get('TWITTER_KEY')
 SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('TWITTER_SECRET')
+
+SOCIAL_AUTH_REDDIT_KEY = os.environ.get('REDDIT_KEY')
+SOCIAL_AUTH_REDDIT_SECRET = os.environ.get('REDDIT_SECRET')
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
