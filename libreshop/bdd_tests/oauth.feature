@@ -24,3 +24,5 @@ Feature: oauth
        And I click the "Sign in" button
        And I click the "Authorize application" button
       Then I will see "LibreShop | User Registration" in the browser title
+       And I will navigate to the "GitHub" app settings page
+       And I will remove the "LibreShop" app

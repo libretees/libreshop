@@ -18,6 +18,8 @@ def step_impl(context, id_provider):
     url = None
     if id_provider == 'facebook':
         url = 'https://www.facebook.com/settings?tab=applications'
+    elif id_provider == 'github':
+        url = 'https://github.com/settings/applications'
 
     if not url:
         assert False
@@ -48,8 +50,25 @@ def step_impl(context, app):
 
         # Wait up to 60 seconds for the modal dialog to display.
         wait = WebDriverWait(context.browser, 60)
-        element = wait.until(expected_conditions.element_to_be_clickable((By.XPATH,"//span[contains(text(), 'Remove %s')]" % app)))
+        element = wait.until(expected_conditions.presence_of_element_located((By.XPATH,"//span[contains(text(), 'Remove %s')]" % app)))
 
         # Click the `Remove` button.
         confirmation_button = context.browser.find_element_by_xpath("//input[@value='Remove']")
         confirmation_button.click()
+
+    elif context.id_provider == 'github':
+        # Locate the `Revoke` link and click it.
+        revoke_link = (("//a[contains(text(), '%s')]" +
+                        "/parent::div" +
+                        "/following-sibling::div" +
+                        "/a[contains(text(),'Revoke')]") % app)
+        revoke_link = context.browser.find_element_by_xpath(revoke_link)
+        revoke_link.click()
+
+        # Confirm that we wish to revoke access.
+        wait = WebDriverWait(context.browser, 60)
+        revoke_button = ("//h2[contains(text(), 'Are you sure you want to revoke authorization?')]" +
+                         "/ancestor::div[@role='dialog']" +
+                         "//button[contains(text(), 'I understand, revoke access')]")
+        revoke_button = wait.until(expected_conditions.element_to_be_clickable((By.XPATH, revoke_button)))
+        revoke_button.click()
