@@ -96,16 +96,6 @@ def step_impl(context, text):
     button.click()
 
 
-@when(u'I click the "{text}" button to authorize the app')
-def step_impl(context, text):
-
-    # Click a button displaying "text".
-    if text == 'Okay': # Facebook OAuth Opt-In
-        button = context.browser.find_element_by_xpath("//*[@id='platformDialogForm']/div[2]/table/tbody/tr/td[2]/button[2]")
-
-    button.click()
-
-
 @when(u'I enter "{text}" in the "{label}" field')
 def step_impl(context, text, label):
 

@@ -12,3 +12,5 @@ Feature: oauth
        And I click the "Log In" button
        And I click the "Okay" button to authorize the app
       Then I will see "LibreShop | User Registration" in the browser title
+       And I will navigate to the "Facebook" app settings page
+       And I will remove the "LibreShop" app
