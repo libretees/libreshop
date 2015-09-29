@@ -92,14 +92,14 @@ def step_impl(context):
 def step_impl(context, text):
 
     # Click a button displaying "text".
-    button = context.browser.find_element_by_xpath("//input[@value='%s']" % text)
+    button = context.browser.find_element_by_xpath("//input[@value='%s']|//button[contains(text(), '%s')]" % (text, text))
     button.click()
 
 
 @when(u'I enter "{text}" in the "{label}" field')
 def step_impl(context, text, label):
 
-    inputbox = context.browser.find_element_by_xpath("//input[@id=(//label[text()='%s:']/@for)]" % label)
+    inputbox = context.browser.find_element_by_xpath("//input[@id=(//label[contains(text(), '%s')]/@for)]" % label)
 
     text = get_account_credentials(text)
 
@@ -114,6 +114,10 @@ def get_account_credentials(text):
         credentials = os.environ.get('FACEBOOK_USERNAME', None)
     elif text == 'My Facebook Password':
         credentials = os.environ.get('FACEBOOK_PASSWORD', None)
+    if text == 'My GitHub Username':
+        credentials = os.environ.get('GITHUB_USERNAME', None)
+    elif text == 'My GitHub Password':
+        credentials = os.environ.get('GITHUB_PASSWORD', None)
 
     return credentials
 
