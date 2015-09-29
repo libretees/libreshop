@@ -1,3 +1,4 @@
+import os
 from behave import when, given, then
 
 
@@ -34,6 +35,16 @@ def step_impl(context, text):
 
 @then(u'I will see "{text}" in the browser title')
 def step_impl(context, text):
+    """
+    Wait up to 10 seconds for the title specified by `text` to display in the
+    browser title bar. This allows time to pass for page loads as well as for
+    redirect chains.
+    """
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions
+
+    wait = WebDriverWait(context.browser, 10)
+    element = wait.until(expected_conditions.title_is(text))
 
     context.test.assertIn(text, context.browser.title)
 
@@ -85,13 +96,39 @@ def step_impl(context, text):
     button.click()
 
 
+@when(u'I click the "{text}" button to authorize the app')
+def step_impl(context, text):
+
+    # Click a button displaying "text".
+    if text == 'Okay': # Facebook OAuth Opt-In
+        button = context.browser.find_element_by_xpath("//*[@id='platformDialogForm']/div[2]/table/tbody/tr/td[2]/button[2]")
+
+    button.click()
+
+
 @when(u'I enter "{text}" in the "{label}" field')
 def step_impl(context, text, label):
 
     inputbox = context.browser.find_element_by_xpath("//input[@id=(//label[text()='%s:']/@for)]" % label)
+
+    text = get_account_credentials(text)
+
     inputbox.send_keys(text)
 
 
-@when(u'I take a screenshot named "{text}"')
+def get_account_credentials(text):
+
+    credentials = text
+
+    if text == 'My Facebook Username':
+        credentials = os.environ.get('FACEBOOK_USERNAME', None)
+    elif text == 'My Facebook Password':
+        credentials = os.environ.get('FACEBOOK_PASSWORD', None)
+
+    return credentials
+
+
+@step(u'I take a screenshot named "{text}"')
 def step_impl(context, text):
+
     context.browser.save_screenshot('%s.png' % text)

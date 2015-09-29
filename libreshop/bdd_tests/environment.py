@@ -20,7 +20,7 @@ def before_all(context):
     context.browser = webdriver.Firefox()
 
     # Wait a maximum of 3 seconds if an element is not present.
-    context.browser.implicitly_wait(3)
+    context.browser.implicitly_wait(5)
 
     # Store Live Server URL.
     context.server_url = 'http://%s' % os.environ.get('DJANGO_LIVE_TEST_SERVER_ADDRESS', 'localhost:8081')
