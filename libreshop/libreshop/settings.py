@@ -27,6 +27,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Detect whether or not we are in a testing mode.
+TESTING = (sys.argv[1] if len(sys.argv) > 1 else None) in ['test', 'behave']
+
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -85,8 +88,12 @@ OAUTH2_PROVIDER = {
 SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('FACEBOOK_KEY')
 SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('FACEBOOK_SECRET')
 
-SOCIAL_AUTH_GITHUB_KEY = os.environ.get('GITHUB_KEY')
-SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('GITHUB_SECRET')
+if TESTING:
+    SOCIAL_AUTH_GITHUB_KEY = os.environ.get('GITHUB_LOCAL_KEY')
+    SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('GITHUB_LOCAL_SECRET')
+else:
+    SOCIAL_AUTH_GITHUB_KEY = os.environ.get('GITHUB_DEV_KEY')
+    SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('GITHUB_DEV_SECRET')
 
 SOCIAL_AUTH_TWITTER_KEY = os.environ.get('TWITTER_KEY')
 SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('TWITTER_SECRET')
@@ -180,10 +187,6 @@ LOGGING = {
         },
     },
 }
-
-
-# Detect whether or not we are in a testing mode.
-TESTING = (sys.argv[1] if len(sys.argv) > 1 else None) in ['test', 'behave']
 
 # Set up an in-memory email backend for development and testing.
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
