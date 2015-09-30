@@ -20,6 +20,8 @@ def step_impl(context, id_provider):
         url = 'https://www.facebook.com/settings?tab=applications'
     elif id_provider == 'github':
         url = 'https://github.com/settings/applications'
+    elif id_provider == 'twitter':
+        url = 'https://twitter.com/settings/applications'
 
     if not url:
         assert False
@@ -73,4 +75,12 @@ def step_impl(context, app):
                  "/ancestor::div[@role='dialog']" +
                  "//button[contains(text(), 'I understand, revoke access')]")
         revoke_button = wait.until(element_to_be_clickable((By.XPATH, xpath)))
+        revoke_button.click()
+
+    elif context.id_provider == 'twitter':
+        # Locate the `Revoke access` button and click it.
+        xpath = (("//strong[contains(text(), '%s')]" +
+                  "//ancestor::div[@class='app']" +
+                  "/button") % app)
+        revoke_button = context.browser.find_element_by_xpath(xpath)
         revoke_button.click()

@@ -114,10 +114,14 @@ def get_account_credentials(text):
         credentials = os.environ.get('FACEBOOK_USERNAME', None)
     elif text == 'My Facebook Password':
         credentials = os.environ.get('FACEBOOK_PASSWORD', None)
-    if text == 'My GitHub Username':
+    elif text == 'My GitHub Username':
         credentials = os.environ.get('GITHUB_USERNAME', None)
     elif text == 'My GitHub Password':
         credentials = os.environ.get('GITHUB_PASSWORD', None)
+    elif text == 'My Twitter Username':
+        credentials = os.environ.get('TWITTER_USERNAME', None)
+    elif text == 'My Twitter Password':
+        credentials = os.environ.get('TWITTER_PASSWORD', None)
 
     return credentials
 

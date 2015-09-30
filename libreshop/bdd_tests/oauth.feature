@@ -26,3 +26,14 @@ Feature: oauth
       Then I will see "LibreShop | User Registration" in the browser title
        And I will navigate to the "GitHub" app settings page
        And I will remove the "LibreShop" app
+
+  Scenario: log in with Twitter
+     Given I am an anonymous user
+      When I visit the user registration page
+       And I click the "Log in with Twitter" link
+       And I enter "My Twitter Username" in the "Username or email" field
+       And I enter "My Twitter Password" in the "Password" field
+       And I click the "Sign In" button
+      Then I will see "LibreShop | User Registration" in the browser title
+       And I will navigate to the "Twitter" app settings page
+       And I will remove the "LibreShop" app
