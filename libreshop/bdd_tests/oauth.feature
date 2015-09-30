@@ -37,3 +37,15 @@ Feature: oauth
       Then I will see "LibreShop | User Registration" in the browser title
        And I will navigate to the "Twitter" app settings page
        And I will remove the "LibreShop" app
+
+  Scenario: log in with Reddit
+     Given I am an anonymous user
+      When I visit the user registration page
+       And I click the "Log in with Reddit" link
+       And I enter "My Reddit Username" in the "username" field
+       And I enter "My Reddit Password" in the "password" field
+       And I click the "log in" button
+       And I click the "Allow" button
+      Then I will see "LibreShop | User Registration" in the browser title
+       And I will navigate to the "Reddit" app settings page
+       And I will remove the "LibreShop" app

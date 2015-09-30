@@ -99,11 +99,17 @@ def step_impl(context, text):
 @when(u'I enter "{text}" in the "{label}" field')
 def step_impl(context, text, label):
 
-    inputbox = context.browser.find_element_by_xpath("//input[@id=(//label[contains(text(), '%s')]/@for)]" % label)
+    xpath = "//input[@id=(//label[text()='%s:']/@for)]" % label
+    input_boxes = context.browser.find_elements_by_xpath(xpath)
+
+    if not input_boxes:
+        xpath = "//input[@id=(//label[contains(text(), '%s')]/@for)]" % label
+        input_boxes = context.browser.find_elements_by_xpath(xpath)
 
     text = get_account_credentials(text)
 
-    inputbox.send_keys(text)
+    for input_box in input_boxes:
+        input_box.send_keys(text)
 
 
 def get_account_credentials(text):
@@ -122,6 +128,10 @@ def get_account_credentials(text):
         credentials = os.environ.get('TWITTER_USERNAME', None)
     elif text == 'My Twitter Password':
         credentials = os.environ.get('TWITTER_PASSWORD', None)
+    elif text == 'My Reddit Username':
+        credentials = os.environ.get('REDDIT_USERNAME', None)
+    elif text == 'My Reddit Password':
+        credentials = os.environ.get('REDDIT_PASSWORD', None)
 
     return credentials
 

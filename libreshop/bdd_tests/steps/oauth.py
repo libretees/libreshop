@@ -22,6 +22,8 @@ def step_impl(context, id_provider):
         url = 'https://github.com/settings/applications'
     elif id_provider == 'twitter':
         url = 'https://twitter.com/settings/applications'
+    elif id_provider == 'reddit':
+        url = 'https://www.reddit.com/prefs/apps/'
 
     if not url:
         assert False
@@ -84,3 +86,20 @@ def step_impl(context, app):
                   "/button") % app)
         revoke_button = context.browser.find_element_by_xpath(xpath)
         revoke_button.click()
+
+    elif context.id_provider == 'reddit':
+        # Locate the `revoke access` link and click it.
+        xpath = (("//h2[contains(text(), '%s')]" +
+                  "//ancestor::div[@class='app-details']" +
+                  "//parent::div" +
+                  "//a[text()='revoke access']") % app)
+        revoke_link = context.browser.find_element_by_xpath(xpath)
+        revoke_link.click()
+
+        # Confirm that we wish to revoke access.
+        xpath = (("//h2[contains(text(), '%s')]" +
+                  "//ancestor::div[@class='app-details']" +
+                  "//parent::div" +
+                  "//a[text()='yes']") % app)
+        confirmation_link = context.browser.find_element_by_xpath(xpath)
+        confirmation_link.click()

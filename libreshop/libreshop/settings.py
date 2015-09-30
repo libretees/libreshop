@@ -85,21 +85,22 @@ OAUTH2_PROVIDER = {
     'SCOPES': {'read': 'Read scope', 'write': 'Write scope'}
 }
 
+SOCIAL_AUTH_TWITTER_KEY = os.environ.get('TWITTER_KEY')
+SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('TWITTER_SECRET')
+
 SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('FACEBOOK_KEY')
 SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('FACEBOOK_SECRET')
 
 if TESTING:
     SOCIAL_AUTH_GITHUB_KEY = os.environ.get('GITHUB_LOCAL_KEY')
     SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('GITHUB_LOCAL_SECRET')
+    SOCIAL_AUTH_REDDIT_KEY = os.environ.get('REDDIT_LOCAL_KEY')
+    SOCIAL_AUTH_REDDIT_SECRET = os.environ.get('REDDIT_LOCAL_SECRET')
 else:
     SOCIAL_AUTH_GITHUB_KEY = os.environ.get('GITHUB_DEV_KEY')
     SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('GITHUB_DEV_SECRET')
-
-SOCIAL_AUTH_TWITTER_KEY = os.environ.get('TWITTER_KEY')
-SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('TWITTER_SECRET')
-
-SOCIAL_AUTH_REDDIT_KEY = os.environ.get('REDDIT_KEY')
-SOCIAL_AUTH_REDDIT_SECRET = os.environ.get('REDDIT_SECRET')
+    SOCIAL_AUTH_REDDIT_KEY = os.environ.get('REDDIT_DEV_KEY')
+    SOCIAL_AUTH_REDDIT_SECRET = os.environ.get('REDDIT_DEV_SECRET')
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
