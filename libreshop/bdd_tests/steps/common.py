@@ -67,6 +67,11 @@ def step_impl(context, text):
 def step_impl(context, text):
 
     link = context.browser.find_elements_by_link_text(text)
+
+    if not link:
+        # Try to find the link by XPath, since there may be hidden elements within the <a> tag's text.
+        link = context.browser.find_element_by_xpath("//a[contains(text(), '%s')]" % text)
+
     assert link
 
 
