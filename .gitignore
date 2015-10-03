@@ -6,6 +6,9 @@
 docs/build
 browser.png
 
+# Vim-specific files
+*.swp
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
