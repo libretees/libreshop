@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.7.2" last-position="3,69" last-zoom="0.8">
+<database name="new_database">
+</database>
+
+<schema name="public" protected="true" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<table name="Products">
+	<schema name="public"/>
+	<position x="47.5" y="218.25"/>
+	<column name="id">
+		<type name="smallint"/>
+	</column>
+	<column name="base_sku">
+		<type name="varchar"/>
+	</column>
+</table>
+
+<table name="Variants">
+	<schema name="public"/>
+	<position x="415" y="186.25"/>
+	<column name="id">
+		<type name="smallint"/>
+	</column>
+	<column name="product_id">
+		<type name="smallint"/>
+	</column>
+	<column name="name">
+		<type name="varchar"/>
+	</column>
+	<column name="sub_sku">
+		<type name="varchar"/>
+	</column>
+	<column name="photo">
+		<type name="varchar"/>
+	</column>
+	<column name="price">
+		<type name="decimal"/>
+	</column>
+</table>
+
+<table name="Inventory">
+	<schema name="public"/>
+	<position x="825" y="448.75"/>
+	<column name="id">
+		<type name="smallint"/>
+	</column>
+	<column name="location_id">
+		<type name="smallint"/>
+	</column>
+	<column name="name">
+		<type name="varchar"/>
+	</column>
+	<column name="quantity">
+		<type name="smallint"/>
+	</column>
+	<column name="cost">
+		<type name="decimal"/>
+	</column>
+</table>
+
+<table name="Components">
+	<schema name="public"/>
+	<position x="816.25" y="202.5"/>
+	<column name="id">
+		<type name="smallint"/>
+	</column>
+	<column name="variant_id">
+		<type name="smallint"/>
+	</column>
+	<column name="inventory_id">
+		<type name="smallint"/>
+	</column>
+	<column name="quantity">
+		<type name="smallint"/>
+	</column>
+</table>
+
+<table name="Alternatives">
+	<schema name="public"/>
+	<position x="1226.25" y="466.25"/>
+	<column name="id">
+		<type name="smallint"/>
+	</column>
+	<column name="inventory_id">
+		<type name="smallint"/>
+	</column>
+	<column name="alt_inventory_id">
+		<type name="smallint"/>
+	</column>
+</table>
+
+<table name="Location">
+	<schema name="public"/>
+	<position x="1265" y="212.5"/>
+	<column name="id">
+		<type name="smallint"/>
+	</column>
+	<column name="name">
+		<type name="varchar"/>
+	</column>
+</table>
+
+<table name="Attributes">
+	<schema name="public"/>
+	<position x="47.5" y="470"/>
+	<column name="id">
+		<type name="smallint"/>
+	</column>
+	<column name="name">
+		<type name="varchar"/>
+	</column>
+	<column name="displayed">
+		<type name="boolean"/>
+	</column>
+</table>
+
+<table name="Attribute_Values">
+	<schema name="public"/>
+	<position x="415" y="458.75"/>
+	<column name="id">
+		<type name="smallint"/>
+	</column>
+	<column name="attribute_id">
+		<type name="smallint"/>
+	</column>
+	<column name="inventory_id">
+		<type name="smallint"/>
+	</column>
+	<column name="value">
+		<type name="varchar"/>
+	</column>
+</table>
+
+<constraint name="product_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Products&quot;" table="public.&quot;Variants&quot;">
+	<columns names="product_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="a" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Location&quot;" table="public.&quot;Inventory&quot;">
+	<columns names="location_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="b" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Inventory&quot;" table="public.&quot;Components&quot;">
+	<columns names="inventory_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="c" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Variants&quot;" table="public.&quot;Components&quot;">
+	<columns names="variant_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="a" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Inventory&quot;" table="public.&quot;Alternatives&quot;">
+	<columns names="inventory_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="b" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Inventory&quot;" table="public.&quot;Alternatives&quot;">
+	<columns names="alt_inventory_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="a" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Attributes&quot;" table="public.&quot;Attribute_Values&quot;">
+	<columns names="attribute_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="b" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Inventory&quot;" table="public.&quot;Attribute_Values&quot;">
+	<columns names="inventory_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<relationship name="rel_Variants_Products" type="relfk"
+	 src-table="public.&quot;Variants&quot;"
+	 dst-table="public.&quot;Products&quot;"
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<relationship name="&quot;rel_Components_Inventory&quot;" type="relfk"
+	 src-table="public.&quot;Components&quot;"
+	 dst-table="public.&quot;Inventory&quot;"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="&quot;rel_Components_Variants&quot;" type="relfk"
+	 src-table="public.&quot;Components&quot;"
+	 dst-table="public.&quot;Variants&quot;"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="&quot;rel_Alternatives_Inventory&quot;" type="relfk"
+	 src-table="public.&quot;Alternatives&quot;"
+	 dst-table="public.&quot;Inventory&quot;"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="&quot;rel_Inventory_Location&quot;" type="relfk"
+	 src-table="public.&quot;Inventory&quot;"
+	 dst-table="public.&quot;Location&quot;"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="&quot;rel_Attribute_Values_Attributes&quot;" type="relfk"
+	 src-table="public.&quot;Attribute_Values&quot;"
+	 dst-table="public.&quot;Attributes&quot;"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="&quot;rel_Attribute_Values_Inventory&quot;" type="relfk"
+	 src-table="public.&quot;Attribute_Values&quot;"
+	 dst-table="public.&quot;Inventory&quot;"
+	 src-required="true" dst-required="true"/>
+
+</dbmodel>
