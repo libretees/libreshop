@@ -4,27 +4,81 @@ from jsonfield import JSONField
 
 # Create your models here.
 class Product(TimeStampedModel):
-    sku = models.CharField(max_length=8
-                          ,null=True
-                          ,blank=True)
-    name = models.CharField(max_length=32
-                           ,null=False
-                           ,blank=False
-                           ,unique=True)
-    featured = models.BooleanField(null=False
-                                  ,blank=False
-                                  ,default=False)
-    slug = models.SlugField(max_length=32
-                           ,null=True
-                           ,blank=True
-                           ,db_index=True)
-    teaser = models.CharField(max_length=128
-                             ,null=True
-                             ,blank=True) 
-    description = models.TextField(null=True
-                                  ,blank=True)
-    attributes = JSONField(null=True
-                          ,blank=True)
-    
+    sku = models.CharField(max_length=8,
+                           null=True,
+                           blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Variant(TimeStampedModel):
+
+    product = models.ForeignKey(Product)
+    name = models.CharField(max_length=64,
+                            null=True,
+                            blank=True)
+    sub_sku = models.CharField(max_length=8,
+                               null=True,
+                               blank=True)
+    price = models.DecimalField(max_digits=8,
+                                decimal_places=2)
+
+    def __str__(self):
+        return self.name
+
+
+class Location(TimeStampedModel):
+
+    name = models.CharField(max_length=64,
+                            null=True,
+                            blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Attribute(TimeStampedModel):
+
+    name = models.CharField(max_length=64,
+                            null=True,
+                            blank=True)
+
+
+class Attribute_Values(TimeStampedModel):
+
+    attribute = models.ForeignKey('Attribute')
+    inventory = models.ForeignKey('Inventory')
+    value = models.CharField(max_length=64,
+                             null=True,
+                             blank=True)
+
+
+class Inventory(TimeStampedModel):
+
+    location = models.ForeignKey(Location)
+    name = models.CharField(max_length=64,
+                            null=True,
+                            blank=True)
+    attributes = models.ManyToManyField(Attribute,
+                                        through='Attribute_Values',
+                                        through_fields=('inventory', 'attribute'))
+    alternatives = models.ManyToManyField('self')
+    quantity = models.DecimalField(max_digits=8,
+                                   decimal_places=2)
+    cost = models.DecimalField(max_digits=8,
+                               decimal_places=2)
+
+    def __str__(self):
+        return self.name
+
+
+class Component(TimeStampedModel):
+
+    variant = models.ForeignKey(Variant)
+    inventory = models.ForeignKey(Inventory)
+    quantity = models.DecimalField(max_digits=8,
+                                   decimal_places=2)
+
     def __str__(self):
         return self.name
