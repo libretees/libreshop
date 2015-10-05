@@ -45,7 +45,10 @@ class Attribute(TimeStampedModel):
                             blank=True)
 
 
-class Attribute_Values(TimeStampedModel):
+class Attribute_Value(TimeStampedModel):
+
+    class Meta():
+        verbose_name_plural = 'attribute values'
 
     attribute = models.ForeignKey('Attribute')
     inventory = models.ForeignKey('Inventory')
@@ -61,7 +64,7 @@ class Inventory(TimeStampedModel):
                             null=True,
                             blank=True)
     attributes = models.ManyToManyField(Attribute,
-                                        through='Attribute_Values',
+                                        through='Attribute_Value',
                                         through_fields=('inventory', 'attribute'))
     alternatives = models.ManyToManyField('self')
     quantity = models.DecimalField(max_digits=8,
