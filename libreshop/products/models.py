@@ -1,15 +1,44 @@
+import logging
+from decimal import Decimal
 from django.db import models
+from django.db import transaction
 from model_utils.models import TimeStampedModel
 from jsonfield import JSONField
 
+
+# Initialize logger
+logger = logging.getLogger(__name__)
+
+
 # Create your models here.
+class ProductManager(models.Manager):
+
+    def create(self, *args, **kwargs):
+        product = None
+        with transaction.atomic():
+            product = super(ProductManager, self).create(*args, **kwargs)
+            variant = Variant.objects.create(product=product)
+
+        return product
+
 class Product(TimeStampedModel):
+
     sku = models.CharField(max_length=8,
-                           null=True,
-                           blank=True)
+                           unique=True,
+                           null=False)
+
+    objects = ProductManager()
+
+    def save(self, *args, **kwargs):
+        product = None
+        with transaction.atomic():
+            super(Product, self).save(*args, **kwargs)
+            variant = Variant.objects.create(product=self)
+
+        return product
 
     def __str__(self):
-        return self.name
+        return 'Product: %s' % self.sku
 
 
 class Variant(TimeStampedModel):
@@ -22,10 +51,12 @@ class Variant(TimeStampedModel):
                                null=True,
                                blank=True)
     price = models.DecimalField(max_digits=8,
-                                decimal_places=2)
+                                decimal_places=2,
+                                null=False,
+                                default=Decimal('0.00'))
 
     def __str__(self):
-        return self.name
+        return self.name or 'Variant of Product: %s' % self.product.sku
 
 
 class Location(TimeStampedModel):
@@ -59,6 +90,9 @@ class Attribute_Value(TimeStampedModel):
 
 class Inventory(TimeStampedModel):
 
+    class Meta():
+        verbose_name_plural = 'inventory'
+
     location = models.ForeignKey(Location)
     name = models.CharField(max_length=64,
                             null=True,
@@ -82,6 +116,3 @@ class Component(TimeStampedModel):
     inventory = models.ForeignKey(Inventory)
     quantity = models.DecimalField(max_digits=8,
                                    decimal_places=2)
-
-    def __str__(self):
-        return self.name
