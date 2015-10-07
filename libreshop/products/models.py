@@ -18,7 +18,7 @@ class ProductManager(models.Manager):
         with transaction.atomic():
 
             product = super(ProductManager, self).create(*args, **kwargs)
-            variant_exists = bool(Variant.objects.filter(product=self).count())
+            variant_exists = bool(Variant.objects.filter(product=product).count())
             if not variant_exists:
                 variant = Variant.objects.create(product=product)
 
@@ -35,8 +35,7 @@ class Product(TimeStampedModel):
     def save(self, *args, **kwargs):
         product = None
         with transaction.atomic():
-            super(Product, self).save(*args, **kwargs)
-
+            product = super(Product, self).save(*args, **kwargs)
             variant_exists = bool(Variant.objects.filter(product=self).count())
             if not variant_exists:
                 variant = Variant.objects.create(product=self)
@@ -45,6 +44,19 @@ class Product(TimeStampedModel):
 
     def __str__(self):
         return 'Product: %s' % self.sku
+
+
+class VariantManager(models.Manager):
+
+    def create(self, *args, **kwargs):
+        variant = None
+        with transaction.atomic():
+            variant = super(VariantManager, self).create(*args, **kwargs)
+            component_exists = bool(Component.objects.filter(variant=variant).count())
+            if not component_exists:
+                component = Component.objects.create(variant=variant)
+
+        return variant
 
 
 class Variant(TimeStampedModel):
@@ -60,6 +72,19 @@ class Variant(TimeStampedModel):
                                 decimal_places=2,
                                 null=False,
                                 default=Decimal('0.00'))
+
+    objects = VariantManager()
+
+    def save(self, *args, **kwargs):
+        variant = None
+        with transaction.atomic():
+            variant = super(Variant, self).save(*args, **kwargs)
+            component_exists = (bool(Component.objects.filter(variant=self).
+                count()))
+            if not component_exists:
+                component = Component.objects.create(variant=self)
+
+        return variant
 
     def __str__(self):
         return self.name or 'Variant(%s) of Product: %s' % (self.id, self.product.sku)
@@ -119,6 +144,13 @@ class Inventory(TimeStampedModel):
 class Component(TimeStampedModel):
 
     variant = models.ForeignKey(Variant)
-    inventory = models.ForeignKey(Inventory)
+    inventory = models.ForeignKey(Inventory,
+                                  blank=True,
+                                  null=True)
     quantity = models.DecimalField(max_digits=8,
-                                   decimal_places=2)
+                                   decimal_places=2,
+                                   null=False,
+                                   default=Decimal('1'))
+
+    def __str__(self):
+        return 'Component of Variant'
