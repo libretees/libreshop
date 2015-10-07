@@ -16,8 +16,11 @@ class ProductManager(models.Manager):
     def create(self, *args, **kwargs):
         product = None
         with transaction.atomic():
+
             product = super(ProductManager, self).create(*args, **kwargs)
-            variant = Variant.objects.create(product=product)
+            variant_exists = bool(Variant.objects.filter(product=self).count())
+            if not variant_exists:
+                variant = Variant.objects.create(product=product)
 
         return product
 
@@ -33,7 +36,10 @@ class Product(TimeStampedModel):
         product = None
         with transaction.atomic():
             super(Product, self).save(*args, **kwargs)
-            variant = Variant.objects.create(product=self)
+
+            variant_exists = bool(Variant.objects.filter(product=self).count())
+            if not variant_exists:
+                variant = Variant.objects.create(product=self)
 
         return product
 
@@ -56,7 +62,7 @@ class Variant(TimeStampedModel):
                                 default=Decimal('0.00'))
 
     def __str__(self):
-        return self.name or 'Variant of Product: %s' % self.product.sku
+        return self.name or 'Variant(%s) of Product: %s' % (self.id, self.product.sku)
 
 
 class Location(TimeStampedModel):
