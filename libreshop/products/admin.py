@@ -14,10 +14,27 @@ admin.site.register(models.Location)
 admin.site.register(models.Attribute)
 admin.site.register(models.Attribute_Value)
 
+class VariantInlineAdmin(admin.TabularInline):
+    model = models.Variant
+    extra = 0
+    show_change_link = False
+
+    def get_max_num(self, request, obj=None, **kwargs):
+        return models.Variant.objects.filter(product=obj).count() if obj else 1
+
 class ProductAdmin(admin.ModelAdmin):
 
     form = ProductChangeForm
     add_form = ProductCreationForm
+
+    def get_inline_instances(self, request, obj=None):
+
+        if obj:
+            inlines = set(self.inlines)
+            inlines.add(VariantInlineAdmin)
+            self.inlines = list(inlines)
+
+        return super(ProductAdmin, self).get_inline_instances(request, obj)
 
     def has_add_permission(self, request):
         """
