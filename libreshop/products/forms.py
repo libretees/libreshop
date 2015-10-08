@@ -39,9 +39,13 @@ class RelatedFieldWidgetWrapper(admin.widgets.RelatedFieldWidgetWrapper):
 
 
 class ProductChangeForm(forms.ModelForm):
+    class Meta:
+        model = models.Product
+        fields = ('sku',)
+
     variants = forms.ModelMultipleChoiceField(queryset=None,
                                               widget=admin.widgets.FilteredSelectMultiple('Variants', False),
-                                              required=False)
+                                              required=True)
 
     def __init__(self, *args, **kwargs):
         super(ProductChangeForm, self).__init__(*args, **kwargs)
@@ -68,25 +72,44 @@ class ProductChangeForm(forms.ModelForm):
 
         return instance
 
+
+class ProductCreationForm(forms.ModelForm):
     class Meta:
         model = models.Product
         fields = ('sku',)
 
-
-class ProductCreationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProductCreationForm, self).__init__(*args, **kwargs)
 
+
+class VariantCreationForm(forms.ModelForm):
     class Meta:
-        model = models.Product
-        fields = ('sku',)
+        model = models.Variant
+        fields = ('product', 'name', 'sub_sku', 'price')
+
+    components = forms.ModelMultipleChoiceField(queryset=None,
+                                                widget=admin.widgets.FilteredSelectMultiple('Components', False),
+                                                required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(VariantCreationForm, self).__init__(*args, **kwargs)
+        self.fields['components'].queryset = models.Component.objects.filter(variant=self.instance)
+        self.initial['components'] = models.Component.objects.filter(variant=self.instance)
+        relation = OneToOneRel(field=models.Variant,
+                               to=models.Component,
+                               field_name='id')
+        prepopulated_values = [('variant', self.instance.pk)]
+        self.fields['components'].widget = RelatedFieldWidgetWrapper(self.fields['components'].widget,
+                                                                     relation,
+                                                                     admin.site,
+                                                                     prepopulated_values)
 
 
-def PopulatedFormFactory(cls, request):
+def PopulatedFormFactory(request, cls, form=forms.ModelForm):
 
     model_field_names = [_.name for _ in cls._meta.get_fields()]
 
-    class PopulatedForm(forms.ModelForm):
+    class PopulatedForm(form):
         def __init__(self, *args, **kwargs):
             super(PopulatedForm, self).__init__(*args, **kwargs)
             if request.method == 'GET':

@@ -2,7 +2,8 @@ import logging
 from django.contrib import admin
 from django.contrib.admin.options import IS_POPUP_VAR
 from . import models
-from .forms import ProductCreationForm, ProductChangeForm, PopulatedFormFactory
+from .forms import (ProductCreationForm, ProductChangeForm, VariantCreationForm,
+    PopulatedFormFactory)
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -83,13 +84,16 @@ class ProductAdmin(admin.ModelAdmin):
 
 class VariantAdmin(admin.ModelAdmin):
 
+    add_form = VariantCreationForm
+
     def __init__(self, *args, **kwargs):
         super(VariantAdmin, self).__init__(*args, **kwargs)
 
     def get_form(self, request, obj=None, **kwargs):
         defaults = {}
         if obj is None:
-            defaults['form'] = PopulatedFormFactory(models.Variant, request)
+            defaults['form'] = PopulatedFormFactory(request, models.Variant,
+                self.add_form)
         defaults.update(kwargs)
         return super(VariantAdmin, self).get_form(request, obj, **defaults)
 
