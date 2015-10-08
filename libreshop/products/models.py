@@ -18,7 +18,7 @@ class ProductManager(models.Manager):
         with transaction.atomic():
 
             product = super(ProductManager, self).create(*args, **kwargs)
-            variant_exists = bool(Variant.objects.filter(product=product).count())
+            variant_exists = bool(Variant.objects.filter(product=product))
             if not variant_exists:
                 variant = Variant.objects.create(product=product)
 
@@ -79,12 +79,22 @@ class Variant(TimeStampedModel):
         variant = None
         with transaction.atomic():
             variant = super(Variant, self).save(*args, **kwargs)
-            component_exists = (bool(Component.objects.filter(variant=self).
-                count()))
+
+            component_exists = bool(Component.objects.filter(variant=self))
+
             if not component_exists:
                 component = Component.objects.create(variant=self)
 
         return variant
+
+    def delete(self, *args, **kwargs):
+        super(Variant, self).delete(*args, **kwargs)
+
+        product_exists = bool(Product.objects.get(id=self.product_id))
+        variant_exists = bool(Variant.objects.filter(product=self.product))
+
+        if product_exists and not variant_exists:
+            variant = Variant.objects.create(product=self.product)
 
     def __str__(self):
         return self.name or 'Variant(%s) of Product: %s' % (self.id, self.product.sku)
