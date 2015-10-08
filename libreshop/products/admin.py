@@ -34,6 +34,8 @@ class ProductAdmin(admin.ModelAdmin):
             inlines = set(self.inlines)
             inlines.add(VariantInlineAdmin)
             self.inlines = list(inlines)
+        else:
+            self.inlines = []
 
         return super(ProductAdmin, self).get_inline_instances(request, obj)
 
