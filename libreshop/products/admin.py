@@ -4,6 +4,7 @@ from django.contrib.admin.options import IS_POPUP_VAR
 from . import models
 from .forms import (ProductCreationForm, ProductChangeForm, VariantCreationForm,
     PopulatedFormFactory)
+from nested_inline.admin import NestedTabularInline, NestedModelAdmin
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -15,15 +16,26 @@ admin.site.register(models.Location)
 admin.site.register(models.Attribute)
 admin.site.register(models.Attribute_Value)
 
-class VariantInlineAdmin(admin.TabularInline):
-    model = models.Variant
+
+class ComponentInlineAdmin(NestedTabularInline):
+    model = models.Component
     extra = 0
-    show_change_link = False
+    show_change_link = False # Does not work with Nested Inlines.
+
+
+class VariantInlineAdmin(NestedTabularInline):
+    model = models.Variant
+    inlines = [ComponentInlineAdmin,]
+    extra = 0
+    show_change_link = False # Does not work with Nested Inlines.
 
     def get_max_num(self, request, obj=None, **kwargs):
         return models.Variant.objects.filter(product=obj).count() if obj else 1
 
-class ProductAdmin(admin.ModelAdmin):
+
+class ProductAdmin(NestedModelAdmin):
+
+    list_display = ('sku', 'name')
 
     form = ProductChangeForm
     add_form = ProductCreationForm
@@ -32,7 +44,7 @@ class ProductAdmin(admin.ModelAdmin):
 
         if obj:
             inlines = set(self.inlines)
-            inlines.add(VariantInlineAdmin)
+            inlines = inlines.union({VariantInlineAdmin,})
             self.inlines = list(inlines)
         else:
             self.inlines = []

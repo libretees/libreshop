@@ -48,6 +48,7 @@ THIRD_PARTY_APPS = (
     'social.apps.django_app.default',
     'oauth2_provider',
     'rest_framework',
+    'nested_inline',
 )
 
 LOCAL_APPS = (

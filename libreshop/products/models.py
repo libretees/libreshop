@@ -6,7 +6,7 @@ from model_utils.models import TimeStampedModel
 from jsonfield import JSONField
 
 
-# Initialize logger
+# Initialize logger.
 logger = logging.getLogger(__name__)
 
 
@@ -24,11 +24,16 @@ class ProductManager(models.Manager):
 
         return product
 
+
 class Product(TimeStampedModel):
 
     sku = models.CharField(max_length=8,
                            unique=True,
                            null=False)
+    name = models.CharField(max_length=64,
+                            unique=True,
+                            null=False,
+                            blank=False)
 
     objects = ProductManager()
 
@@ -43,7 +48,7 @@ class Product(TimeStampedModel):
         return product
 
     def __str__(self):
-        return 'Product: %s' % self.sku
+        return self.name
 
 
 class VariantManager(models.Manager):

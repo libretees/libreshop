@@ -41,7 +41,7 @@ class RelatedFieldWidgetWrapper(admin.widgets.RelatedFieldWidgetWrapper):
 class ProductChangeForm(forms.ModelForm):
     class Meta:
         model = models.Product
-        fields = ('sku',)
+        fields = ('sku', 'name')
 
     variants = forms.ModelMultipleChoiceField(queryset=None,
                                               widget=admin.widgets.FilteredSelectMultiple('Variants', False),
@@ -76,7 +76,7 @@ class ProductChangeForm(forms.ModelForm):
 class ProductCreationForm(forms.ModelForm):
     class Meta:
         model = models.Product
-        fields = ('sku',)
+        fields = ('sku', 'name')
 
     def __init__(self, *args, **kwargs):
         super(ProductCreationForm, self).__init__(*args, **kwargs)
