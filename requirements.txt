@@ -7,6 +7,7 @@ defusedxml==0.4.1
 Django==1.8.4
 django-braces==1.8.1
 django-model-utils==2.3.1
+django-nested-inline==0.3.5
 django-oauth-toolkit==0.9.0
 djangorestframework==3.2.3
 docutils==0.12
@@ -21,7 +22,7 @@ parse-type==0.3.4
 Pillow==2.9.0
 Pygments==2.0.2
 PyJWT==1.4.0
-python-social-auth==0.2.12
+python-social-auth==0.2.13
 python3-openid==3.0.7
 pytz==2015.4
 PyVirtualDisplay==0.1.5
