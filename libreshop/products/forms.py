@@ -49,6 +49,7 @@ class ProductChangeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProductChangeForm, self).__init__(*args, **kwargs)
+        self.fields['sku'].label = 'SKU'
         self.fields['variants'].queryset = models.Variant.objects.filter(product=self.instance)
         self.initial['variants'] = models.Variant.objects.filter(product=self.instance)
         relation = OneToOneRel(field=models.Product,
@@ -80,6 +81,7 @@ class ProductCreationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProductCreationForm, self).__init__(*args, **kwargs)
+        self.fields['sku'].label = 'SKU'
 
 
 class VariantCreationForm(forms.ModelForm):

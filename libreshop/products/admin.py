@@ -35,10 +35,15 @@ class VariantInlineAdmin(NestedTabularInline):
 
 class ProductAdmin(NestedModelAdmin):
 
-    list_display = ('sku', 'name')
+    list_display = ('_sku', 'name')
 
     form = ProductChangeForm
     add_form = ProductCreationForm
+
+    def _sku(self, instance):
+        return instance.sku
+    _sku.short_description = 'SKU'
+    _sku.admin_order_field = 'sku'
 
     def get_inline_instances(self, request, obj=None):
 
