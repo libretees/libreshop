@@ -20,7 +20,8 @@ class ProductManager(models.Manager):
             product = super(ProductManager, self).create(*args, **kwargs)
             variant_exists = bool(Variant.objects.filter(product=product))
             if not variant_exists:
-                variant = Variant.objects.create(product=product)
+                variant = Variant.objects.create(product=product,
+                    name=product.name)
 
         return product
 
@@ -41,9 +42,10 @@ class Product(TimeStampedModel):
         product = None
         with transaction.atomic():
             product = super(Product, self).save(*args, **kwargs)
-            variant_exists = bool(Variant.objects.filter(product=self).count())
+            variant_exists = bool(Variant.objects.filter(product=self))
             if not variant_exists:
-                variant = Variant.objects.create(product=self)
+                variant = Variant.objects.create(product=self,
+                    name=self.name)
 
         return product
 
@@ -57,7 +59,7 @@ class VariantManager(models.Manager):
         variant = None
         with transaction.atomic():
             variant = super(VariantManager, self).create(*args, **kwargs)
-            component_exists = bool(Component.objects.filter(variant=variant).count())
+            component_exists = bool(Component.objects.filter(variant=variant))
             if not component_exists:
                 component = Component.objects.create(variant=variant)
 
@@ -166,6 +168,15 @@ class Component(TimeStampedModel):
                                    decimal_places=2,
                                    null=False,
                                    default=Decimal('1'))
+
+    def delete(self, *args, **kwargs):
+        super(Component, self).delete(*args, **kwargs)
+
+        product_exists = bool(Product.objects.get(id=self.product_id))
+        variant_exists = bool(Variant.objects.filter(product=self.product))
+
+        if product_exists and not variant_exists:
+            variant = Variant.objects.create(product=self.product)
 
     def __str__(self):
         return 'Component of Variant'
