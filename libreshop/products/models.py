@@ -16,12 +16,9 @@ class ProductManager(models.Manager):
     def create(self, *args, **kwargs):
         product = None
         with transaction.atomic():
-
             product = super(ProductManager, self).create(*args, **kwargs)
-            variant_exists = bool(Variant.objects.filter(product=product))
-            if not variant_exists:
-                variant = Variant.objects.create(product=product,
-                    name=product.name)
+            variant = Variant.objects.create(product=product,
+                name=product.name)
 
         return product
 
@@ -41,11 +38,18 @@ class Product(TimeStampedModel):
     def save(self, *args, **kwargs):
         product = None
         with transaction.atomic():
+
             product = super(Product, self).save(*args, **kwargs)
-            variant_exists = bool(Variant.objects.filter(product=self))
-            if not variant_exists:
+            variants = Variant.objects.filter(product=self)
+
+            if not variants:
                 variant = Variant.objects.create(product=self,
                     name=self.name)
+
+            if variants.count() == 1 and self.name != variants[0].name:
+                variant = variants[0]
+                variant.name = self.name
+                variant.save(*args, **kwargs)
 
         return product
 
@@ -59,8 +63,8 @@ class VariantManager(models.Manager):
         variant = None
         with transaction.atomic():
             variant = super(VariantManager, self).create(*args, **kwargs)
-            component_exists = bool(Component.objects.filter(variant=variant))
-            if not component_exists:
+            component = Component.objects.filter(variant=variant)
+            if not component:
                 component = Component.objects.create(variant=variant)
 
         return variant
@@ -85,11 +89,15 @@ class Variant(TimeStampedModel):
     def save(self, *args, **kwargs):
         variant = None
         with transaction.atomic():
+            if (self.product.name != self.name and self.product.variant_set.
+                count() == 1):
+                self.name = self.product.name
+
             variant = super(Variant, self).save(*args, **kwargs)
 
-            component_exists = bool(Component.objects.filter(variant=self))
+            components = Component.objects.filter(variant=self)
 
-            if not component_exists:
+            if not components:
                 component = Component.objects.create(variant=self)
 
         return variant
@@ -97,11 +105,16 @@ class Variant(TimeStampedModel):
     def delete(self, *args, **kwargs):
         super(Variant, self).delete(*args, **kwargs)
 
-        product_exists = bool(Product.objects.get(id=self.product_id))
-        variant_exists = bool(Variant.objects.filter(product=self.product))
+        product = Product.objects.get(id=self.product_id)
+        variants = Variant.objects.filter(product=self.product)
 
-        if product_exists and not variant_exists:
+        if product and not variants:
             variant = Variant.objects.create(product=self.product)
+
+        if (self.product.variant_set.count() == 1):
+            variant = self.product.variant_set.first()
+            variant.name = self.product.name
+            variant.save(*args, **kwargs)
 
     def __str__(self):
         return self.name or 'Variant(%s) of Product: %s' % (self.id, self.product.sku)
@@ -167,16 +180,16 @@ class Component(TimeStampedModel):
     quantity = models.DecimalField(max_digits=8,
                                    decimal_places=2,
                                    null=False,
-                                   default=Decimal('1'))
+                                   default=Decimal('0.00'))
 
     def delete(self, *args, **kwargs):
         super(Component, self).delete(*args, **kwargs)
 
-        product_exists = bool(Product.objects.get(id=self.product_id))
-        variant_exists = bool(Variant.objects.filter(product=self.product))
+        variant = Variant.objects.get(id=self.variant_id)
+        components = Component.objects.filter(variant=self.variant)
 
-        if product_exists and not variant_exists:
-            variant = Variant.objects.create(product=self.product)
+        if variant and not components:
+            component = Component.objects.create(variant=self.variant)
 
     def __str__(self):
-        return 'Component of Variant'
+        return 'Component of %s' % self.variant.name
