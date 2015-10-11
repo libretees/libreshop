@@ -11,10 +11,6 @@ logger = logging.getLogger(__name__)
 
 # Register your models here.
 admin.site.register(models.Component)
-admin.site.register(models.Inventory)
-admin.site.register(models.Location)
-admin.site.register(models.Attribute)
-admin.site.register(models.Attribute_Value)
 
 
 class ComponentInlineAdmin(NestedTabularInline):

@@ -56,6 +56,7 @@ LOCAL_APPS = (
     'shop',
     'customers',
     'products',
+    'inventory',
 )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
