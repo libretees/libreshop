@@ -3,7 +3,6 @@ from decimal import Decimal
 from django.db import models
 from django.db import transaction
 from model_utils.models import TimeStampedModel
-from jsonfield import JSONField
 from inventory.models import Inventory
 
 # Initialize logger.
