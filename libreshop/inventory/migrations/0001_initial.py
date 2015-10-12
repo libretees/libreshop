@@ -2,8 +2,8 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import model_utils.fields
 import django.utils.timezone
+import model_utils.fields
 
 
 class Migration(migrations.Migration):
@@ -15,10 +15,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Attribute',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(editable=False, default=django.utils.timezone.now, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, default=django.utils.timezone.now, verbose_name='modified')),
-                ('name', models.CharField(null=True, max_length=64, blank=True)),
+                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('name', models.CharField(max_length=64, null=True, blank=True)),
             ],
             options={
                 'abstract': False,
@@ -27,11 +27,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Attribute_Value',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(editable=False, default=django.utils.timezone.now, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, default=django.utils.timezone.now, verbose_name='modified')),
-                ('value', models.CharField(null=True, max_length=64, blank=True)),
-                ('attribute', models.ForeignKey(to='inventory.Attribute')),
+                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('value', models.CharField(max_length=64, null=True, blank=True)),
             ],
             options={
                 'verbose_name_plural': 'attribute values',
@@ -40,14 +39,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Inventory',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(editable=False, default=django.utils.timezone.now, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, default=django.utils.timezone.now, verbose_name='modified')),
-                ('name', models.CharField(null=True, max_length=64, blank=True)),
-                ('quantity', models.DecimalField(max_digits=8, decimal_places=2)),
+                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('name', models.CharField(max_length=64, null=True, blank=True)),
                 ('cost', models.DecimalField(max_digits=8, decimal_places=2)),
-                ('alternatives', models.ManyToManyField(related_name='alternatives_rel_+', to='inventory.Inventory')),
-                ('attributes', models.ManyToManyField(to='inventory.Attribute', through='inventory.Attribute_Value')),
             ],
             options={
                 'verbose_name_plural': 'inventory',
@@ -56,23 +52,25 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Location',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(editable=False, default=django.utils.timezone.now, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, default=django.utils.timezone.now, verbose_name='modified')),
-                ('name', models.CharField(null=True, max_length=64, blank=True)),
+                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('quantity', models.DecimalField(max_digits=8, decimal_places=2)),
             ],
             options={
                 'abstract': False,
             },
         ),
-        migrations.AddField(
-            model_name='inventory',
-            name='location',
-            field=models.ForeignKey(to='inventory.Location'),
-        ),
-        migrations.AddField(
-            model_name='attribute_value',
-            name='inventory',
-            field=models.ForeignKey(to='inventory.Inventory'),
+        migrations.CreateModel(
+            name='Warehouse',
+            fields=[
+                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('name', models.CharField(max_length=64, null=True, blank=True)),
+            ],
+            options={
+                'abstract': False,
+            },
         ),
     ]

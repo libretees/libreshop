@@ -8,12 +8,14 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('customers', '0001_initial'),
+        ('products', '0001_initial'),
+        ('shop', '0001_initial'),
     ]
 
     operations = [
-        migrations.AlterField(
+        migrations.AddField(
             model_name='customer',
             name='selected_products',
-            field=models.ManyToManyField(to='products.Product', through='shop.Cart'),
+            field=models.ManyToManyField(through='shop.Cart', to='products.Product'),
         ),
     ]

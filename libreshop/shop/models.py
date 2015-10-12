@@ -23,7 +23,8 @@ class Address(TimeStampedModel):
         verbose_name_plural = 'addresses'
 
     customer = models.ForeignKey(Customer,
-                                 null=False)   
+                                 null=True,
+                                 blank=True)   
     name = models.CharField(max_length=64,
                             null=True,
                             blank=True)

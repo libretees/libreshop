@@ -1,7 +1,7 @@
 from decimal import Decimal
 from django.test import TestCase
 from .models import Product, Variant, Component
-from inventory.models import Inventory, InventoryLocation
+from inventory.models import Inventory, Location
 
 # Create your tests here.
 class ProductModelTest(TestCase):
@@ -130,10 +130,10 @@ class ProductModelTest(TestCase):
         variant1.refresh_from_db()
         self.assertEqual(variant1.name, 'bar')
 
-    def test_original_variant_is_not_renamed_when_sibling_present_at_product_update(self):
+    def test_original_variant_is_not_renamed_at_product_update_when_sibling_present(self):
         '''
-        Test that the first child Variant does not inherit its parents name
-        after a sibling is present.
+        Test that the first child Variant does not inherit its parent's name
+        when a sibling is present.
         '''
         product = Product.objects.create(sku='foo', name='foo')
         variant1 = Variant.objects.filter(product=product)[0]
@@ -143,10 +143,10 @@ class ProductModelTest(TestCase):
         product.refresh_from_db()
         self.assertEqual(variant1.name, 'foo')
 
-    def test_sibling_variant_is_not_renamed_when_sibling_present_at_product_update(self):
+    def test_sibling_variant_is_not_renamed_at_product_update_when_sibling_present(self):
         '''
-        Test that the first child Variant does not inherit its parents name
-        after a sibling is present.
+        Test that any subsequent child Variants do not inherit their parent's
+        name when a sibling is present.
         '''
         product = Product.objects.create(sku='foo', name='foo')
         variant1 = Variant.objects.filter(product=product)[0]
@@ -243,8 +243,7 @@ class ComponentModelTest(TestCase):
         '''
         product = Product.objects.create(sku='foo', name='foo')
         variant = Variant.objects.create(name='bar', product=product)
-        inventory_location = InventoryLocation.objects.create(
-            quantity=Decimal(1.00))
+        location = Location.objects.create(quantity=Decimal(1.00))
         inventory = Inventory.objects.create(location=inventory_location,
             cost=Decimal(1.00))
         component = Component.objects.create(variant=variant,

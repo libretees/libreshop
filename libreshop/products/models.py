@@ -66,8 +66,8 @@ class VariantManager(models.Manager):
         with transaction.atomic():
             variant = super(VariantManager, self).create(*args, **kwargs)
 
-            component = Component.objects.filter(variant=variant)
-            if not component:
+            components = Component.objects.filter(variant=variant)
+            if not components:
                 component = Component.objects.create(variant=variant)
 
         return variant
