@@ -6,11 +6,13 @@ from model_utils.models import TimeStampedModel
 logger = logging.getLogger(__name__)
 
 # Create your models here.
-class Location(TimeStampedModel):
+class InventoryLocation(TimeStampedModel):
 
     name = models.CharField(max_length=64,
                             null=True,
                             blank=True)
+    quantity = models.DecimalField(max_digits=8,
+                                   decimal_places=2)
 
     def __str__(self):
         return self.name
@@ -40,7 +42,8 @@ class Inventory(TimeStampedModel):
     class Meta():
         verbose_name_plural = 'inventory'
 
-    location = models.ForeignKey(Location)
+    location = models.ForeignKey(InventoryLocation)
+
     name = models.CharField(max_length=64,
                             null=True,
                             blank=True)
@@ -48,8 +51,6 @@ class Inventory(TimeStampedModel):
                                         through='Attribute_Value',
                                         through_fields=('inventory', 'attribute'))
     alternatives = models.ManyToManyField('self')
-    quantity = models.DecimalField(max_digits=8,
-                                   decimal_places=2)
     cost = models.DecimalField(max_digits=8,
                                decimal_places=2)
 
