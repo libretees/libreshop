@@ -1,6 +1,7 @@
 from decimal import Decimal
 from django.test import TestCase
 from .models import Product, Variant, Component
+from inventory.models import Inventory, InventoryLocation
 
 # Create your tests here.
 class ProductModelTest(TestCase):
@@ -210,6 +211,19 @@ class VariantModelTest(TestCase):
         self.assertEqual(num_variants, 1)
 
 
+    def test_new_variant_is_created_when_parents_only_child_is_deleted(self):
+        '''
+        Test that a new Variant is created when the only child to the parent
+        Product is deleted.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.filter(product=product)[0]
+        original_variant_id = variant.id
+        variant.delete()
+        variant = Variant.objects.filter(product=product)[0]
+        self.assertNotEqual(original_variant_id, variant.id)
+
+
 class ComponentModelTest(TestCase):
 
     def test_model_has_variant_field(self):
@@ -229,7 +243,12 @@ class ComponentModelTest(TestCase):
         '''
         product = Product.objects.create(sku='foo', name='foo')
         variant = Variant.objects.create(name='bar', product=product)
-        component = Component.objects.create(variant=variant)
+        inventory_location = InventoryLocation.objects.create(
+            quantity=Decimal(1.00))
+        inventory = Inventory.objects.create(location=inventory_location,
+            cost=Decimal(1.00))
+        component = Component.objects.create(variant=variant,
+            inventory=inventory)
         inventory = getattr(component, 'inventory', None)
         self.assertIsNotNone(inventory)
 
@@ -247,7 +266,7 @@ class ComponentModelTest(TestCase):
 
     def test_saving_to_and_retrieving_components_from_the_database(self):
         '''
-        Test that a Variant can be successfuly saved to the database.
+        Test that a Component can be successfuly saved to the database.
         '''
         product = Product.objects.create(sku='foo', name='foo')
         variant = Variant.objects.create(product=product, name='bar')
@@ -256,3 +275,17 @@ class ComponentModelTest(TestCase):
         num_components = (Component.objects.filter(quantity=Decimal(1.00)).
             count())
         self.assertEqual(num_components, 1)
+
+
+    def test_new_component_is_created_when_parents_only_child_is_deleted(self):
+        '''
+        Test that a new Component is created when the only child to the parent
+        Variant is deleted.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        component = Component.objects.filter(variant=variant)[0]
+        original_component_id = component.id
+        component.delete()
+        component = Component.objects.filter(variant=variant)[0]
+        self.assertNotEqual(original_component_id, component.id)
