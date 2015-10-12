@@ -4,6 +4,24 @@ from .models import Product, Variant, Component
 # Create your tests here.
 class ProductModelTest(TestCase):
 
+    def test_model_has_sku_field(self):
+        '''
+        Tests that Product.sku is present.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        sku = getattr(product, 'sku', None)
+        self.assertIsNotNone(sku)
+
+
+    def test_model_has_name_field(self):
+        '''
+        Tests that Product.name is present.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        sku = getattr(product, 'name', None)
+        self.assertIsNotNone(sku)
+
+
     def test_saving_and_retrieving_products_from_the_database(self):
         '''
         Tests that a Product can be successfuly saved to the database.
@@ -135,3 +153,56 @@ class ProductModelTest(TestCase):
         product.save()
         product.refresh_from_db()
         self.assertEqual(variant2.name, 'baz')
+
+
+class VariantModelTest(TestCase):
+
+    def test_model_has_product_field(self):
+        '''
+        Tests that Variant.product is present.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(name='bar', product=product)
+        product = getattr(variant, 'product', None)
+        self.assertIsNotNone(product)
+
+
+    def test_model_has_product_field(self):
+        '''
+        Tests that Variant.name is present.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(name='bar', product=product)
+        name = getattr(variant, 'name', None)
+        self.assertIsNotNone(name)
+
+
+    def test_model_has_product_field(self):
+        '''
+        Tests that Variant.sub_sku is present.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(name='bar', product=product)
+        sub_sku = getattr(variant, 'sub_sku', None)
+        self.assertIsNotNone(sub_sku)
+
+
+    def test_model_has_product_field(self):
+        '''
+        Tests that Variant.price is present.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(name='bar', product=product)
+        price = getattr(variant, 'price', None)
+        self.assertIsNotNone(price)
+
+
+    def test_saving_and_retrieving_variants_from_the_database(self):
+        '''
+        Tests that a Variant can be successfuly saved to the database.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant(product=product, name='bar')
+        variant.save()
+        num_variants = Variant.objects.all().count()
+        self.assertEqual(num_variants, 1)
