@@ -3,8 +3,8 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.7.2" last-position="3,69" last-zoom="0.8">
-<database name="new_database">
+<dbmodel pgmodeler-ver="0.7.2" last-position="0,0" last-zoom="0.8">
+<database name="libreshop">
 </database>
 
 <schema name="public" protected="true" fill-color="#e1e1e1" sql-disabled="true">
@@ -56,9 +56,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="name">
 		<type name="varchar"/>
 	</column>
-	<column name="quantity">
-		<type name="smallint"/>
-	</column>
 	<column name="cost">
 		<type name="decimal"/>
 	</column>
@@ -95,28 +92,28 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 </table>
 
-<table name="Location">
+<table name="Locations">
 	<schema name="public"/>
-	<position x="1265" y="212.5"/>
+	<position x="1185" y="260"/>
 	<column name="id">
 		<type name="smallint"/>
 	</column>
-	<column name="name">
-		<type name="varchar"/>
+	<column name="warehouse_id">
+		<type name="smallint"/>
+	</column>
+	<column name="quantity">
+		<type name="smallint"/>
 	</column>
 </table>
 
 <table name="Attributes">
 	<schema name="public"/>
-	<position x="47.5" y="470"/>
+	<position x="57.5" y="476.25"/>
 	<column name="id">
 		<type name="smallint"/>
 	</column>
 	<column name="name">
 		<type name="varchar"/>
-	</column>
-	<column name="displayed">
-		<type name="boolean"/>
 	</column>
 </table>
 
@@ -137,13 +134,27 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 </table>
 
+<table name="Warehouses">
+	<schema name="public"/>
+	<position x="1550" y="70"/>
+	<column name="id">
+		<type name="smallint"/>
+	</column>
+	<column name="address_id">
+		<type name="smallint"/>
+	</column>
+	<column name="name">
+		<type name="varchar"/>
+	</column>
+</table>
+
 <constraint name="product_id" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Products&quot;" table="public.&quot;Variants&quot;">
 	<columns names="product_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="a" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Location&quot;" table="public.&quot;Inventory&quot;">
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Locations&quot;" table="public.&quot;Inventory&quot;">
 	<columns names="location_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -165,6 +176,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <constraint name="b" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Inventory&quot;" table="public.&quot;Alternatives&quot;">
 	<columns names="alt_inventory_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="n" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;Warehouses&quot;" table="public.&quot;Locations&quot;">
+	<columns names="warehouse_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="a" type="fk-constr" comparison-type="MATCH FULL"
@@ -203,7 +219,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="&quot;rel_Inventory_Location&quot;" type="relfk"
 	 src-table="public.&quot;Inventory&quot;"
-	 dst-table="public.&quot;Location&quot;"
+	 dst-table="public.&quot;Locations&quot;"
 	 src-required="true" dst-required="true"/>
 
 <relationship name="&quot;rel_Attribute_Values_Attributes&quot;" type="relfk"
@@ -214,6 +230,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="&quot;rel_Attribute_Values_Inventory&quot;" type="relfk"
 	 src-table="public.&quot;Attribute_Values&quot;"
 	 dst-table="public.&quot;Inventory&quot;"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="&quot;rel_Locations_Warehouses&quot;" type="relfk"
+	 src-table="public.&quot;Locations&quot;"
+	 dst-table="public.&quot;Warehouses&quot;"
 	 src-required="true" dst-required="true"/>
 
 </dbmodel>
