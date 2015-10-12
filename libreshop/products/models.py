@@ -15,8 +15,11 @@ class ProductManager(models.Manager):
         product = None
         with transaction.atomic():
             product = super(ProductManager, self).create(*args, **kwargs)
-            variant = Variant.objects.create(product=product,
-                name=product.name)
+
+            variants = Variant.objects.filter(product=product)
+            if not variants:
+                variant = Variant.objects.create(product=product,
+                    name=product.name)
 
         return product
 
@@ -25,7 +28,8 @@ class Product(TimeStampedModel):
 
     sku = models.CharField(max_length=8,
                            unique=True,
-                           null=False)
+                           null=False,
+                           default='')
     name = models.CharField(max_length=64,
                             unique=True,
                             null=False,
@@ -61,6 +65,7 @@ class VariantManager(models.Manager):
         variant = None
         with transaction.atomic():
             variant = super(VariantManager, self).create(*args, **kwargs)
+
             component = Component.objects.filter(variant=variant)
             if not component:
                 component = Component.objects.create(variant=variant)
@@ -87,11 +92,12 @@ class Variant(TimeStampedModel):
     def save(self, *args, **kwargs):
         variant = None
         with transaction.atomic():
+            variant = super(Variant, self).save(*args, **kwargs)
+
             if (self.product.name != self.name and self.product.variant_set.
                 count() == 1):
                 self.name = self.product.name
-
-            variant = super(Variant, self).save(*args, **kwargs)
+                variant = self.save()
 
             components = Component.objects.filter(variant=self)
 
