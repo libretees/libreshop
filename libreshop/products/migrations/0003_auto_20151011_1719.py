@@ -7,14 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0004_auto_20151007_2014'),
+        ('products', '0002_auto_20151011_1717'),
     ]
 
     operations = [
-        migrations.AddField(
+        migrations.AlterField(
             model_name='product',
-            name='name',
-            field=models.CharField(max_length=64, unique=True, default='Name'),
-            preserve_default=False,
+            name='sku',
+            field=models.CharField(unique=True, max_length=8, default=''),
         ),
     ]
