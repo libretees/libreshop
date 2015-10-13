@@ -17,11 +17,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Component',
             fields=[
-                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
-                ('quantity', models.DecimalField(default=Decimal('0.00'), decimal_places=2, max_digits=8)),
-                ('inventory', models.ForeignKey(blank=True, null=True, to='inventory.Inventory')),
+                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('created', model_utils.fields.AutoCreatedField(editable=False, default=django.utils.timezone.now, verbose_name='created')),
+                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, default=django.utils.timezone.now, verbose_name='modified')),
+                ('quantity', models.DecimalField(decimal_places=2, default=Decimal('0.00'), max_digits=8)),
+                ('inventory', models.ForeignKey(null=True, blank=True, to='inventory.Inventory')),
             ],
             options={
                 'abstract': False,
@@ -30,11 +30,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Product',
             fields=[
-                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
-                ('sku', models.CharField(default='', max_length=8, unique=True)),
-                ('name', models.CharField(max_length=64, unique=True)),
+                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('created', model_utils.fields.AutoCreatedField(editable=False, default=django.utils.timezone.now, verbose_name='created')),
+                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, default=django.utils.timezone.now, verbose_name='modified')),
+                ('sku', models.CharField(unique=True, max_length=8, default='')),
+                ('name', models.CharField(unique=True, max_length=64)),
             ],
             options={
                 'abstract': False,
@@ -43,12 +43,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Variant',
             fields=[
-                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
-                ('name', models.CharField(max_length=64, null=True, blank=True)),
-                ('sub_sku', models.CharField(max_length=8, null=True, blank=True)),
-                ('price', models.DecimalField(default=Decimal('0.00'), decimal_places=2, max_digits=8)),
+                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('created', model_utils.fields.AutoCreatedField(editable=False, default=django.utils.timezone.now, verbose_name='created')),
+                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, default=django.utils.timezone.now, verbose_name='modified')),
+                ('name', models.CharField(blank=True, null=True, max_length=64)),
+                ('sub_sku', models.CharField(blank=True, null=True, max_length=8)),
+                ('price', models.DecimalField(decimal_places=2, default=Decimal('0.00'), max_digits=8)),
                 ('product', models.ForeignKey(to='products.Product')),
             ],
             options={

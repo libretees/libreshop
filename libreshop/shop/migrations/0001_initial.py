@@ -18,14 +18,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Address',
             fields=[
-                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
-                ('name', models.CharField(max_length=64, null=True, blank=True)),
-                ('location', models.CharField(max_length=1024, null=True, blank=True)),
-                ('state', models.CharField(max_length=16, null=True, blank=True)),
-                ('postal_code', models.CharField(max_length=16, null=True, blank=True)),
-                ('customer', models.ForeignKey(to='customers.Customer')),
+                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('created', model_utils.fields.AutoCreatedField(editable=False, default=django.utils.timezone.now, verbose_name='created')),
+                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, default=django.utils.timezone.now, verbose_name='modified')),
+                ('name', models.CharField(blank=True, null=True, max_length=64)),
+                ('location', models.CharField(blank=True, null=True, max_length=1024)),
+                ('state', models.CharField(blank=True, null=True, max_length=16)),
+                ('postal_code', models.CharField(blank=True, null=True, max_length=16)),
+                ('customer', models.ForeignKey(null=True, blank=True, to='customers.Customer')),
             ],
             options={
                 'verbose_name_plural': 'addresses',
@@ -34,10 +34,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Cart',
             fields=[
-                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
-                ('saved_product', jsonfield.fields.JSONField(null=True, blank=True)),
+                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('created', model_utils.fields.AutoCreatedField(editable=False, default=django.utils.timezone.now, verbose_name='created')),
+                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, default=django.utils.timezone.now, verbose_name='modified')),
+                ('saved_product', jsonfield.fields.JSONField(blank=True, null=True)),
                 ('customer', models.ForeignKey(to='customers.Customer')),
                 ('product', models.ForeignKey(to='products.Product')),
             ],
@@ -48,13 +48,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Category',
             fields=[
-                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
-                ('name', models.CharField(max_length=32, unique=True)),
+                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('created', model_utils.fields.AutoCreatedField(editable=False, default=django.utils.timezone.now, verbose_name='created')),
+                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, default=django.utils.timezone.now, verbose_name='modified')),
+                ('name', models.CharField(unique=True, max_length=32)),
                 ('slug', models.SlugField(max_length=32, null=True, blank=True)),
-                ('parent_category', models.ForeignKey(blank=True, null=True, to='shop.Category')),
-                ('products', models.ManyToManyField(to='products.Product', blank=True)),
+                ('parent_category', models.ForeignKey(null=True, blank=True, to='shop.Category')),
+                ('products', models.ManyToManyField(blank=True, to='products.Product')),
             ],
             options={
                 'verbose_name_plural': 'categories',
@@ -63,12 +63,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Order',
             fields=[
-                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
-                ('shipping_address', models.CharField(max_length=1024, null=True, blank=True)),
-                ('billing_addresss', models.CharField(max_length=1024, null=True, blank=True)),
-                ('payment_card', models.CharField(max_length=4, null=True, blank=True)),
+                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('created', model_utils.fields.AutoCreatedField(editable=False, default=django.utils.timezone.now, verbose_name='created')),
+                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, default=django.utils.timezone.now, verbose_name='modified')),
+                ('shipping_address', models.CharField(blank=True, null=True, max_length=1024)),
+                ('billing_addresss', models.CharField(blank=True, null=True, max_length=1024)),
+                ('payment_card', models.CharField(blank=True, null=True, max_length=4)),
                 ('customer', models.ForeignKey(to='customers.Customer')),
             ],
             options={
@@ -78,11 +78,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Purchase',
             fields=[
-                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
-                ('saved_product', jsonfield.fields.JSONField(null=True, blank=True)),
-                ('gift_amount', models.DecimalField(max_digits=8, decimal_places=2)),
+                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('created', model_utils.fields.AutoCreatedField(editable=False, default=django.utils.timezone.now, verbose_name='created')),
+                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, default=django.utils.timezone.now, verbose_name='modified')),
+                ('saved_product', jsonfield.fields.JSONField(blank=True, null=True)),
+                ('gift_amount', models.DecimalField(decimal_places=2, max_digits=8)),
                 ('order', models.ForeignKey(to='shop.Order')),
                 ('product', models.ForeignKey(to='products.Product')),
             ],

@@ -19,13 +19,18 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='location',
+            name='inventory',
+            field=models.ForeignKey(to='inventory.Inventory'),
+        ),
+        migrations.AddField(
+            model_name='location',
             name='warehouse',
             field=models.ForeignKey(to='inventory.Warehouse'),
         ),
         migrations.AddField(
             model_name='inventory',
             name='alternatives',
-            field=models.ManyToManyField(related_name='alternatives_rel_+', to='inventory.Inventory'),
+            field=models.ManyToManyField(blank=True, related_name='alternatives_rel_+', to='inventory.Inventory'),
         ),
         migrations.AddField(
             model_name='inventory',
@@ -34,8 +39,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='inventory',
-            name='location',
-            field=models.ForeignKey(to='inventory.Location'),
+            name='warehouses',
+            field=models.ManyToManyField(through='inventory.Location', to='inventory.Warehouse'),
         ),
         migrations.AddField(
             model_name='attribute_value',
