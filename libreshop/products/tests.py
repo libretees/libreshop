@@ -1,7 +1,11 @@
+import logging
 from decimal import Decimal
 from django.test import TestCase
 from .models import Product, Variant, Component
 from inventory.models import Inventory, Location
+
+# Initialize logger.
+logger = logging.getLogger(__name__)
 
 # Create your tests here.
 class ProductModelTest(TestCase):
