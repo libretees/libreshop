@@ -25,5 +25,4 @@ class InventoryAdmin(admin.ModelAdmin):
 admin.site.register(models.Inventory, InventoryAdmin)
 admin.site.register(models.Location)
 admin.site.register(models.Attribute)
-admin.site.register(models.Attribute_Value)
 admin.site.register(models.Warehouse)
