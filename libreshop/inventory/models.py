@@ -72,9 +72,9 @@ class Attribute_Value(TimeStampedModel):
         unique_together = ('inventory', 'attribute')
 
 
-    attribute = models.ForeignKey('Attribute')
-    inventory = models.ForeignKey('Inventory')
-    value = models.CharField(max_length=64, null=True, blank=True)
+    attribute = models.ForeignKey('Attribute', null=False, blank=False)
+    inventory = models.ForeignKey('Inventory', null=False, blank=False)
+    value = models.CharField(max_length=64, null=False, blank=False)
 
 
     def __str__(self):
@@ -87,8 +87,8 @@ class Location(TimeStampedModel):
         unique_together = ('inventory', 'warehouse')
 
 
-    inventory = models.ForeignKey('Inventory')
-    warehouse = models.ForeignKey('Warehouse')
+    inventory = models.ForeignKey('Inventory', null=False, blank=False)
+    warehouse = models.ForeignKey('Warehouse', null=False, blank=False)
     quantity = models.DecimalField(max_digits=8, decimal_places=2,
         validators=[MinValueValidator(Decimal('0.00'))])
 
