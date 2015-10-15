@@ -11,10 +11,6 @@ logger = logging.getLogger(__name__)
 
 class Warehouse(TimeStampedModel):
 
-    class Meta:
-        unique_together = ('name', 'address')
-
-
     name = models.CharField(max_length=64, unique=True, null=False, blank=False)
     address = models.OneToOneField('shop.Address', null=False, blank=False)
 
@@ -35,8 +31,14 @@ class Warehouse(TimeStampedModel):
 
         if queryset.exists():
             raise ValidationError({
-                NON_FIELD_ERRORS: ['Warehouse with this Name already exists',],
+                'name': ['Warehouse with this Name already exists',],
             })
+
+
+    def save(self, *args, **kwargs):
+        exclude = kwargs.pop('exclude', None)
+        self.validate_unique(exclude)
+        super(Warehouse, self).save(*args, **kwargs)
 
 
 class Attribute(TimeStampedModel):
@@ -65,7 +67,7 @@ class Attribute(TimeStampedModel):
 
 
     def save(self, *args, **kwargs):
-        exclude = kwargs.get('exclude', None)
+        exclude = kwargs.pop('exclude', None)
         self.validate_unique(exclude)
         super(Attribute, self).save(*args, **kwargs)
 
