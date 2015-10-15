@@ -12,18 +12,46 @@ logger = logging.getLogger(__name__)
 # Create your tests here.
 class WarehouseModelTest(TestCase):
 
+    def test_model_has_name_field(self):
+        '''
+        Test that Warehouse.name is present.
+        '''
+        warehouse = Warehouse.objects.create(name='foo',
+            address=Address.objects.create())
+        name = getattr(warehouse, 'name', None)
+        self.assertIsNotNone(name)
+
+
+    def test_model_has_address_field(self):
+        '''
+        Test that Warehouse.address is present.
+        '''
+        warehouse = Warehouse.objects.create(name='foo',
+            address=Address.objects.create())
+        address = getattr(warehouse, 'address', None)
+        self.assertIsNotNone(address)
+
+
     def test_saving_to_and_retrieving_warehouses_from_the_database(self):
         '''
         Test that a Warehouse can be successfuly saved to the database.
         '''
         warehouse = Warehouse(name='foo', address=Address.objects.create())
         warehouse.save()
-
         num_warehouses = Warehouse.objects.all().count()
         self.assertEqual(num_warehouses, 1)
 
 
 class AttributeModelTest(TestCase):
+
+    def test_model_has_name_field(self):
+        '''
+        Test that Attribute.name is present.
+        '''
+        attribute = Attribute.objects.create(name='foo')
+        name = getattr(attribute, 'name', None)
+        self.assertIsNotNone(name)
+
 
     def test_saving_to_and_retrieving_attributes_from_the_database(self):
         '''
@@ -31,12 +59,47 @@ class AttributeModelTest(TestCase):
         '''
         attribute = Attribute(name='foo')
         attribute.save()
-
         num_attributes = Attribute.objects.all().count()
         self.assertEqual(num_attributes, 1)
 
 
 class AttributeValueModelTest(TestCase):
+
+    def test_model_has_inventory_field(self):
+        '''
+        Test that Attribute_Value.inventory is present.
+        '''
+        inventory = Inventory.objects.create(name='foo')
+        attribute = Attribute.objects.create(name='bar')
+        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory, value='baz')
+        inventory = getattr(attribute_value, 'inventory', None)
+        self.assertIsNotNone(inventory)
+
+
+    def test_model_has_attribute_field(self):
+        '''
+        Test that Attribute_Value.attribute is present.
+        '''
+        inventory = Inventory.objects.create(name='foo')
+        attribute = Attribute.objects.create(name='bar')
+        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory, value='baz')
+        attribute = getattr(attribute_value, 'attribute', None)
+        self.assertIsNotNone(attribute)
+
+
+    def test_model_has_value_field(self):
+        '''
+        Test that Attribute_Value.value is present.
+        '''
+        inventory = Inventory.objects.create(name='foo')
+        attribute = Attribute.objects.create(name='bar')
+        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory, value='baz')
+        value = getattr(attribute_value, 'value', None)
+        self.assertIsNotNone(value)
+
 
     def test_saving_to_and_retrieving_attribute_values_from_the_database(self):
         '''
@@ -47,7 +110,6 @@ class AttributeValueModelTest(TestCase):
         attribute_value = Attribute_Value(attribute=attribute,
             inventory=inventory, value='baz')
         attribute_value.save()
-
         num_attribute_values = Attribute_Value.objects.all().count()
         self.assertEqual(num_attribute_values, 1)
 
@@ -64,10 +126,8 @@ class AttributeValueModelTest(TestCase):
             inventory=inventory, value='qux')
         attribute_value2 = Attribute_Value.objects.create(attribute=attribute2,
             inventory=inventory, value='quux')
-
         num_associated_attributes = (Attribute_Value.objects.
             filter(inventory=inventory).count())
-
         self.assertEqual(num_associated_attributes, 2)
 
 
@@ -78,16 +138,53 @@ class AttributeValueModelTest(TestCase):
         '''
         inventory = Inventory.objects.create(name='foo')
         attribute = Attribute.objects.create(name='bar')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value = Attribute_Value.objects.create(attribute=attribute,
             inventory=inventory, value='baz')
-
         func = Attribute_Value.objects.create
-
         self.assertRaises(IntegrityError, func, attribute=attribute,
             inventory=inventory, value='qux')
 
 
 class LocationModelTest(TestCase):
+
+    def test_model_has_inventory_field(self):
+        '''
+        Test that Location.inventory is present.
+        '''
+        inventory = Inventory.objects.create(name='foo')
+        warehouse = Warehouse.objects.create(name='bar',
+            address=Address.objects.create())
+        location = Location.objects.create(warehouse=warehouse,
+            inventory=inventory, quantity=Decimal(0.00))
+        inventory = getattr(location, 'inventory', None)
+        self.assertIsNotNone(inventory)
+
+
+    def test_model_has_warehouse_field(self):
+        '''
+        Test that Location.warehouse is present.
+        '''
+        inventory = Inventory.objects.create(name='foo')
+        warehouse = Warehouse.objects.create(name='bar',
+            address=Address.objects.create())
+        location = Location.objects.create(warehouse=warehouse,
+            inventory=inventory, quantity=Decimal(0.00))
+        warehouse = getattr(location, 'warehouse', None)
+        self.assertIsNotNone(warehouse)
+
+
+    def test_model_has_quantity_field(self):
+        '''
+        Test that Location.quantity is present.
+        '''
+        inventory = Inventory.objects.create(name='foo')
+        warehouse = Warehouse.objects.create(name='bar',
+            address=Address.objects.create())
+        location = Location.objects.create(warehouse=warehouse,
+            inventory=inventory, quantity=Decimal(0.00))
+        quantity = getattr(location, 'quantity', None)
+        self.assertIsNotNone(quantity)
+
 
     def test_saving_to_and_retrieving_locations_from_the_database(self):
         '''
@@ -98,14 +195,57 @@ class LocationModelTest(TestCase):
             address=Address.objects.create())
         location = Location(warehouse=warehouse, inventory=inventory,
             quantity=Decimal(0.00))
-
         location.save()
-
         num_locations = Location.objects.all().count()
         self.assertEqual(num_locations, 1)
 
 
 class InventoryModelTest(TestCase):
+
+    def test_model_has_name_field(self):
+        '''
+        Test that Inventory.name is present.
+        '''
+        inventory = Inventory.objects.create(name='foo')
+        name = getattr(inventory, 'name', None)
+        self.assertIsNotNone(name)
+
+
+    def test_model_has_warehouses_field(self):
+        '''
+        Test that Inventory.warehouses is present.
+        '''
+        inventory = Inventory.objects.create(name='foo')
+        warehouses = getattr(inventory, 'warehouses', None)
+        self.assertIsNotNone(warehouses)
+
+
+    def test_model_has_attributes_field(self):
+        '''
+        Test that Inventory.attributes is present.
+        '''
+        inventory = Inventory.objects.create(name='foo')
+        attributes = getattr(inventory, 'attributes', None)
+        self.assertIsNotNone(attributes)
+
+
+    def test_model_has_alternatives_field(self):
+        '''
+        Test that Inventory.alternatives is present.
+        '''
+        inventory = Inventory.objects.create(name='foo')
+        alternatives = getattr(inventory, 'alternatives', None)
+        self.assertIsNotNone(alternatives)
+
+
+    def test_model_has_cost_field(self):
+        '''
+        Test that Inventory.alternatives is present.
+        '''
+        inventory = Inventory.objects.create(name='foo')
+        cost = getattr(inventory, 'cost', None)
+        self.assertIsNotNone(cost)
+
 
     def test_saving_to_and_retrieving_inventory_from_the_database(self):
         '''
@@ -113,6 +253,5 @@ class InventoryModelTest(TestCase):
         '''
         inventory = Inventory(name='foo')
         inventory.save()
-
         num_inventory = Inventory.objects.all().count()
         self.assertEqual(num_inventory, 1)
