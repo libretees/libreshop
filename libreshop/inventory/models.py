@@ -1,7 +1,7 @@
 import logging
 from decimal import Decimal
 from django.db import models
-from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from model_utils.models import TimeStampedModel
 
@@ -60,8 +60,14 @@ class Attribute(TimeStampedModel):
 
         if queryset.exists():
             raise ValidationError({
-                NON_FIELD_ERRORS: ['Attribute with this Name already exists',],
+                'name': ['Attribute with this Name already exists',],
             })
+
+
+    def save(self, *args, **kwargs):
+        exclude = kwargs.get('exclude', None)
+        self.validate_unique(exclude)
+        super(Attribute, self).save(*args, **kwargs)
 
 
 class Attribute_Value(TimeStampedModel):
