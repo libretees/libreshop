@@ -115,7 +115,31 @@ class Variant(TimeStampedModel):
 
     objects = VariantManager()
 
+    def validate_unique(self, *args, **kwargs):
+        super(Variant, self).validate_unique(*args, **kwargs)
+
+        validation_errors = {}
+
+        if self.sub_sku:
+            sub_sku_queryset = self.__class__._default_manager.filter(
+                sub_sku__iexact=self.sub_sku
+            )
+
+            if not self._state.adding and self.pk:
+                sub_sku_queryset = sub_sku_queryset.exclude(pk=self.pk)
+
+            if sub_sku_queryset.exists():
+                validation_errors['sub_sku'] = ['Sub-SKU for this Product already exists',]
+
+        if validation_errors:
+            raise ValidationError(validation_errors)
+
+
     def save(self, *args, **kwargs):
+
+        exclude = kwargs.pop('exclude', None)
+        self.validate_unique(exclude)
+
         variant = None
         with transaction.atomic():
             variant = super(Variant, self).save(*args, **kwargs)

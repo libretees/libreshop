@@ -1,4 +1,5 @@
 import logging
+from django.core.exceptions import ValidationError
 from decimal import Decimal
 from django.test import TestCase
 from ..models import Product, Variant
@@ -197,6 +198,19 @@ class VariantModelTest(TestCase):
         variant = Variant.objects.create(name='bar', product=product)
         unique_together = getattr(variant._meta, 'unique_together', None)
         self.assertIn(('product', 'sub_sku'), unique_together)
+
+
+    def test_model_product_and_sub_sku_fields_are_unique_together_regardless_of_character_case(self):
+        '''
+        Test that Variant.product and Variant.sub_sku are unique together regardless of character case.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.filter(product=product)[0]
+        variant.sub_sku = 'foo'
+        variant.save()
+        func = Variant.objects.create
+        self.assertRaises(ValidationError, func, product=product, name='bar',
+            sub_sku='Foo')
 
 
     def test_model_sub_sku_field_is_not_required(self):
