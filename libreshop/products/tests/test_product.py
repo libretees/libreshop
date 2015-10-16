@@ -1,4 +1,5 @@
 import logging
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 from ..models import Product, Variant, Component
 
@@ -33,6 +34,15 @@ class ProductModelTest(TestCase):
             pass
         unique = getattr(sku, 'unique', None)
         self.assertTrue(unique)
+
+
+    def test_sku_field_must_be_unique_regardless_of_character_case(self):
+        '''
+        Test that Product.sku must be unique regardless of character case.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        func = Product.objects.create
+        self.assertRaises(ValidationError, func, sku='Foo', name='bar')
 
 
     def test_model_sku_field_is_required(self):

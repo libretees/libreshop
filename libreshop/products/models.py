@@ -2,6 +2,7 @@ import logging
 from decimal import Decimal
 from django.db import models
 from django.db import transaction
+from django.core.exceptions import ValidationError
 from model_utils.models import TimeStampedModel
 from inventory.models import Inventory
 
@@ -31,7 +32,33 @@ class Product(TimeStampedModel):
 
     objects = ProductManager()
 
+    def __init__(self, *args, **kwargs):
+        super(Product, self).__init__(*args, **kwargs)
+        self._meta.get_field('sku').verbose_name = 'SKU'
+        self._meta.get_field('sku').verbose_name_plural = 'SKUs'
+
+
+    def validate_unique(self, *args, **kwargs):
+        super(Product, self).validate_unique(*args, **kwargs)
+
+        queryset = self.__class__._default_manager.filter(
+            sku__iexact=self.sku
+        )
+
+        if not self._state.adding and self.pk:
+            queryset = queryset.exclude(pk=self.pk)
+
+        if queryset.exists():
+            raise ValidationError({
+                'sku': ['Product with this SKU already exists',],
+            })
+
+
     def save(self, *args, **kwargs):
+
+        exclude = kwargs.pop('exclude', None)
+        self.validate_unique(exclude)
+
         product = None
         with transaction.atomic():
 
