@@ -74,7 +74,7 @@ class Variant(TimeStampedModel):
 
     product = models.ForeignKey(Product, null=False, blank=False)
     name = models.CharField(max_length=64, null=False, blank=False)
-    sub_sku = models.CharField(max_length=8, null=False, blank=False)
+    sub_sku = models.CharField(max_length=8, null=True, blank=False)
     price = models.DecimalField(max_digits=8, decimal_places=2, null=False,
         blank=False, default=Decimal('0.00'))
 
@@ -122,7 +122,7 @@ class Component(TimeStampedModel):
         unique_together = ('variant', 'inventory',)
 
     variant = models.ForeignKey(Variant, null=False, blank=False)
-    inventory = models.ForeignKey(Inventory, blank=False, null=False)
+    inventory = models.ForeignKey(Inventory, blank=False, null=True)
     quantity = models.DecimalField(max_digits=8, decimal_places=2, null=False,
         blank=False, default=Decimal('0.00'))
 
