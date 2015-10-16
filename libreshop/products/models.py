@@ -118,6 +118,12 @@ class Variant(TimeStampedModel):
 
     objects = VariantManager()
 
+    def __init__(self, *args, **kwargs):
+        super(Variant, self).__init__(*args, **kwargs)
+        self._meta.get_field('sub_sku').verbose_name = 'Sub-SKU'
+        self._meta.get_field('sub_sku').verbose_name_plural = 'Sub-SKUs'
+
+
     def validate_unique(self, *args, **kwargs):
         super(Variant, self).validate_unique(*args, **kwargs)
 

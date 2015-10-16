@@ -310,6 +310,36 @@ class VariantModelTest(TestCase):
         self.assertEqual(max_length, 8)
 
 
+    def test_model_sub_sku_field_has_verbose_name(self):
+        '''
+        Test that Variant.sub_sku's verbose name is 'Sub-SKU'.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(name='bar', product=product)
+        sub_sku = None
+        try:
+            sub_sku = variant._meta.get_field('sub_sku')
+        except:
+            pass
+        verbose_name = getattr(sub_sku, 'verbose_name', None)
+        self.assertEqual(verbose_name, 'Sub-SKU')
+
+
+    def test_model_sub_sku_field_has_verbose_name_plural(self):
+        '''
+        Test that Variant.sub_sku's plural verbose name is 'Sub-SKUs'.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(name='bar', product=product)
+        sub_sku = None
+        try:
+            sub_sku = variant._meta.get_field('sub_sku')
+        except:
+            pass
+        verbose_name_plural = getattr(sub_sku, 'verbose_name_plural', None)
+        self.assertEqual(verbose_name_plural, 'Sub-SKUs')
+
+
     def test_model_has_price_field(self):
         '''
         Test that Variant.price is present.
