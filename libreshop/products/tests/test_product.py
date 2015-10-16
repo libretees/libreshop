@@ -87,6 +87,34 @@ class ProductModelTest(TestCase):
         self.assertEqual(max_length, 8)
 
 
+    def test_model_sku_field_has_verbose_name(self):
+        '''
+        Test that Product.sku's verbose name is 'SKU'.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        sku = None
+        try:
+            sku = product._meta.get_field('sku')
+        except:
+            pass
+        verbose_name = getattr(sku, 'verbose_name', None)
+        self.assertEqual(verbose_name, 'SKU')
+
+
+    def test_model_sku_field_has_verbose_name_plural(self):
+        '''
+        Test that Product.sku's plural verbose name is 'SKUs'.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        sku = None
+        try:
+            sku = product._meta.get_field('sku')
+        except:
+            pass
+        verbose_name_plural = getattr(sku, 'verbose_name_plural', None)
+        self.assertEqual(verbose_name_plural, 'SKUs')
+
+
     def test_model_has_name_field(self):
         '''
         Test that Product.name is present.
