@@ -114,6 +114,15 @@ class ProductModelTest(TestCase):
         self.assertTrue(unique)
 
 
+    def test_name_field_must_be_unique_regardless_of_character_case(self):
+        '''
+        Test that Product.name must be unique regardless of character case.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        func = Product.objects.create
+        self.assertRaises(ValidationError, func, sku='bar', name='Foo')
+
+
     def test_model_name_field_is_required(self):
         '''
         Test that Product.name is required.

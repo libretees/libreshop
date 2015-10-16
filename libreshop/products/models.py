@@ -41,17 +41,25 @@ class Product(TimeStampedModel):
     def validate_unique(self, *args, **kwargs):
         super(Product, self).validate_unique(*args, **kwargs)
 
-        queryset = self.__class__._default_manager.filter(
+        sku_queryset = self.__class__._default_manager.filter(
             sku__iexact=self.sku
+        )
+        name_queryset = self.__class__._default_manager.filter(
+            name__iexact=self.name
         )
 
         if not self._state.adding and self.pk:
-            queryset = queryset.exclude(pk=self.pk)
+            sku_queryset = sku_queryset.exclude(pk=self.pk)
+            name_queryset = name_queryset.exclude(pk=self.pk)
 
-        if queryset.exists():
-            raise ValidationError({
-                'sku': ['Product with this SKU already exists',],
-            })
+        validation_errors = {}
+        if sku_queryset.exists():
+            validation_errors['sku'] = ['Product with this SKU already exists',]
+        if name_queryset.exists():
+            validation_errors['name'] = ['Product with this Name already exists',]
+
+        if validation_errors:
+            raise ValidationError(validation_errors)
 
 
     def save(self, *args, **kwargs):
