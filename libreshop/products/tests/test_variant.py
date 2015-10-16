@@ -98,6 +98,25 @@ class VariantModelTest(TestCase):
         self.assertFalse(unique)
 
 
+    def test_model_product_and_name_fields_are_unique_together(self):
+        '''
+        Test that Variant.product and Variant.name are unique together.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(name='bar', product=product)
+        unique_together = getattr(variant._meta, 'unique_together', None)
+        self.assertIn(('product', 'name'), unique_together)
+
+
+    def test_model_product_and_name_fields_are_unique_together_regardless_of_character_case(self):
+        '''
+        Test that Variant.product and Variant.name are unique together regardless of character case.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        func = Variant.objects.create
+        self.assertRaises(ValidationError, func, product=product, name='Foo')
+
+
     def test_model_name_field_is_required(self):
         '''
         Test that Variant.name is required.

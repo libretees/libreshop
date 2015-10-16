@@ -105,7 +105,10 @@ class VariantManager(models.Manager):
 class Variant(TimeStampedModel):
 
     class Meta:
-        unique_together = ('product', 'sub_sku',)
+        unique_together = (
+            ('product', 'name',),
+            ('product', 'sub_sku',),
+        )
 
     product = models.ForeignKey(Product, null=False, blank=False)
     name = models.CharField(max_length=64, null=False, blank=False)
@@ -124,12 +127,19 @@ class Variant(TimeStampedModel):
             sub_sku_queryset = self.__class__._default_manager.filter(
                 sub_sku__iexact=self.sub_sku
             )
-
             if not self._state.adding and self.pk:
                 sub_sku_queryset = sub_sku_queryset.exclude(pk=self.pk)
-
             if sub_sku_queryset.exists():
-                validation_errors['sub_sku'] = ['Sub-SKU for this Product already exists',]
+                validation_errors['sub_sku'] = ['Variant Sub-SKU for this Product already exists',]
+
+        if self.name:
+            name_queryset = self.__class__._default_manager.filter(
+                name__iexact=self.name
+            )
+            if not self._state.adding and self.pk:
+                name_queryset = name_queryset.exclude(pk=self.pk)
+            if name_queryset.exists():
+                validation_errors['name'] = ['Variant Name for this Product already exists',]
 
         if validation_errors:
             raise ValidationError(validation_errors)
