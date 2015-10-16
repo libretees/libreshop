@@ -444,6 +444,35 @@ class VariantModelTest(TestCase):
         self.assertEqual(decimal_places, 2)
 
 
+    def test_model_has_enabled_field(self):
+        '''
+        Test that Variant.enabled is present.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(name='bar', product=product)
+        enabled = None
+        try:
+            enabled = variant._meta.get_field('enabled')
+        except:
+            pass
+        self.assertIsNotNone(enabled)
+
+
+    def test_model_enabled_field_default(self):
+        '''
+        Test that Variant.enabled defaults to True.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(name='bar', product=product)
+        enabled = None
+        try:
+            enabled = variant._meta.get_field('enabled')
+        except:
+            pass
+        enabled = getattr(enabled, 'default', None)
+        self.assertTrue(enabled)
+
+
     def test_saving_to_and_retrieving_variants_from_the_database(self):
         '''
         Test that a Variant can be successfuly saved to the database.

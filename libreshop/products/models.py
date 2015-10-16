@@ -115,6 +115,7 @@ class Variant(TimeStampedModel):
     sub_sku = models.CharField(max_length=8, null=True, blank=False)
     price = models.DecimalField(max_digits=8, decimal_places=2, null=False,
         blank=False, default=Decimal('0.00'))
+    enabled = models.BooleanField(default=True)
 
     objects = VariantManager()
 
