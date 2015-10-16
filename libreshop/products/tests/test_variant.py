@@ -117,6 +117,21 @@ class VariantModelTest(TestCase):
         self.assertRaises(ValidationError, func, product=product, name='Foo')
 
 
+    def test_model_different_products_can_have_same_variant_name(self):
+        '''
+        Test that two Variants of two distinct Products can have the same
+        Variant.name.
+        '''
+        product1 = Product.objects.create(sku='foo', name='foo')
+        product2 = Product.objects.create(sku='bar', name='bar')
+        variant1 = Variant.objects.filter(product=product2)[0]
+        variant2 = Variant.objects.filter(product=product2)[0]
+        variant2.name = 'foo'
+        variant2.save()
+        variant2.refresh_from_db()
+        self.assertEqual(variant1.name, variant2.name)
+
+
     def test_model_name_field_is_required(self):
         '''
         Test that Variant.name is required.
@@ -230,6 +245,24 @@ class VariantModelTest(TestCase):
         func = Variant.objects.create
         self.assertRaises(ValidationError, func, product=product, name='bar',
             sub_sku='Foo')
+
+
+    def test_model_different_products_can_have_same_variant_sub_sku(self):
+        '''
+        Test that two Variants of two distinct Products can have the same
+        Variant.sub_sku.
+        '''
+        product1 = Product.objects.create(sku='foo', name='foo')
+        product2 = Product.objects.create(sku='bar', name='bar')
+        variant1 = Variant.objects.filter(product=product1)[0]
+        variant1.sub_sku = 'baz'
+        variant1.save()
+        variant1.refresh_from_db()
+        variant2 = Variant.objects.filter(product=product2)[0]
+        variant2.sub_sku = 'baz'
+        variant2.save()
+        variant2.refresh_from_db()
+        self.assertEqual(variant1.sub_sku, variant2.sub_sku)
 
 
     def test_model_sub_sku_field_is_not_required(self):

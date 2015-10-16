@@ -125,6 +125,7 @@ class Variant(TimeStampedModel):
 
         if self.sub_sku:
             sub_sku_queryset = self.__class__._default_manager.filter(
+                product=self.product,
                 sub_sku__iexact=self.sub_sku
             )
             if not self._state.adding and self.pk:
@@ -134,6 +135,7 @@ class Variant(TimeStampedModel):
 
         if self.name:
             name_queryset = self.__class__._default_manager.filter(
+                product=self.product,
                 name__iexact=self.name
             )
             if not self._state.adding and self.pk:
