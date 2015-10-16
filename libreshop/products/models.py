@@ -26,14 +26,8 @@ class ProductManager(models.Manager):
 
 class Product(TimeStampedModel):
 
-    sku = models.CharField(max_length=8,
-                           unique=True,
-                           null=False,
-                           default='')
-    name = models.CharField(max_length=64,
-                            unique=True,
-                            null=False,
-                            blank=False)
+    sku = models.CharField(max_length=8, unique=True, null=False, blank=False)
+    name = models.CharField(max_length=64, unique=True, null=False, blank=False)
 
     objects = ProductManager()
 
@@ -75,17 +69,14 @@ class VariantManager(models.Manager):
 
 class Variant(TimeStampedModel):
 
-    product = models.ForeignKey(Product)
-    name = models.CharField(max_length=64,
-                            null=True,
-                            blank=True)
-    sub_sku = models.CharField(max_length=8,
-                               null=True,
-                               blank=True)
-    price = models.DecimalField(max_digits=8,
-                                decimal_places=2,
-                                null=False,
-                                default=Decimal('0.00'))
+    class Meta:
+        unique_together = ('product', 'sub_sku',)
+
+    product = models.ForeignKey(Product, null=False, blank=False)
+    name = models.CharField(max_length=64, null=False, blank=False)
+    sub_sku = models.CharField(max_length=8, null=False, blank=False)
+    price = models.DecimalField(max_digits=8, decimal_places=2, null=False,
+        blank=False, default=Decimal('0.00'))
 
     objects = VariantManager()
 
@@ -121,19 +112,19 @@ class Variant(TimeStampedModel):
             variant.save(*args, **kwargs)
 
     def __str__(self):
-        return self.name or 'Variant(%s) of Product: %s' % (self.id, self.product.sku)
+        return self.name or 'Variant(%s) of Product: %s' % (self.id,
+            self.product.sku)
 
 
 class Component(TimeStampedModel):
 
-    variant = models.ForeignKey(Variant)
-    inventory = models.ForeignKey(Inventory,
-                                  blank=True,
-                                  null=True)
-    quantity = models.DecimalField(max_digits=8,
-                                   decimal_places=2,
-                                   null=False,
-                                   default=Decimal('0.00'))
+    class Meta:
+        unique_together = ('variant', 'inventory',)
+
+    variant = models.ForeignKey(Variant, null=False, blank=False)
+    inventory = models.ForeignKey(Inventory, blank=False, null=False)
+    quantity = models.DecimalField(max_digits=8, decimal_places=2, null=False,
+        blank=False, default=Decimal('0.00'))
 
     def delete(self, *args, **kwargs):
         super(Component, self).delete(*args, **kwargs)
