@@ -2,6 +2,7 @@ import logging
 from django.core.exceptions import ValidationError
 from decimal import Decimal
 from django.test import TestCase
+from inventory.models import Inventory
 from ..models import Product, Variant
 
 # Initialize logger.
@@ -471,6 +472,51 @@ class VariantModelTest(TestCase):
             pass
         enabled = getattr(enabled, 'default', None)
         self.assertTrue(enabled)
+
+
+    def test_model_has_salable_property(self):
+        '''
+        Test that Variant.salable is present.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(name='bar', product=product)
+        salable = getattr(variant, 'salable', None)
+        self.assertIsNotNone(salable)
+
+
+    def test_salable_property_is_false_when_any_child_components_are_invalid(self):
+        '''
+        Test that Variant.salable returns False when any child components have a
+        NULL Component.inventory field.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(name='bar', product=product)
+        components = variant.component_set.all()
+        for component in components:
+            component.inventory = None
+            component.quantity = Decimal(0.00)
+            component.save()
+            component.refresh_from_db()
+        salable = getattr(variant, 'salable', None)
+        self.assertFalse(salable)
+
+
+    def test_salable_property_is_true_when_all_child_components_are_valid(self):
+        '''
+        Test that Variant.salable returns True when all child components have a
+        populated Component.inventory field.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(name='bar', product=product)
+        components = variant.component_set.all()
+        inventory = Inventory.objects.create(name='baz')
+        for component in components:
+            component.inventory = inventory
+            component.quantity = Decimal(1.00)
+            component.save()
+            component.refresh_from_db()
+        salable = getattr(variant, 'salable', None)
+        self.assertTrue(salable)
 
 
     def test_saving_to_and_retrieving_variants_from_the_database(self):

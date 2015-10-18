@@ -125,6 +125,12 @@ class Variant(TimeStampedModel):
         self._meta.get_field('sub_sku').verbose_name_plural = 'Sub-SKUs'
 
 
+    @property
+    def salable(self):
+        components = self.component_set.all()
+        return all(component.inventory for component in components)
+
+
     def validate_unique(self, *args, **kwargs):
         super(Variant, self).validate_unique(*args, **kwargs)
 
