@@ -12,17 +12,25 @@ logger = logging.getLogger(__name__)
 # Register your models here.
 admin.site.register(models.Component)
 
+class ComponentInline(admin.TabularInline):
+    model = models.Component
+    min_num = 1
+    extra = 0
 
-class ComponentInlineAdmin(NestedTabularInline):
+
+class ComponentNestedInline(NestedTabularInline):
     model = models.Component
     extra = 0
+    fk_name = 'variant'
     show_change_link = False # Does not work with Nested Inlines.
 
 
-class VariantInlineAdmin(NestedTabularInline):
+class VariantNestedInline(NestedTabularInline):
     model = models.Variant
-    inlines = [ComponentInlineAdmin,]
+    inlines = [ComponentNestedInline,]
+    fields = ('name', 'sub_sku', 'price', 'enabled')
     extra = 0
+    fk_name = 'product'
     show_change_link = False # Does not work with Nested Inlines.
 
     def get_max_num(self, request, obj=None, **kwargs):
@@ -31,21 +39,16 @@ class VariantInlineAdmin(NestedTabularInline):
 
 class ProductAdmin(NestedModelAdmin):
 
-    list_display = ('_sku', 'name')
+    list_display = ('sku', 'name')
 
     form = ProductChangeForm
     add_form = ProductCreationForm
-
-    def _sku(self, instance):
-        return instance.sku
-    _sku.short_description = 'SKU'
-    _sku.admin_order_field = 'sku'
 
     def get_inline_instances(self, request, obj=None):
 
         if obj:
             inlines = set(self.inlines)
-            inlines = inlines.union({VariantInlineAdmin,})
+            inlines = inlines.union({VariantNestedInline,})
             self.inlines = list(inlines)
         else:
             self.inlines = []
@@ -100,6 +103,7 @@ class ProductAdmin(NestedModelAdmin):
 class VariantAdmin(admin.ModelAdmin):
 
     add_form = VariantCreationForm
+    inlines = (ComponentInline,)
 
     def __init__(self, *args, **kwargs):
         super(VariantAdmin, self).__init__(*args, **kwargs)

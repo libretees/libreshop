@@ -9,12 +9,13 @@ logger = logging.getLogger(__name__)
 # Register your models here.
 class LocationAdmin(admin.TabularInline):
     model = models.Location
-    extra = 1
+    min_num = 1
+    extra = 0
 
 
 class AttributeAdmin(admin.TabularInline):
     model = models.Attribute_Value
-    extra = 1
+    extra = 0
 
 
 class InventoryAdmin(admin.ModelAdmin):

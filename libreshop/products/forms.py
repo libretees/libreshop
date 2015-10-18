@@ -43,33 +43,50 @@ class ProductChangeForm(forms.ModelForm):
         model = models.Product
         fields = ('sku', 'name')
 
-    variants = forms.ModelMultipleChoiceField(queryset=None,
-                                              widget=admin.widgets.FilteredSelectMultiple('Variants', False),
-                                              required=True)
+    variants = forms.ModelMultipleChoiceField(label='Enabled Variants',
+        widget=admin.widgets.FilteredSelectMultiple('Variants', False),
+        required=True, queryset=None
+    )
 
     def __init__(self, *args, **kwargs):
         super(ProductChangeForm, self).__init__(*args, **kwargs)
-        self.fields['sku'].label = 'SKU'
-        self.fields['variants'].queryset = models.Variant.objects.filter(product=self.instance)
-        self.initial['variants'] = models.Variant.objects.filter(product=self.instance)
-        relation = OneToOneRel(field=models.Product,
-                               to=models.Variant,
-                               field_name='id')
+        self.fields['variants'].queryset = (models.Variant.objects.
+            filter(product=self.instance)
+        )
+        self.initial['variants'] = models.Variant.objects.filter(
+                product=self.instance, enabled=True
+        )
+        relation = OneToOneRel(field=models.Product, to=models.Variant,
+            field_name='id'
+        )
 
         prepopulated_values = [('product', self.instance.pk)]
-        self.fields['variants'].widget = RelatedFieldWidgetWrapper(self.fields['variants'].widget,
-                                                                   relation,
-                                                                   admin.site,
-                                                                   prepopulated_values)
+        self.fields['variants'].widget = RelatedFieldWidgetWrapper(
+            self.fields['variants'].widget, relation, admin.site,
+            prepopulated_values
+        )
 
     def save(self, *args, **kwargs):
         instance = super(ProductChangeForm, self).save(*args, **kwargs)
 
         if instance.pk:
-            for variant in [variant for variant in models.Variant.objects.filter(product=instance.pk)]:
+
+            enabled_variants = ([variant for variant in models.Variant.objects.
+                filter(product=instance.pk, enabled=True)])
+
+            # Disable a Variant that has been unselected.
+            for variant in enabled_variants:
                 if variant not in self.cleaned_data['variants']:
-                    # remove a variant that has been unselected
-                    models.Variant.objects.get(id=variant.id).delete()
+                    variant = models.Variant.objects.get(id=variant.id)
+                    variant.enabled = False
+                    variant.save()
+
+            # Enable a Variant that has been selected.
+            for variant in self.cleaned_data['variants']:
+                if variant not in enabled_variants:
+                    variant = models.Variant.objects.get(id=variant.id)
+                    variant.enabled = True
+                    variant.save()
 
         return instance
 
@@ -88,23 +105,6 @@ class VariantCreationForm(forms.ModelForm):
     class Meta:
         model = models.Variant
         fields = ('product', 'name', 'sub_sku', 'price')
-
-    components = forms.ModelMultipleChoiceField(queryset=None,
-                                                widget=admin.widgets.FilteredSelectMultiple('Components', False),
-                                                required=False)
-
-    def __init__(self, *args, **kwargs):
-        super(VariantCreationForm, self).__init__(*args, **kwargs)
-        self.fields['components'].queryset = models.Component.objects.filter(variant=self.instance)
-        self.initial['components'] = models.Component.objects.filter(variant=self.instance)
-        relation = OneToOneRel(field=models.Variant,
-                               to=models.Component,
-                               field_name='id')
-        prepopulated_values = [('variant', self.instance.pk)]
-        self.fields['components'].widget = RelatedFieldWidgetWrapper(self.fields['components'].widget,
-                                                                     relation,
-                                                                     admin.site,
-                                                                     prepopulated_values)
 
 
 def PopulatedFormFactory(request, cls, form=forms.ModelForm):
