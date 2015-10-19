@@ -39,10 +39,22 @@ class VariantNestedInline(NestedTabularInline):
 
 class ProductAdmin(NestedModelAdmin):
 
-    list_display = ('sku', 'name')
+    list_display = ('sku', 'name', '_salable', '_salable_variants')
 
     form = ProductChangeForm
     add_form = ProductCreationForm
+
+    def _salable(self, instance):
+        return 'Yes' if instance.salable else 'No'
+    _salable.short_description = 'Product Salable?'
+
+
+    def _salable_variants(self, instance):
+        variants = instance.variant_set.all()
+        salable_variants = [variant for variant in variants if variant.salable]
+        return '%s of %s' % (len(salable_variants), variants.count())
+    _salable_variants.short_description = 'Salable Variants'
+
 
     def get_inline_instances(self, request, obj=None):
 
@@ -54,6 +66,7 @@ class ProductAdmin(NestedModelAdmin):
             self.inlines = []
 
         return super(ProductAdmin, self).get_inline_instances(request, obj)
+
 
     def has_add_permission(self, request):
         """
@@ -73,6 +86,7 @@ class ProductAdmin(NestedModelAdmin):
         else:
             return True
 
+
     def get_form(self, request, obj=None, **kwargs):
         """
         Use special form during product creation
@@ -82,6 +96,7 @@ class ProductAdmin(NestedModelAdmin):
             defaults['form'] = self.add_form
         defaults.update(kwargs)
         return super(ProductAdmin, self).get_form(request, obj, **defaults)
+
 
     def response_add(self, request, obj, post_url_continue=None):
         """
