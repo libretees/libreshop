@@ -486,7 +486,7 @@ class VariantModelTest(TestCase):
 
     def test_salable_property_is_false_when_any_child_components_are_invalid(self):
         '''
-        Test that Variant.salable returns False when any child components have a
+        Test that Variant.salable returns False when any child Components have a
         NULL Component.inventory field.
         '''
         product = Product.objects.create(sku='foo', name='foo')
@@ -503,7 +503,7 @@ class VariantModelTest(TestCase):
 
     def test_salable_property_is_true_when_all_child_components_are_valid(self):
         '''
-        Test that Variant.salable returns True when all child components have a
+        Test that Variant.salable returns True when all child Components have a
         populated Component.inventory field.
         '''
         product = Product.objects.create(sku='foo', name='foo')

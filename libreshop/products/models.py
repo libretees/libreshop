@@ -38,6 +38,12 @@ class Product(TimeStampedModel):
         self._meta.get_field('sku').verbose_name_plural = 'SKUs'
 
 
+    @property
+    def salable(self):
+        variants = self.variant_set.all()
+        return any(variant.salable for variant in variants)
+
+
     def validate_unique(self, *args, **kwargs):
         super(Product, self).validate_unique(*args, **kwargs)
 

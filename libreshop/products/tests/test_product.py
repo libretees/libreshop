@@ -1,7 +1,8 @@
 import logging
+from decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from ..models import Product, Variant, Component
+from ..models import Product, Variant, Component, Inventory
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -191,6 +192,71 @@ class ProductModelTest(TestCase):
             pass
         max_length = getattr(name, 'max_length', None)
         self.assertEqual(max_length, 64)
+
+
+    def test_model_has_salable_property(self):
+        '''
+        Test that Product.salable is present.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        salable = getattr(product, 'salable', None)
+        self.assertIsNotNone(salable)
+
+
+    def test_salable_property_is_false_when_all_child_variants_are_not_salable(self):
+        '''
+        Test that Product.salable returns False when all child Variants have a
+        False Variant.salable property.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variants = product.variant_set.all()
+        for variant in variants:
+            components = variant.component_set.all()
+            for component in components:
+                component.inventory = None
+                component.quantity = Decimal(0.00)
+                component.save()
+                component.refresh_from_db()
+        salable = getattr(product, 'salable', None)
+        self.assertFalse(salable)
+
+
+    def test_salable_property_is_true_when_any_child_variant_is_salable(self):
+        '''
+        Test that Product.salable returns True when any child Variant has a
+        True Variant.salable property.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(name='bar', product=product)
+        inventory = Inventory.objects.create(name='baz')
+        variants = product.variant_set.all().exclude(pk=variant.pk)
+        for variant in variants:
+            components = variant.component_set.all()
+            for component in components:
+                component.inventory = inventory
+                component.quantity = Decimal(0.00)
+                component.save()
+        salable = getattr(product, 'salable', None)
+        self.assertTrue(salable)
+
+
+    def test_salable_property_is_true_when_all_child_variants_are_salable(self):
+        '''
+        Test that Product.salable returns True when all child Variants have a
+        True Variant.salable property.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(name='bar', product=product)
+        inventory = Inventory.objects.create(name='baz')
+        variants = product.variant_set.all()
+        for variant in variants:
+            components = variant.component_set.all()
+            for component in components:
+                component.inventory = inventory
+                component.quantity = Decimal(0.00)
+                component.save()
+        salable = getattr(product, 'salable', None)
+        self.assertTrue(salable)
 
 
     def test_saving_to_and_retrieving_products_from_the_database(self):
