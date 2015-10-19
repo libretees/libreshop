@@ -114,12 +114,13 @@ def PopulatedFormFactory(request, cls, form=forms.ModelForm):
     class PopulatedForm(form):
         def __init__(self, *args, **kwargs):
             super(PopulatedForm, self).__init__(*args, **kwargs)
-            if request.method == 'GET':
+            if request.method in ['GET', 'POST']:
                 for key in request.GET:
                     try:
                         field = self.fields[key]
                         field.required = False
                         if isinstance(field, forms.models.ModelChoiceField):
+                            field.empty_label = None
                             related_model_name = (field.queryset.model._meta
                                 .model_name.title())
                             cls = getattr(models, related_model_name, None)
@@ -135,12 +136,7 @@ def PopulatedFormFactory(request, cls, form=forms.ModelForm):
                     except KeyError:
                         # Ignore unexpected parameters
                         pass
-            else:
-                prepopulated_fields = ([name for name in model_field_names
-                    if name in request.GET
-                    and name not in request.POST])
-                for name in prepopulated_fields:
-                    self.fields[name].required = False
+
 
     def get_clean_function(name):
         def func(self):
