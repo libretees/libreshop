@@ -591,9 +591,9 @@ class VariantModelTest(TestCase):
         self.assertEqual({'foo': {'bar', 'baz'}}, attributes)
 
 
-    def test_attributes_property_combines_numeric_component_attributes_for_positive_values(self):
+    def test_attributes_property_combines_integer_component_attributes_for_positive_values(self):
         '''
-        Test that Variant.attributes sums numeric attribute values for child
+        Test that Variant.attributes sums integer attribute values for child
         Components with similar attributes with all positive values.
         '''
         attribute = Attribute.objects.create(name='foo')
@@ -613,9 +613,31 @@ class VariantModelTest(TestCase):
         self.assertEqual({'foo': {'3'}}, attributes)
 
 
-    def test_attributes_property_combines_numeric_component_attributes_for_negative_values(self):
+    def test_attributes_property_combines_float_component_attributes_for_positive_values(self):
         '''
-        Test that Variant.attributes sums numeric attribute values for child
+        Test that Variant.attributes sums float attribute values for child
+        Components with similar attributes with all positive values.
+        '''
+        attribute = Attribute.objects.create(name='foo')
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        inventory1 = Inventory.objects.create(name='qux')
+        inventory2 = Inventory.objects.create(name='quux')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='1.0')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='2.0')
+        component1 = Component.objects.create(variant=variant,
+            inventory=inventory1, quantity=Decimal(1.00))
+        component2 = Component.objects.create(variant=variant,
+            inventory=inventory2, quantity=Decimal(1.00))
+        attributes = getattr(variant, 'attributes', None)
+        self.assertEqual({'foo': {'3.0'}}, attributes)
+
+
+    def test_attributes_property_combines_integer_component_attributes_for_negative_values(self):
+        '''
+        Test that Variant.attributes sums integer attribute values for child
         Components with similar attributes with all negative values.
         '''
         attribute = Attribute.objects.create(name='foo')
@@ -635,9 +657,31 @@ class VariantModelTest(TestCase):
         self.assertEqual({'foo': {'-3'}}, attributes)
 
 
-    def test_attributes_property_combines_numeric_component_attributes_for_mixed_values(self):
+    def test_attributes_property_combines_float_component_attributes_for_negative_values(self):
         '''
-        Test that Variant.attributes sums numeric attribute values for child
+        Test that Variant.attributes sums float attribute values for child
+        Components with similar attributes with all negative values.
+        '''
+        attribute = Attribute.objects.create(name='foo')
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        inventory1 = Inventory.objects.create(name='qux')
+        inventory2 = Inventory.objects.create(name='quux')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='-1.0')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='-2.0')
+        component1 = Component.objects.create(variant=variant,
+            inventory=inventory1, quantity=Decimal(1.00))
+        component2 = Component.objects.create(variant=variant,
+            inventory=inventory2, quantity=Decimal(1.00))
+        attributes = getattr(variant, 'attributes', None)
+        self.assertEqual({'foo': {'-3.0'}}, attributes)
+
+
+    def test_attributes_property_combines_integer_component_attributes_for_mixed_values(self):
+        '''
+        Test that Variant.attributes sums integer attribute values for child
         Components with similar attributes with both positive and negative
         values.
         '''
@@ -658,9 +702,32 @@ class VariantModelTest(TestCase):
         self.assertEqual({'foo': {'1'}}, attributes)
 
 
-    def test_attributes_property_combines_numeric_component_attributes_for_special_cases(self):
+    def test_attributes_property_combines_float_component_attributes_for_mixed_values(self):
         '''
-        Test that Variant.attributes sums numeric attribute values for child
+        Test that Variant.attributes sums float attribute values for child
+        Components with similar attributes with both positive and negative
+        values.
+        '''
+        attribute = Attribute.objects.create(name='foo')
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        inventory1 = Inventory.objects.create(name='qux')
+        inventory2 = Inventory.objects.create(name='quux')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='-1.0')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='2.0')
+        component1 = Component.objects.create(variant=variant,
+            inventory=inventory1, quantity=Decimal(1.00))
+        component2 = Component.objects.create(variant=variant,
+            inventory=inventory2, quantity=Decimal(1.00))
+        attributes = getattr(variant, 'attributes', None)
+        self.assertEqual({'foo': {'1.0'}}, attributes)
+
+
+    def test_attributes_property_combines_float_component_attributes_for_special_cases(self):
+        '''
+        Test that Variant.attributes sums float attribute values for child
         Components with similar attributes and special cases (positive/negative
         exponent form).
         '''
