@@ -1,3 +1,4 @@
+import re
 import logging
 from decimal import Decimal
 from django.db import models
@@ -135,6 +136,39 @@ class Variant(TimeStampedModel):
     def salable(self):
         components = self.component_set.all()
         return all(component.inventory for component in components)
+
+
+    @property
+    def attributes(self):
+
+        numeric_pattern = r"""
+            ^[-+]?(?:(?:\d*\.\d+)|(?:\d+\.?))(?:[Ee][+-]?\d+)?$
+        """
+        regex = re.compile(numeric_pattern, re.VERBOSE)
+
+        attributes = {}
+        for component in self.component_set.all():
+            for key in component.attributes.keys():
+                attribute = component.attributes[key]
+                if key not in attributes.keys():
+                    attributes[key] = {attribute}
+                else:
+                    if re.match(regex, attribute):
+                        for value in attributes[key]:
+                            if re.match(regex, value):
+                                try:
+                                    augend = int(value)
+                                except:
+                                    augend = float(value)
+                                try:
+                                    addend = int(attribute)
+                                except:
+                                    addend = float(attribute)
+                                attribute = str(augend + addend)
+                                attributes[key].discard(value)
+                                break
+                    attributes[key].add(attribute)
+        return attributes
 
 
     def validate_unique(self, *args, **kwargs):

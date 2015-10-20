@@ -2,8 +2,8 @@ import logging
 from django.core.exceptions import ValidationError
 from decimal import Decimal
 from django.test import TestCase
-from inventory.models import Inventory
-from ..models import Product, Variant
+from inventory.models import Inventory, Attribute, Attribute_Value
+from ..models import Product, Variant, Component
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -517,6 +517,190 @@ class VariantModelTest(TestCase):
             component.refresh_from_db()
         salable = getattr(variant, 'salable', None)
         self.assertTrue(salable)
+
+
+    def test_model_has_attributes_property(self):
+        '''
+        Test that Variant.attributes is present.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        attributes = getattr(variant, 'attributes', None)
+        self.assertIsNotNone(attributes)
+
+
+    def test_attributes_property_inherits_child_component_attributes(self):
+        '''
+        Test that Variant.attributes contains attributes from its child
+        Component object(s).
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        inventory = Inventory.objects.create(name='baz')
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory, value='bar')
+        component = Component.objects.create(variant=variant,
+            inventory=inventory, quantity=Decimal(1.00))
+        attributes = getattr(variant, 'attributes', None)
+        self.assertIn('foo', attributes)
+
+
+    def test_attributes_property_inherits_child_component_attributes_as_set_of_similar_values(self):
+        '''
+        Test that Variant.attributes contains a set of attribute values, when
+        child Components contain matching attributes with similar values.
+        '''
+        attribute = Attribute.objects.create(name='foo')
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        inventory1 = Inventory.objects.create(name='qux')
+        inventory2 = Inventory.objects.create(name='quux')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='bar')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='bar')
+        component1 = Component.objects.create(variant=variant,
+            inventory=inventory1, quantity=Decimal(1.00))
+        component2 = Component.objects.create(variant=variant,
+            inventory=inventory2, quantity=Decimal(1.00))
+        attributes = getattr(variant, 'attributes', None)
+        self.assertEqual({'foo': {'bar'}}, attributes)
+
+
+
+    def test_attributes_property_inherits_child_component_attributes_as_set_of_differing_values(self):
+        '''
+        Test that Variant.attributes contains a set of attribute values, when
+        child Components contain matching attributes with differing values.
+        '''
+        attribute = Attribute.objects.create(name='foo')
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        inventory1 = Inventory.objects.create(name='qux')
+        inventory2 = Inventory.objects.create(name='quux')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='bar')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='baz')
+        component1 = Component.objects.create(variant=variant,
+            inventory=inventory1, quantity=Decimal(1.00))
+        component2 = Component.objects.create(variant=variant,
+            inventory=inventory2, quantity=Decimal(1.00))
+        attributes = getattr(variant, 'attributes', None)
+        self.assertEqual({'foo': {'bar', 'baz'}}, attributes)
+
+
+    def test_attributes_property_combines_numeric_component_attributes_for_positive_values(self):
+        '''
+        Test that Variant.attributes sums numeric attribute values for child
+        Components with similar attributes with all positive values.
+        '''
+        attribute = Attribute.objects.create(name='foo')
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        inventory1 = Inventory.objects.create(name='qux')
+        inventory2 = Inventory.objects.create(name='quux')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='1')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='2')
+        component1 = Component.objects.create(variant=variant,
+            inventory=inventory1, quantity=Decimal(1.00))
+        component2 = Component.objects.create(variant=variant,
+            inventory=inventory2, quantity=Decimal(1.00))
+        attributes = getattr(variant, 'attributes', None)
+        self.assertEqual({'foo': {'3'}}, attributes)
+
+
+    def test_attributes_property_combines_numeric_component_attributes_for_negative_values(self):
+        '''
+        Test that Variant.attributes sums numeric attribute values for child
+        Components with similar attributes with all negative values.
+        '''
+        attribute = Attribute.objects.create(name='foo')
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        inventory1 = Inventory.objects.create(name='qux')
+        inventory2 = Inventory.objects.create(name='quux')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='-1')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='-2')
+        component1 = Component.objects.create(variant=variant,
+            inventory=inventory1, quantity=Decimal(1.00))
+        component2 = Component.objects.create(variant=variant,
+            inventory=inventory2, quantity=Decimal(1.00))
+        attributes = getattr(variant, 'attributes', None)
+        self.assertEqual({'foo': {'-3'}}, attributes)
+
+
+    def test_attributes_property_combines_numeric_component_attributes_for_mixed_values(self):
+        '''
+        Test that Variant.attributes sums numeric attribute values for child
+        Components with similar attributes with both positive and negative
+        values.
+        '''
+        attribute = Attribute.objects.create(name='foo')
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        inventory1 = Inventory.objects.create(name='qux')
+        inventory2 = Inventory.objects.create(name='quux')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='-1')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='2')
+        component1 = Component.objects.create(variant=variant,
+            inventory=inventory1, quantity=Decimal(1.00))
+        component2 = Component.objects.create(variant=variant,
+            inventory=inventory2, quantity=Decimal(1.00))
+        attributes = getattr(variant, 'attributes', None)
+        self.assertEqual({'foo': {'1'}}, attributes)
+
+
+    def test_attributes_property_combines_numeric_component_attributes_for_special_cases(self):
+        '''
+        Test that Variant.attributes sums numeric attribute values for child
+        Components with similar attributes and special cases (positive/negative
+        exponent form).
+        '''
+        attribute = Attribute.objects.create(name='foo')
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        inventory1 = Inventory.objects.create(name='qux')
+        inventory2 = Inventory.objects.create(name='quux')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='1e2')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='-1E-1')
+        component1 = Component.objects.create(variant=variant,
+            inventory=inventory1, quantity=Decimal(1.00))
+        component2 = Component.objects.create(variant=variant,
+            inventory=inventory2, quantity=Decimal(1.00))
+        attributes = getattr(variant, 'attributes', None)
+        self.assertEqual({'foo': {'99.9'}}, attributes)
+
+
+    def test_attributes_property_allows_for_mixed_type_attributes(self):
+        '''
+        Test that Variant.attributes allows for mixed attribute types to
+        coexist.
+        '''
+        attribute = Attribute.objects.create(name='foo')
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        inventory1 = Inventory.objects.create(name='qux')
+        inventory2 = Inventory.objects.create(name='quux')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='1')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='baz')
+        component1 = Component.objects.create(variant=variant,
+            inventory=inventory1, quantity=Decimal(1.00))
+        component2 = Component.objects.create(variant=variant,
+            inventory=inventory2, quantity=Decimal(1.00))
+        attributes = getattr(variant, 'attributes', None)
+        self.assertEqual({'foo': {'1', 'baz'}}, attributes)
 
 
     def test_saving_to_and_retrieving_variants_from_the_database(self):
