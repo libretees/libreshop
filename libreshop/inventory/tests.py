@@ -223,6 +223,18 @@ class AttributeValueModelTest(TestCase):
         self.assertIsNotNone(value)
 
 
+    def test_model_has_name_property(self):
+        '''
+        Test that Attribute_Value.name is present.
+        '''
+        inventory = Inventory.objects.create(name='foo')
+        attribute = Attribute.objects.create(name='bar')
+        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory, value='baz')
+        name = getattr(attribute_value, 'name', None)
+        self.assertIsNotNone(name)
+
+
     def test_saving_to_and_retrieving_attribute_values_from_the_database(self):
         '''
         Test that an Attribute Value can be successfuly saved to the database.

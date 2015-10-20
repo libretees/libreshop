@@ -85,6 +85,11 @@ class Attribute_Value(TimeStampedModel):
     value = models.CharField(max_length=64, null=False, blank=False)
 
 
+    @property
+    def name(self):
+        return self.attribute.name
+
+
     def __str__(self):
         return self.attribute.name
 

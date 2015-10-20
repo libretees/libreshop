@@ -216,6 +216,14 @@ class Component(TimeStampedModel):
     quantity = models.DecimalField(max_digits=8, decimal_places=2, null=False,
         blank=False, default=Decimal('0.00'))
 
+
+    @property
+    def attributes(self):
+        return ({attribute.name:attribute.value
+            for attribute in self.inventory.attribute_value_set.all()}
+            if self.inventory else {})
+
+
     def delete(self, *args, **kwargs):
         super(Component, self).delete(*args, **kwargs)
 

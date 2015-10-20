@@ -2,7 +2,8 @@ import logging
 from decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from ..models import Product, Variant, Component, Inventory
+from inventory.models import Inventory, Attribute, Attribute_Value
+from ..models import Product, Variant, Component
 
 # Initialize logger.
 logger = logging.getLogger(__name__)

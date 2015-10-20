@@ -1,7 +1,8 @@
 import logging
 from decimal import Decimal
 from django.test import TestCase
-from ..models import Product, Variant, Component
+from inventory.models import Inventory, Attribute, Attribute_Value
+from ..models import Product, Variant, Component, Inventory
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -255,6 +256,35 @@ class ComponentModelTest(TestCase):
             pass
         decimal_places = getattr(quantity, 'decimal_places', None)
         self.assertEqual(decimal_places, 2)
+
+
+    def test_model_has_attributes_property(self):
+        '''
+        Test that Component.attributes is present.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        component = Component.objects.create(variant=variant,
+            quantity=Decimal(1.00))
+        attributes = getattr(component, 'attributes', None)
+        self.assertIsNotNone(attributes)
+
+
+    def test_attributes_property_inherits_linked_inventory_attributes(self):
+        '''
+        Test that Component.attributes contains attributes from its linked
+        Inventory object.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        inventory = Inventory.objects.create(name='baz')
+        attribute = Attribute.objects.create(name='qux')
+        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory, value='quux')
+        component = Component.objects.create(variant=variant,
+            inventory=inventory, quantity=Decimal(1.00))
+        attributes = getattr(component, 'attributes', None)
+        self.assertIn('qux', attributes)
 
 
     def test_saving_to_and_retrieving_components_from_the_database(self):
