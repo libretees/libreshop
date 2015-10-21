@@ -10,6 +10,26 @@ from inventory.models import Inventory
 # Initialize logger.
 logger = logging.getLogger(__name__)
 
+
+class AttributeDict(dict):
+
+    def __getattr__(self, key):
+        try:
+            return self[key]
+        except KeyError:
+            # to conform with __getattr__ spec
+            raise AttributeError(key)
+
+    def __setattr__(self, key, value):
+        self[key] = value
+
+    def first(self, *names):
+        for name in names:
+            value = self.get(name)
+            if value:
+                return value
+
+
 # Create your models here.
 class ProductManager(models.Manager):
 
@@ -49,7 +69,7 @@ class Product(TimeStampedModel):
     @property
     def attributes(self):
 
-        attributes = {}
+        attributes = AttributeDict()
         variants = self.variant_set.all()
         for variant in variants:
             for key in variant.attributes:
