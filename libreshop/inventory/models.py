@@ -126,5 +126,16 @@ class Inventory(TimeStampedModel):
         default=Decimal(0.00), validators=[MinValueValidator(Decimal('0.00'))])
 
 
+    def delete(self, *args, **kwargs):
+        from products.models import Component
+
+        linked_components = Component.objects.filter(inventory=self)
+        for component in linked_components:
+            component.inventory = None
+            component.save()
+
+        super(Inventory, self).delete(*args, **kwargs)
+
+
     def __str__(self):
         return self.name

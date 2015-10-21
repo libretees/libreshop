@@ -6,9 +6,9 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from django.test import TestCase
+from products.models import Product, Variant, Component
 from shop.models import Address
-from inventory.models import (Warehouse, Attribute, Inventory, Attribute_Value,
-    Location)
+from .models import Warehouse, Attribute, Inventory, Attribute_Value, Location
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -423,3 +423,19 @@ class InventoryModelTest(TestCase):
         inventory.save()
         num_inventory = Inventory.objects.all().count()
         self.assertEqual(num_inventory, 1)
+
+
+    def test_components_are_unlinked_when_inventory_is_deleted(self):
+        '''
+        Test that any linked Components are unlinked when an Inventory object is
+        deleted.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        inventory = Inventory.objects.create(name='baz')
+        component = Component.objects.filter(variant=variant)[0]
+        component.inventory = inventory
+        component.save()
+        inventory.delete()
+        num_components = Component.objects.filter(variant=variant).count()
+        self.assertEqual(num_components, 1)
