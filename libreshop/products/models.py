@@ -45,6 +45,21 @@ class Product(TimeStampedModel):
         return any(variant.salable for variant in variants)
 
 
+    @property
+    def attributes(self):
+
+        attributes = {}
+        variants = self.variant_set.all()
+        for variant in variants:
+            for key in variant.attributes.keys():
+                attribute = variant.attributes[key]
+                if key not in attributes:
+                    attributes[key] = attribute
+                else:
+                    attributes[key] |= attribute
+        return attributes
+
+
     def validate_unique(self, *args, **kwargs):
         super(Product, self).validate_unique(*args, **kwargs)
 

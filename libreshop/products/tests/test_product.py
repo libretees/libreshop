@@ -260,6 +260,52 @@ class ProductModelTest(TestCase):
         self.assertTrue(salable)
 
 
+    def test_model_has_attributes_property(self):
+        '''
+        Test that Product.attributes is present.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        attributes = getattr(product, 'attributes', None)
+        self.assertIsNotNone(attributes)
+
+
+    def test_attributes_property_inherits_child_variant_attributes(self):
+        '''
+        Test that Product.attributes contains attributes from its child Variant
+        object(s).
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(product=product, name='bar')
+        inventory = Inventory.objects.create(name='baz')
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory, value='bar')
+        component = Component.objects.create(variant=variant,
+            inventory=inventory, quantity=Decimal(1.00))
+        attributes = getattr(product, 'attributes', None)
+        self.assertIn('foo', attributes)
+
+
+    def test_attributes_property_inherits_child_variant_attributes_as_set(self):
+        '''
+        Test that Product.attributes contains a set of attribute values, when
+        child Variants contain matching attributes.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant1 = Variant.objects.create(product=product, name='bar')
+        variant2 = Variant.objects.create(product=product, name='baz')
+        attribute = Attribute.objects.create(name='foo')
+        inventory = Inventory.objects.create(name='baz')
+        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory, value='bar')
+        component1 = Component.objects.create(variant=variant1,
+            inventory=inventory, quantity=Decimal(1.00))
+        componen2 = Component.objects.create(variant=variant2,
+            inventory=inventory, quantity=Decimal(1.00))
+        attributes = getattr(product, 'attributes', None)
+        self.assertEqual({'foo': {'bar'}}, attributes)
+
+
     def test_saving_to_and_retrieving_products_from_the_database(self):
         '''
         Test that a Product can be successfuly saved to the database.
