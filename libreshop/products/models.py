@@ -51,7 +51,7 @@ class Product(TimeStampedModel):
         attributes = {}
         variants = self.variant_set.all()
         for variant in variants:
-            for key in variant.attributes.keys():
+            for key in variant.attributes:
                 attribute = variant.attributes[key]
                 if key not in attributes:
                     attributes[key] = attribute
@@ -163,9 +163,9 @@ class Variant(TimeStampedModel):
 
         attributes = {}
         for component in self.component_set.all():
-            for key in component.attributes.keys():
+            for key in component.attributes:
                 attribute = component.attributes[key]
-                if key not in attributes.keys():
+                if key not in attributes:
                     attributes[key] = {attribute}
                 else:
                     if re.match(regex, attribute):
