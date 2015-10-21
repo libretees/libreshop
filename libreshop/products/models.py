@@ -42,7 +42,8 @@ class Product(TimeStampedModel):
     @property
     def salable(self):
         variants = self.variant_set.all()
-        return any(variant.salable for variant in variants)
+        return (False if not variants else
+            any(variant.salable for variant in variants))
 
 
     @property
@@ -150,7 +151,8 @@ class Variant(TimeStampedModel):
     @property
     def salable(self):
         components = self.component_set.all()
-        return all(component.inventory for component in components)
+        return (False if not components else
+            all(component.inventory for component in components))
 
 
     @property
