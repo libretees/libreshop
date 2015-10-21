@@ -257,6 +257,17 @@ class Variant(TimeStampedModel):
             self.product.sku)
 
 
+class ComponentManager(models.Manager):
+
+    def create(self, *args, **kwargs):
+        component = None
+        with transaction.atomic():
+            component = super(ComponentManager, self).create(*args, **kwargs)
+            component.delete_invalid_components()
+
+        return component
+
+
 class Component(TimeStampedModel):
 
     class Meta:
@@ -267,12 +278,35 @@ class Component(TimeStampedModel):
     quantity = models.DecimalField(max_digits=8, decimal_places=2, null=False,
         blank=False, default=Decimal('0.00'))
 
+    objects = ComponentManager()
 
     @property
     def attributes(self):
         return ({attribute.name:attribute.value
             for attribute in self.inventory.attribute_value_set.all()}
             if self.inventory else {})
+
+
+    def delete_invalid_components(self):
+        '''
+        Do not permit valid and invalid Components to coexist.
+        '''
+        components = Component.objects.filter(variant=self.variant)
+        invalid_components = Component.objects.filter(
+            variant=self.variant, inventory=None)
+        valid_components = [component for component in components
+            if component not in invalid_components]
+        if valid_components and invalid_components:
+            invalid_components.delete()
+
+
+    def save(self, *args, **kwargs):
+        component = None
+        with transaction.atomic():
+            component = super(Component, self).save(*args, **kwargs)
+            self.delete_invalid_components()
+
+        return component
 
 
     def delete(self, *args, **kwargs):

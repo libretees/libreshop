@@ -312,3 +312,32 @@ class ComponentModelTest(TestCase):
         component.delete()
         component = Component.objects.filter(variant=variant)[0]
         self.assertNotEqual(original_component_id, component.id)
+
+
+    def test_invalid_child_component_is_deleted_when_valid_child_component_is_created(self):
+        '''
+        Test that invalid child Components are deleted when a valid child
+        Component is created.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.filter(product=product)[0]
+        inventory = Inventory.objects.create(name='baz')
+        component = Component.objects.create(variant=variant,
+            inventory=inventory, quantity=Decimal(1.00))
+        num_components = Component.objects.filter(variant=variant).count()
+        self.assertEqual(num_components, 1)
+
+
+    def test_invalid_child_component_is_deleted_when_valid_child_component_is_saved(self):
+        '''
+        Test that invalid child Components are deleted when a valid child
+        Component is saved.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.filter(product=product)[0]
+        inventory = Inventory.objects.create(name='baz')
+        component = Component(variant=variant, inventory=inventory,
+            quantity=Decimal(1.00))
+        component.save()
+        num_components = Component.objects.filter(variant=variant).count()
+        self.assertEqual(num_components, 1)
