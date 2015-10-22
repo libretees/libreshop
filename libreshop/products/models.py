@@ -6,28 +6,10 @@ from django.db import transaction
 from django.core.exceptions import ValidationError
 from model_utils.models import TimeStampedModel
 from inventory.models import Inventory
+from .utils import AttributeDict, AttributeSet
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
-
-
-class AttributeDict(dict):
-
-    def __getattr__(self, key):
-        try:
-            return self[key]
-        except KeyError:
-            # to conform with __getattr__ spec
-            raise AttributeError(key)
-
-    def __setattr__(self, key, value):
-        self[key] = value
-
-    def first(self, *names):
-        for name in names:
-            value = self.get(name)
-            if value:
-                return value
 
 
 # Create your models here.
@@ -75,9 +57,9 @@ class Product(TimeStampedModel):
             for key in variant.attributes:
                 attribute = variant.attributes[key]
                 if key not in attributes:
-                    attributes[key] = attribute
+                    attributes[key] = AttributeSet(attribute)
                 else:
-                    attributes[key] |= attribute
+                    attributes[key] |= AttributeSet(attribute)
         return attributes
 
 
