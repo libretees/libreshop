@@ -3,10 +3,10 @@ import logging
 from xml.etree import ElementTree
 from django import forms
 from django.forms.widgets import Select
+from django.forms.utils import ErrorList
 from django.contrib import admin
 from django.db.models.fields.related import OneToOneRel
 from django.utils.safestring import mark_safe
-
 from . import models
 
 # Initialize logger
@@ -45,7 +45,7 @@ class ProductChangeForm(forms.ModelForm):
 
     variants = forms.ModelMultipleChoiceField(label='Enabled Variants',
         widget=admin.widgets.FilteredSelectMultiple('Variants', False),
-        required=True, queryset=None
+        required=False, queryset=None
     )
 
     def __init__(self, *args, **kwargs):
@@ -96,9 +96,9 @@ class ProductCreationForm(forms.ModelForm):
         model = models.Product
         fields = ('sku', 'name')
 
+
     def __init__(self, *args, **kwargs):
         super(ProductCreationForm, self).__init__(*args, **kwargs)
-        self.fields['sku'].label = 'SKU'
 
 
 class VariantCreationForm(forms.ModelForm):
@@ -154,3 +154,12 @@ def PopulatedFormFactory(request, cls, form=forms.ModelForm):
         setattr(PopulatedForm, 'clean_%s' % key, get_clean_function(key))
 
     return PopulatedForm
+
+
+class ProductOrderForm(forms.Form):
+
+    def __init__(self, product, **kwargs):
+        super(ProductOrderForm, self).__init__(**kwargs)
+        for key, values in product.attributes.items():
+            choices = [(value.lower(), value) for value in values]
+            self.fields[key] = forms.fields.ChoiceField(choices=choices)
