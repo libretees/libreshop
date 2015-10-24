@@ -60,6 +60,7 @@ class Product(TimeStampedModel):
                     attributes[key] = AttributeSet(attribute)
                 else:
                     attributes[key] |= AttributeSet(attribute)
+
         return attributes
 
 
@@ -166,7 +167,7 @@ class Variant(TimeStampedModel):
         regex = re.compile(numeric_pattern, re.VERBOSE)
 
         attributes = {}
-        for component in self.component_set.all():
+        for component in self.component_set.all().order_by('-created'):
             for key in component.attributes:
                 attribute = component.attributes[key]
                 if key not in attributes:

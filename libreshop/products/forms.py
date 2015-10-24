@@ -162,4 +162,5 @@ class ProductOrderForm(forms.Form):
         super(ProductOrderForm, self).__init__(**kwargs)
         for key, values in product.attributes.items():
             choices = [(value.lower(), value) for value in values]
-            self.fields[key] = forms.fields.ChoiceField(choices=choices)
+            if len(choices) > 1:
+                self.fields[key] = forms.fields.ChoiceField(choices=choices)

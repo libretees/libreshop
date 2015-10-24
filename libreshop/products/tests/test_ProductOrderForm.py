@@ -31,10 +31,11 @@ class ProductOrderFormTest(TestCase):
         form = ProductOrderForm(product)
         self.assertEqual(str(form), '')
 
-    def test_form_does_creates_markup_for_salable_product_with_attributes(self):
+
+    def test_form_does_not_create_markup_for_salable_product_with_attributes_and_no_options(self):
         '''
-        Test that markup is created for a salable Product with linked
-        attributes.
+        Test that no markup is created for a salable Product with linked
+        attributes that do not have multiple values.
         '''
         product = Product.objects.create(sku='foo', name='foo')
         inventory = Inventory.objects.create(name='bar')
@@ -46,7 +47,36 @@ class ProductOrderFormTest(TestCase):
         component.inventory = inventory
         component.save()
         form = ProductOrderForm(product)
+        self.assertEqual(str(form), '')
+
+
+    def test_form_does_creates_markup_for_salable_product_with_attributes_and_options(self):
+        '''
+        Test that markup is created for a salable Product with linked
+        attributes that have multiple values.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        inventory1 = Inventory.objects.create(name='bar')
+        inventory2 = Inventory.objects.create(name='baz')
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='bar')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='baz')
+        variant = Variant.objects.get(product=product)
+        component = Component.objects.get(variant=variant)
+        component.inventory = inventory1
+        component.save()
+        variant = Variant.objects.create(name='bar', product=product)
+        component = Component.objects.get(variant=variant)
+        component.inventory = inventory2
+        component.save()
+        form = ProductOrderForm(product)
+
         markup = ('<tr><th><label for="id_foo">Foo:</label></th><td>' +
             '<select id="id_foo" name="foo">\n' +
-            '<option value="bar">bar</option>\n</select></td></tr>')
+            '<option value="bar">bar</option>\n' +
+            '<option value="baz">baz</option>\n' +
+            '</select></td></tr>')
+
         self.assertEqual(str(form), markup)
