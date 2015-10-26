@@ -51,15 +51,17 @@ class Product(TimeStampedModel):
     @property
     def attributes(self):
 
-        attributes = AttributeDict()
-        variants = self.variant_set.all()
+        attributes = {}
+        variants = self.variant_set.all().order_by('created')
         for variant in variants:
             for key in variant.attributes:
-                attribute = variant.attributes[key]
+                variant_attributes = variant.attributes[key]
                 if key not in attributes:
-                    attributes[key] = AttributeSet(attribute)
+                    attributes[key] = list(variant_attributes)
                 else:
-                    attributes[key] |= AttributeSet(attribute)
+                    for attribute in variant_attributes:
+                        if attribute not in attributes[key]:
+                            attributes[key].append(attribute)
 
         return attributes
 

@@ -73,10 +73,10 @@ class ProductOrderFormTest(TestCase):
         component.save()
         form = ProductOrderForm(product)
 
-        markup = ('<tr><th><label for="id_foo">Foo:</label></th><td>' +
-            '<select id="id_foo" name="foo">\n' +
+        markup = (
+            '<option value="" selected="selected">Choose a foo</option>\n' +
             '<option value="bar">bar</option>\n' +
-            '<option value="baz">baz</option>\n' +
-            '</select></td></tr>')
+            '<option value="baz">baz</option>\n'
+        )
 
-        self.assertEqual(str(form), markup)
+        self.assertIn(markup, str(form))

@@ -286,9 +286,9 @@ class ProductModelTest(TestCase):
         self.assertIn('foo', attributes)
 
 
-    def test_attributes_property_inherits_child_variant_attributes_as_set(self):
+    def test_attributes_property_inherits_child_variant_attributes_as_list(self):
         '''
-        Test that Product.attributes contains a set of attribute values, when
+        Test that Product.attributes contains a list of attribute values, when
         child Variants contain matching attributes.
         '''
         product = Product.objects.create(sku='foo', name='foo')
@@ -303,7 +303,7 @@ class ProductModelTest(TestCase):
         componen2 = Component.objects.create(variant=variant2,
             inventory=inventory, quantity=Decimal(1.00))
         attributes = getattr(product, 'attributes', None)
-        self.assertEqual({'foo': {'bar'}}, attributes)
+        self.assertEqual({'foo': ['bar']}, attributes)
 
 
     def test_saving_to_and_retrieving_products_from_the_database(self):
