@@ -178,13 +178,32 @@ STATICFILES_DIRS = (
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'formatters': {
+        'simple': {
+            'format': '[%(asctime)s] (%(levelname)s) %(message)s',
+	    'datefmt': '%d/%b/%Y %H:%M:%S'
+        },
+        'simple_yellow': {
+            'format': ('\033[0;33m%s\033[0;0m' % # ASCII escape code for yellow.
+                '[%(asctime)s] (%(levelname)s) %(name)s: %(message)s'),
+	    'datefmt': '%d/%b/%Y %H:%M:%S'
+        },
+    },
     'handlers': {
         'console': {
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
+            'formatter': 'simple_yellow',
         },
     },
     'loggers': {
-        'django': {
+        'products': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
