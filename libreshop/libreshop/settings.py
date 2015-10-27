@@ -58,6 +58,7 @@ LOCAL_APPS = (
     'customers',
     'products',
     'inventory',
+    'carts',
 )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -172,7 +173,7 @@ STATIC_ROOT = ''
 
 # Serve project-wide static files.
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, 'libreshop/static'),
 )
 
 # Set up logging.
