@@ -49,6 +49,7 @@ THIRD_PARTY_APPS = (
     'oauth2_provider',
     'rest_framework',
     'nested_inline',
+    'widget_tweaks',
 )
 
 LOCAL_APPS = (
@@ -186,12 +187,12 @@ LOGGING = {
     'formatters': {
         'simple': {
             'format': '[%(asctime)s] (%(levelname)s) %(message)s',
-	    'datefmt': '%d/%b/%Y %H:%M:%S'
+            'datefmt': '%d/%b/%Y %H:%M:%S'
         },
         'simple_yellow': {
-            'format': ('\033[0;33m%s\033[0;0m' % # ASCII escape code for yellow.
+            'format': ('\033[33m%s\033[0m' % # ANSI escape code for yellow.
                 '[%(asctime)s] (%(levelname)s) %(name)s: %(message)s'),
-	    'datefmt': '%d/%b/%Y %H:%M:%S'
+            'datefmt': '%d/%b/%Y %H:%M:%S',
         },
     },
     'handlers': {
