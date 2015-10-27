@@ -50,7 +50,7 @@ class ProductOrderFormTest(TestCase):
         self.assertEqual(str(form), '')
 
 
-    def test_form_does_creates_markup_for_salable_product_with_attributes_and_options(self):
+    def test_form_creates_markup_for_salable_product_with_attributes_and_options(self):
         '''
         Test that markup is created for a salable Product with linked
         attributes that have multiple values.
@@ -74,9 +74,90 @@ class ProductOrderFormTest(TestCase):
         form = ProductOrderForm(product)
 
         markup = (
-            '<option value="" selected="selected">Choose a foo</option>\n' +
             '<option value="bar">bar</option>\n' +
             '<option value="baz">baz</option>\n'
         )
 
         self.assertIn(markup, str(form))
+
+
+    def test_form_markup_creates_default_selected_option(self):
+        '''
+        Test that markup for a default selected option when a form is
+        instantiated with a salable Product with linked multivariate attributes.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        inventory1 = Inventory.objects.create(name='bar')
+        inventory2 = Inventory.objects.create(name='baz')
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='bar')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='baz')
+        variant = Variant.objects.get(product=product)
+        component = Component.objects.get(variant=variant)
+        component.inventory = inventory1
+        component.save()
+        variant = Variant.objects.create(name='bar', product=product)
+        component = Component.objects.get(variant=variant)
+        component.inventory = inventory2
+        component.save()
+        form = ProductOrderForm(product)
+
+        markup = '<option value="" selected="selected">Choose a foo</option>\n'
+
+        self.assertIn(markup, str(form))
+
+
+    def test_form_as_div_surrounds_form_controls_with_div_tags(self):
+        '''
+        Test that markup for each form control is surrounded by a <div> tag.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        inventory1 = Inventory.objects.create(name='bar')
+        inventory2 = Inventory.objects.create(name='baz')
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='bar')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='baz')
+        variant = Variant.objects.get(product=product)
+        component = Component.objects.get(variant=variant)
+        component.inventory = inventory1
+        component.save()
+        variant = Variant.objects.create(name='bar', product=product)
+        component = Component.objects.get(variant=variant)
+        component.inventory = inventory2
+        component.save()
+        form = ProductOrderForm(product)
+
+        markup = form.as_div().replace('\n', '')
+
+        self.assertRegex(markup, '^<div>.*</div>$')
+
+
+    def test_form_markup_surrounds_form_controls_with_div_tags(self):
+        '''
+        Test that markup for each form control is surrounded by a <div> tag.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        inventory1 = Inventory.objects.create(name='bar')
+        inventory2 = Inventory.objects.create(name='baz')
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='bar')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='baz')
+        variant = Variant.objects.get(product=product)
+        component = Component.objects.get(variant=variant)
+        component.inventory = inventory1
+        component.save()
+        variant = Variant.objects.create(name='bar', product=product)
+        component = Component.objects.get(variant=variant)
+        component.inventory = inventory2
+        component.save()
+        form = ProductOrderForm(product)
+
+        markup = str(form).replace('\n', '')
+
+        self.assertRegex(markup, '^<div>.*</div>$')

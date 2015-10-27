@@ -160,7 +160,23 @@ class ProductOrderForm(forms.Form):
 
     def __init__(self, product, **kwargs):
         super(ProductOrderForm, self).__init__(**kwargs)
+
         for key, values in product.attributes.items():
             choices = [(value.lower(), value) for value in values]
             if len(choices) > 1:
+                choices.insert(0, ('', 'Choose a %s' % key))
                 self.fields[key] = forms.fields.ChoiceField(choices=choices)
+
+    def __str__(self):
+        return self.as_div()
+
+    def as_div(self):
+        '''
+        Returns this form rendered as HTML <div>s.
+        '''
+        return super(ProductOrderForm, self)._html_output(
+            normal_row='<div%(html_class_attr)s>%(label)s %(field)s%(help_text)s</div>',
+            error_row='%s',
+            row_ender='</div>',
+            help_text_html=' <span class="helptext">%s</span>',
+            errors_on_separate_row=True)
