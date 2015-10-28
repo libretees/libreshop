@@ -1,4 +1,5 @@
 import logging
+from django.http import HttpRequest
 from django.test import TestCase
 from inventory.models import Inventory, Attribute, Attribute_Value
 from ..forms import ProductOrderForm
@@ -50,10 +51,38 @@ class ProductOrderFormTest(TestCase):
         self.assertEqual(str(form), '')
 
 
-    def test_form_creates_markup_for_salable_product_with_attributes_and_options(self):
+    def test_form_creates_select_markup_for_salable_product_with_multivariate_attribute(self):
         '''
-        Test that markup is created for a salable Product with linked
-        attributes that have multiple values.
+        Test that <select> tag markup is created for a salable Product with
+        linked multivariate attributes.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        inventory1 = Inventory.objects.create(name='bar')
+        inventory2 = Inventory.objects.create(name='baz')
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='bar')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='baz')
+        variant = Variant.objects.get(product=product)
+        component = Component.objects.get(variant=variant)
+        component.inventory = inventory1
+        component.save()
+        variant = Variant.objects.create(name='bar', product=product)
+        component = Component.objects.get(variant=variant)
+        component.inventory = inventory2
+        component.save()
+        form = ProductOrderForm(product)
+
+        markup = '<select id="id_foo" name="foo">'
+
+        self.assertIn(markup, str(form))
+
+
+    def test_form_creates_options_markup_for_salable_product_with_multivariate_attribute(self):
+        '''
+        Test that <option> tag markup is created for a salable Product with
+        linked multivariate attributes.
         '''
         product = Product.objects.create(sku='foo', name='foo')
         inventory1 = Inventory.objects.create(name='bar')
@@ -76,6 +105,37 @@ class ProductOrderFormTest(TestCase):
         markup = (
             '<option value="bar">bar</option>\n' +
             '<option value="baz">baz</option>\n'
+        )
+
+        self.assertIn(markup, str(form))
+
+
+    def test_form_creates_options_markup_maintains_same_character_case_as_attribute_value(self):
+        '''
+        Test that <option> tag value and inner HTML maintain the same character
+        case throughout.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        inventory1 = Inventory.objects.create(name='bar')
+        inventory2 = Inventory.objects.create(name='baz')
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='BaR')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='BaZ')
+        variant = Variant.objects.get(product=product)
+        component = Component.objects.get(variant=variant)
+        component.inventory = inventory1
+        component.save()
+        variant = Variant.objects.create(name='bar', product=product)
+        component = Component.objects.get(variant=variant)
+        component.inventory = inventory2
+        component.save()
+        form = ProductOrderForm(product)
+
+        markup = (
+            '<option value="BaR">BaR</option>\n' +
+            '<option value="BaZ">BaZ</option>\n'
         )
 
         self.assertIn(markup, str(form))
@@ -161,3 +221,33 @@ class ProductOrderFormTest(TestCase):
         markup = str(form).replace('\n', '')
 
         self.assertRegex(markup, '^<div>.*</div>$')
+
+
+    def test_bound_form_provides_data_as_dict_of_sets(self):
+        '''
+        Test that the cleaned_data property of the form returns a dict of sets.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        inventory1 = Inventory.objects.create(name='bar')
+        inventory2 = Inventory.objects.create(name='baz')
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory1, value='bar')
+        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+            inventory=inventory2, value='baz')
+        variant = Variant.objects.get(product=product)
+        component = Component.objects.get(variant=variant)
+        component.inventory = inventory1
+        component.save()
+        variant = Variant.objects.create(name='bar', product=product)
+        component = Component.objects.get(variant=variant)
+        component.inventory = inventory2
+        component.save()
+
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST['foo'] = 'bar'
+        form = ProductOrderForm(product, data=request.POST)
+        form.full_clean()
+
+        self.assertEqual(form.cleaned_data, {'foo': {'bar'}})

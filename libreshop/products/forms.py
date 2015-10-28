@@ -162,7 +162,7 @@ class ProductOrderForm(forms.Form):
         super(ProductOrderForm, self).__init__(**kwargs)
 
         for key, values in product.attributes.items():
-            choices = [(value.lower(), value) for value in values]
+            choices = [(value, value) for value in values]
             if len(choices) > 1:
                 choices.insert(0, ('', 'Choose a %s' % key))
                 self.fields[key] = forms.fields.ChoiceField(choices=choices)
@@ -180,3 +180,7 @@ class ProductOrderForm(forms.Form):
             row_ender='</div>',
             help_text_html=' <span class="helptext">%s</span>',
             errors_on_separate_row=True)
+
+    def clean(self):
+        cleaned_data = super(ProductOrderForm, self).clean()
+        return {key:{cleaned_data[key]} for key in cleaned_data}
