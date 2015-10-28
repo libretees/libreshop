@@ -8,15 +8,6 @@ from products.models import Product
 logger = logging.getLogger(__name__)
 
 
-class Cart(TimeStampedModel):
-    customer = models.ForeignKey(Customer,
-                                 null=False)
-    product = models.ForeignKey(Product,
-                                null=False)
-    saved_product = JSONField(null=True,
-                              blank=True)
-
-
 class Address(TimeStampedModel):
     
     class Meta():
