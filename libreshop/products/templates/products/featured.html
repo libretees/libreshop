@@ -13,18 +13,19 @@
       <p>dolor sit amet, solet legimus suscipit an vis. Nec autem soluta alienum ne, eos rationibus assueverit et. Has scripta oportere salutatus te, accusata temporibus ut duo, ei nisl mucius has.</p>
       <p>Ius case detracto ex, at perfecto perpetua neglegentur sed.</p>
 
-      <form>
-        {% for field in form %}
-          <div class='form-group'>
-          {{ field.errors }}
-          {{ field.label_tag }}{{ field|add_class:"form-control" }}
-          </div>
-        {% endfor %}
+      <form method='POST' action=''>
+      {% csrf_token %}
+      {% for field in form %}
+        <div class='form-group'>
+        {{ field.errors }}
+        {{ field.label_tag }}{{ field|add_class:"form-control" }}
+        </div>
+      {% endfor %}
+        <div>
+          <button type='submit' id='action-button' class='btn btn-lg btn-primary pull-right bottom-align btn-xlarge'>Get One! &raquo;</button>
+        </div>
       </form>
 
-      <p>
-        <a id='action-button' class="btn btn-lg btn-primary pull-right bottom-align btn-xlarge" href="#" role="button">Get One! &raquo;</a>
-      </p>
     </div>
   </div>
 </div>
