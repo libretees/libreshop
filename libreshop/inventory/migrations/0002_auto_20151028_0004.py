@@ -7,8 +7,8 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop', '0001_initial'),
         ('inventory', '0001_initial'),
+        ('shop', '0001_initial'),
     ]
 
     operations = [
@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='inventory',
             name='alternatives',
-            field=models.ManyToManyField(to='inventory.Inventory', related_name='alternatives_rel_+', blank=True),
+            field=models.ManyToManyField(related_name='alternatives_rel_+', to='inventory.Inventory', blank=True),
         ),
         migrations.AddField(
             model_name='inventory',

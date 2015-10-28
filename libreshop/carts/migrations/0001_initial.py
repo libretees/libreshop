@@ -4,22 +4,22 @@ from __future__ import unicode_literals
 from django.db import models, migrations
 import django.utils.timezone
 import model_utils.fields
-from django.conf import settings
+import jsonfield.fields
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0006_require_contenttypes_0002'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Customer',
+            name='Cart',
             fields=[
+                ('id', models.AutoField(serialize=False, auto_created=True, primary_key=True, verbose_name='ID')),
                 ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
                 ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
-                ('user', models.OneToOneField(serialize=False, to=settings.AUTH_USER_MODEL, primary_key=True)),
+                ('saved_product', jsonfield.fields.JSONField(null=True, blank=True)),
             ],
             options={
                 'abstract': False,

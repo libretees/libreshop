@@ -2,9 +2,9 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-from decimal import Decimal
 import django.utils.timezone
 import model_utils.fields
+from decimal import Decimal
 
 
 class Migration(migrations.Migration):
@@ -17,21 +17,21 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Component',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(editable=False, verbose_name='created', default=django.utils.timezone.now)),
-                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, verbose_name='modified', default=django.utils.timezone.now)),
-                ('quantity', models.DecimalField(decimal_places=2, default=Decimal('0.00'), max_digits=8)),
-                ('inventory', models.ForeignKey(to='inventory.Inventory')),
+                ('id', models.AutoField(serialize=False, auto_created=True, primary_key=True, verbose_name='ID')),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
+                ('quantity', models.DecimalField(max_digits=8, default=Decimal('0.00'), decimal_places=2)),
+                ('inventory', models.ForeignKey(to='inventory.Inventory', null=True)),
             ],
         ),
         migrations.CreateModel(
             name='Product',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(editable=False, verbose_name='created', default=django.utils.timezone.now)),
-                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, verbose_name='modified', default=django.utils.timezone.now)),
-                ('sku', models.CharField(unique=True, max_length=8)),
-                ('name', models.CharField(unique=True, max_length=64)),
+                ('id', models.AutoField(serialize=False, auto_created=True, primary_key=True, verbose_name='ID')),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
+                ('sku', models.CharField(max_length=8, unique=True)),
+                ('name', models.CharField(max_length=64, unique=True)),
             ],
             options={
                 'abstract': False,
@@ -40,12 +40,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Variant',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(editable=False, verbose_name='created', default=django.utils.timezone.now)),
-                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, verbose_name='modified', default=django.utils.timezone.now)),
+                ('id', models.AutoField(serialize=False, auto_created=True, primary_key=True, verbose_name='ID')),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
                 ('name', models.CharField(max_length=64)),
-                ('sub_sku', models.CharField(max_length=8)),
-                ('price', models.DecimalField(decimal_places=2, default=Decimal('0.00'), max_digits=8)),
+                ('sub_sku', models.CharField(max_length=8, null=True)),
+                ('price', models.DecimalField(max_digits=8, default=Decimal('0.00'), decimal_places=2)),
+                ('enabled', models.BooleanField(default=True)),
                 ('product', models.ForeignKey(to='products.Product')),
             ],
         ),
@@ -56,7 +57,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='variant',
-            unique_together=set([('product', 'sub_sku')]),
+            unique_together=set([('product', 'name'), ('product', 'sub_sku')]),
         ),
         migrations.AlterUniqueTogether(
             name='component',
