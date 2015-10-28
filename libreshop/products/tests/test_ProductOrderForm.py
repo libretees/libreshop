@@ -104,9 +104,9 @@ class ProductOrderFormTest(TestCase):
         component.save()
         form = ProductOrderForm(product)
 
-        markup = '<option value="" selected="selected">Choose a foo</option>\n'
+        markup = '<option value="" selected="selected">Choose a foo</option>'
 
-        self.assertIn(markup, str(form))
+        self.assertInHTML(markup, str(form))
 
 
     def test_form_as_div_surrounds_form_controls_with_div_tags(self):
