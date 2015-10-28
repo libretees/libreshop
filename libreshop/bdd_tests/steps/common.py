@@ -145,3 +145,12 @@ def get_account_credentials(text):
 def step_impl(context, text):
 
     context.browser.save_screenshot('%s.png' % text)
+
+
+@then(u'I will see a "{text}" icon')
+def step_impl(context, text):
+
+    class_name = 'fa-%s' % text.replace(' ', '-').lower()
+    icon = context.browser.find_element_by_class_name(class_name)
+
+    context.test.assertIsNotNone(icon)
