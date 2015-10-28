@@ -14,7 +14,9 @@ class ProductManager(models.Manager):
     def create(self, *args, **kwargs):
         product = None
         with transaction.atomic():
+            logger.info('Creating product...')
             product = super(ProductManager, self).create(*args, **kwargs)
+            logger.info('Created product.')
 
             variants = Variant.objects.filter(product=product)
             if not variants:
@@ -87,14 +89,14 @@ class Product(TimeStampedModel):
 
 
     def save(self, *args, **kwargs):
-
         exclude = kwargs.pop('exclude', None)
         self.validate_unique(exclude)
 
         product = None
         with transaction.atomic():
-
+            logger.info('Creating product...')
             product = super(Product, self).save(*args, **kwargs)
+            logger.info('Created product.')
             variants = Variant.objects.filter(product=self)
 
             if not variants:

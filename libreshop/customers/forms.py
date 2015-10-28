@@ -22,7 +22,8 @@ from django.db.models.fields.related import ManyToManyRel
 from captcha.image import ImageCaptcha
 from captcha.audio import AudioCaptcha
 
-from shop.models import Product, Cart
+from products.models import Product
+from carts.models import Cart
 from .models import Customer
 from .widgets import CaptchaWidget
 

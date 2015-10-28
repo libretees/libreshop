@@ -5,7 +5,6 @@ import logging
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
-from products.models import Product
 
 # Import 3rd-Party module(s)
 from model_utils.models import TimeStampedModel
@@ -21,8 +20,8 @@ User = settings.AUTH_USER_MODEL
 class Customer(TimeStampedModel):
     user = models.OneToOneField(User,
                                 primary_key=True)
-    selected_products = models.ManyToManyField(Product,
-                                               through='shop.Cart',
+    selected_products = models.ManyToManyField('products.Product',
+                                               through='carts.Cart',
                                                through_fields=('customer', 'product'))
 
     def __str__(self):
