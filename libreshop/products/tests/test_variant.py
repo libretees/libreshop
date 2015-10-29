@@ -118,7 +118,21 @@ class VariantModelTest(TestCase):
         self.assertRaises(ValidationError, func, product=product, name='Foo')
 
 
-    def test_model_different_products_can_have_same_variant_name(self):
+    def test_model_sub_sku_field_and_product_sku_field_are_unique_when_concatenated_together(self):
+        '''
+        Test that the Product SKU and Variant Sub-SKU are unique at a catalog
+        level when they are concatenated together.
+        '''
+        product1 = Product.objects.create(name='foo', sku='123')
+        product2 = Product.objects.create(name='bar', sku='12')
+        variant1 = Variant.objects.create(product=product1, sku='45')
+        func = Variant.objects.create
+        self.assertRaises(
+            ValidationError, func, product=product2, name='baz', sku='345'
+        )
+
+
+    def test_different_products_can_have_same_variant_name(self):
         '''
         Test that two Variants of two distinct Products can have the same
         Variant.name.
@@ -248,7 +262,7 @@ class VariantModelTest(TestCase):
             sub_sku='Foo')
 
 
-    def test_model_different_products_can_have_same_variant_sub_sku(self):
+    def test_different_products_can_have_same_variant_sub_sku(self):
         '''
         Test that two Variants of two distinct Products can have the same
         Variant.sub_sku.

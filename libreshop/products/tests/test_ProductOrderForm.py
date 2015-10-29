@@ -223,7 +223,7 @@ class ProductOrderFormTest(TestCase):
         self.assertRegex(markup, '^<div>.*</div>$')
 
 
-    def test_bound_form_provides_data_as_dict_of_sets(self):
+    def test_bound_form_provides_cleaned_data_as_dict_of_sets(self):
         '''
         Test that the cleaned_data property of the form returns a dict of sets.
         '''

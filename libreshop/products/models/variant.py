@@ -4,6 +4,7 @@ from decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db import transaction
+from django.db.models import Q
 from model_utils.models import TimeStampedModel
 from .component import Component
 
@@ -49,6 +50,11 @@ class Variant(TimeStampedModel):
 
 
     @property
+    def sku(self):
+        return self.product.sku + self.sub_sku
+
+
+    @property
     def salable(self):
         components = self.component_set.all()
         return (False if not components else
@@ -89,6 +95,7 @@ class Variant(TimeStampedModel):
 
 
     def validate_unique(self, *args, **kwargs):
+        from .product import Product
         super(Variant, self).validate_unique(*args, **kwargs)
 
         validation_errors = {}
@@ -102,6 +109,19 @@ class Variant(TimeStampedModel):
                 sub_sku_queryset = sub_sku_queryset.exclude(pk=self.pk)
             if sub_sku_queryset.exists():
                 validation_errors['sub_sku'] = ['Variant Sub-SKU for this Product already exists',]
+
+            similar_skus = (
+                [product.sku + (variant.sub_sku if variant.sub_sku else '')
+                for product in Product.objects.filter(
+                    sku__istartswith=self.product.sku[0]
+                )
+                for variant in product.variant_set.filter(
+                    Q(sub_sku=None) | Q(sub_sku__iendswith=self.sub_sku[-1])
+                )
+            ])
+
+            if self.sku in similar_skus:
+                validation_errors['sub_sku'] = ['Product SKU and Variant Sub-SKU are not unique at the catalog level',]
 
         if self.name:
             name_queryset = self.__class__._default_manager.filter(
@@ -139,7 +159,7 @@ class Variant(TimeStampedModel):
         return variant
 
     def delete(self, *args, **kwargs):
-        from . import Product
+        from .product import Product
         super(Variant, self).delete(*args, **kwargs)
 
         product = Product.objects.get(id=self.product_id)
