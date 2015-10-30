@@ -39,7 +39,7 @@ class VariantNestedInline(NestedTabularInline):
 
 class ProductAdmin(NestedModelAdmin):
 
-    list_display = ('sku', 'name', '_salable', '_salable_variants')
+    list_display = ('name', 'sku', '_salable', '_salable_variants')
 
     form = ProductChangeForm
     add_form = ProductCreationForm
