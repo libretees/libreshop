@@ -786,6 +786,29 @@ class VariantModelTest(TestCase):
         self.assertEqual({'foo': {'1', 'baz'}}, attributes)
 
 
+    def test_model_has_sku_property(self):
+        '''
+        Test that Variant.sku is present.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(name='bar', product=product)
+        sku = getattr(variant, 'sku', None)
+        self.assertIsNotNone(sku)
+
+
+    def test_sku_property_consists_of_product_sku_and_model_sub_sku(self):
+        '''
+        Test that Variant.sku consists of the parent Product SKU and the Variant
+        Sub-SKU.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(
+            name='bar', sub_sku='bar', product=product
+        )
+        sku = getattr(variant, 'sku', None)
+        self.assertEqual(sku, 'foobar')
+
+
     def test_saving_to_and_retrieving_variants_from_the_database(self):
         '''
         Test that a Variant can be successfuly saved to the database.

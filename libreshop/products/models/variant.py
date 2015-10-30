@@ -50,7 +50,7 @@ class Variant(TimeStampedModel):
 
     @property
     def sku(self):
-        return self.product.sku + self.sub_sku
+        return self.product.sku + self.sub_sku if self.sub_sku else ''
 
 
     @property
