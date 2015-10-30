@@ -125,10 +125,12 @@ class VariantModelTest(TestCase):
         '''
         product1 = Product.objects.create(name='foo', sku='123')
         product2 = Product.objects.create(name='bar', sku='12')
-        variant1 = Variant.objects.create(product=product1, sku='45')
+        variant1 = Variant.objects.create(
+            product=product1, name='baz', sub_sku='45'
+        )
         func = Variant.objects.create
         self.assertRaises(
-            ValidationError, func, product=product2, name='baz', sku='345'
+            ValidationError, func, product=product2, name='baz', sub_sku='345'
         )
 
 

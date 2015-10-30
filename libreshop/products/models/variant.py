@@ -4,7 +4,6 @@ from decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db import transaction
-from django.db.models import Q
 from model_utils.models import TimeStampedModel
 from .component import Component
 
@@ -111,14 +110,15 @@ class Variant(TimeStampedModel):
                 validation_errors['sub_sku'] = ['Variant Sub-SKU for this Product already exists',]
 
             similar_skus = (
-                [product.sku + (variant.sub_sku if variant.sub_sku else '')
-                for product in Product.objects.filter(
-                    sku__istartswith=self.product.sku[0]
-                )
-                for variant in product.variant_set.filter(
-                    Q(sub_sku=None) | Q(sub_sku__iendswith=self.sub_sku[-1])
-                )
-            ])
+                [product.sku + variant.sub_sku
+                    for product in Product.objects.filter(
+                        sku__istartswith=self.product.sku[0]
+                    )
+                    for variant in product.variant_set.filter(
+                        sub_sku__iendswith=self.sub_sku[-1]
+                    )
+                ]
+            )
 
             if self.sku in similar_skus:
                 validation_errors['sub_sku'] = ['Product SKU and Variant Sub-SKU are not unique at the catalog level',]
