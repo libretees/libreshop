@@ -43,9 +43,9 @@ class HomepageViewTest(TestCase):
         self.assertIsInstance(form, ProductOrderForm)
 
 
-    def test_view_adds_variant_to_cart_when_form_is_valid(self):
+    def test_view_adds_variant_id_to_cart_when_form_is_valid(self):
         '''
-        Test that a Variant is added to a SessionCart when valid POST data is
+        Test that a Variant.id is added to a SessionCart when valid POST data is
         submitted.
         '''
         product = Product.objects.create(name='foo', sku='1000')
@@ -63,8 +63,9 @@ class HomepageViewTest(TestCase):
         form = homepage_view.form_valid(form)
 
         cart = SessionCart(request.session)
+        variant_id = product.variant_set.first().id
 
-        self.assertEqual(cart.count, 1)
+        self.assertIn(variant_id, cart)
 
 
     def test_view_context_includes_session_cart(self):
