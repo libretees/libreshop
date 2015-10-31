@@ -15,6 +15,7 @@ class SessionCart(list):
             session[UUID] = self
         else:
             logger.info('Found %s!' % self.__class__.__name__)
+            self += session.get(UUID)
 
         self.session = session
 

@@ -53,6 +53,37 @@ class SessionCartTest(TestCase):
         self.assertIsInstance(value, list)
 
 
+    def test_sessioncart_creates_new_list_at_initial_instantiation(self):
+        '''
+        Test that SessionCart creates a new list at the initial instantiation.
+        '''
+        request = HttpRequest()
+        engine = import_module(settings.SESSION_ENGINE)
+        session_key = None
+        request.session = engine.SessionStore(session_key)
+
+        cart = SessionCart(request.session)
+
+        self.assertEqual(cart, [])
+
+
+    def test_sessioncart_maintains_same_list_between_subsequent_instantiations(self):
+        '''
+        Test that SessionCart maintains the same list between subsequent
+        instantiations.
+        '''
+        request = HttpRequest()
+        engine = import_module(settings.SESSION_ENGINE)
+        session_key = None
+        request.session = engine.SessionStore(session_key)
+
+        cart = SessionCart(request.session)
+        cart.add('foo')
+        cart = SessionCart(request.session)
+
+        self.assertEqual(cart, ['foo'])
+
+
     def test_sessioncart_can_add_new_items_to_list(self):
         '''
         Test that SessionCart can add new items to the list in request.session.
@@ -63,13 +94,9 @@ class SessionCartTest(TestCase):
         request.session = engine.SessionStore(session_key)
 
         cart = SessionCart(request.session)
-
-        module = import_module('carts.sessioncart')
-        uuid = getattr(module, 'UUID', None)
-
-        before = list(request.session.get(uuid))
+        before = cart.copy()
         cart.add('foo')
-        after = list(request.session.get(uuid))
+        after = cart.copy()
 
         self.assertNotEqual(before, after)
 
