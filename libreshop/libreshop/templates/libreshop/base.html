@@ -66,7 +66,14 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Default</a></li>
-            <li><a href="#"><span class='fa fa-2x fa-shopping-cart'></span></a></li>
+            <li>
+              <a href="#">
+                <span class='fa fa-lg fa-shopping-cart'></span>
+                {% if cart.has_products %}
+                  <span class='badge'>{{ cart.count }}</span>
+                {% endif %}
+              </a>
+            </li>
             <li class="active">
 
             <!--Display login or logout. -->
