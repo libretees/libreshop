@@ -70,7 +70,7 @@
               <a href="#">
                 <span class='fa fa-lg fa-shopping-cart'></span>
                 {% if cart.has_products %}
-                  <span class='badge'>{{ cart.count }}</span>
+                  <span class='badge'>{{ cart|length }}</span>
                 {% endif %}
               </a>
             </li>
