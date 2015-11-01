@@ -1,6 +1,4 @@
 from importlib import import_module
-from django.conf import settings
-from django.http import HttpRequest
 from django.test import TestCase
 from .sessioncart import SessionCart
 
@@ -20,16 +18,12 @@ class SessionCartTest(TestCase):
         '''
         Test that SessionCart creates a key within request.session.
         '''
-        request = HttpRequest()
-        engine = import_module(settings.SESSION_ENGINE)
-        session_key = None
-        request.session = engine.SessionStore(session_key)
-
-        cart = SessionCart(request.session)
+        session = self.client.session
+        cart = SessionCart(session)
 
         module = import_module('carts.sessioncart')
         uuid = getattr(module, 'UUID', None)
-        key_created = request.session.has_key(uuid)
+        key_created = session.has_key(uuid)
 
         self.assertTrue(key_created)
 
@@ -38,33 +32,93 @@ class SessionCartTest(TestCase):
         '''
         Test that SessionCart maintains a list within request.session.
         '''
-        request = HttpRequest()
-        engine = import_module(settings.SESSION_ENGINE)
-        session_key = None
-        request.session = engine.SessionStore(session_key)
-
-        cart = SessionCart(request.session)
+        session = self.client.session
+        cart = SessionCart(session)
 
         module = import_module('carts.sessioncart')
         uuid = getattr(module, 'UUID', None)
-
-        value = request.session.get(uuid)
+        value = session.get(uuid)
 
         self.assertIsInstance(value, list)
 
 
-    def test_sessioncart_creates_new_list_at_initial_instantiation(self):
+    def test_sessioncart_maintains_list_within_session_variable_after_add(self):
         '''
-        Test that SessionCart creates a new list at the initial instantiation.
+        Test that SessionCart maintains a list within request.session after add.
         '''
-        request = HttpRequest()
-        engine = import_module(settings.SESSION_ENGINE)
-        session_key = None
-        request.session = engine.SessionStore(session_key)
+        session = self.client.session
+        cart = SessionCart(session)
+        cart.add('foo')
 
-        cart = SessionCart(request.session)
+        module = import_module('carts.sessioncart')
+        uuid = getattr(module, 'UUID', None)
+        value = session.get(uuid)
 
-        self.assertEqual(cart, [])
+        self.assertIsInstance(value, list)
+
+
+    def test_sessioncart_maintains_list_within_session_variable_after_append(self):
+        '''
+        Test that SessionCart maintains a list within request.session.
+        '''
+        session = self.client.session
+        cart = SessionCart(session)
+        cart.append('foo')
+
+        module = import_module('carts.sessioncart')
+        uuid = getattr(module, 'UUID', None)
+        value = session.get(uuid)
+
+        self.assertIsInstance(value, list)
+
+
+    def test_sessioncart_does_not_maintain_self_within_session_variable(self):
+        '''
+        Test that SessionCart does not maintain itself within request.session.
+        '''
+        session = self.client.session
+        cart = SessionCart(session)
+
+        module = import_module('carts.sessioncart')
+        uuid = getattr(module, 'UUID', None)
+
+        value = session.get(uuid)
+
+        self.assertNotIsInstance(value, SessionCart)
+
+
+    def test_sessioncart_does_not_maintain_self_within_session_variable_after_add(self):
+        '''
+        Test that SessionCart does not maintain itself within request.session
+        after an item has been added.
+        '''
+        session = self.client.session
+        cart = SessionCart(session)
+        cart.add('foo')
+
+        module = import_module('carts.sessioncart')
+        uuid = getattr(module, 'UUID', None)
+
+        value = session.get(uuid)
+
+        self.assertNotIsInstance(value, SessionCart)
+
+
+    def test_sessioncart_does_not_maintain_self_within_session_variable_after_append(self):
+        '''
+        Test that SessionCart does not maintain itself within request.session
+        after an item has been appended.
+        '''
+        session = self.client.session
+        cart = SessionCart(session)
+        cart.append('foo')
+
+        module = import_module('carts.sessioncart')
+        uuid = getattr(module, 'UUID', None)
+
+        value = session.get(uuid)
+
+        self.assertNotIsInstance(value, SessionCart)
 
 
     def test_sessioncart_maintains_same_list_between_subsequent_instantiations(self):
@@ -72,28 +126,19 @@ class SessionCartTest(TestCase):
         Test that SessionCart maintains the same list between subsequent
         instantiations.
         '''
-        request = HttpRequest()
-        engine = import_module(settings.SESSION_ENGINE)
-        session_key = None
-        request.session = engine.SessionStore(session_key)
+        session = self.client.session
+        cart1 = SessionCart(session)
+        cart1.add('foo')
+        cart2 = SessionCart(session)
 
-        cart = SessionCart(request.session)
-        cart.add('foo')
-        cart = SessionCart(request.session)
-
-        self.assertEqual(cart, ['foo'])
+        self.assertEqual(cart2, ['foo'])
 
 
     def test_sessioncart_can_add_new_items_to_list(self):
         '''
         Test that SessionCart can add new items to the list in request.session.
         '''
-        request = HttpRequest()
-        engine = import_module(settings.SESSION_ENGINE)
-        session_key = None
-        request.session = engine.SessionStore(session_key)
-
-        cart = SessionCart(request.session)
+        cart = SessionCart(self.client.session)
         before = cart.copy()
         cart.add('foo')
         after = cart.copy()
@@ -105,62 +150,16 @@ class SessionCartTest(TestCase):
         '''
         Test that SessionCart.session is present.
         '''
-        request = HttpRequest()
-        engine = import_module(settings.SESSION_ENGINE)
-        session_key = None
-        request.session = engine.SessionStore(session_key)
-
-        cart = SessionCart(request.session)
+        cart = SessionCart(self.client.session)
         session = getattr(cart, 'session', None)
         self.assertIsNotNone(session)
-
-
-    def test_sessioncart_has_count_property(self):
-        '''
-        Test that SessionCart.count is present.
-        '''
-        request = HttpRequest()
-        engine = import_module(settings.SESSION_ENGINE)
-        session_key = None
-        request.session = engine.SessionStore(session_key)
-
-        cart = SessionCart(request.session)
-        count = getattr(cart, 'count', None)
-        self.assertIsNotNone(count)
-
-
-    def test_sessioncart_increases_count_by_one_after_an_item_is_added(self):
-        '''
-        Test that SessionCart.count increases by one after a new item is added.
-        '''
-        request = HttpRequest()
-        engine = import_module(settings.SESSION_ENGINE)
-        session_key = None
-        request.session = engine.SessionStore(session_key)
-
-        cart = SessionCart(request.session)
-
-        module = import_module('carts.sessioncart')
-        uuid = getattr(module, 'UUID', None)
-
-        before = cart.count
-        cart.add('foo')
-        after = cart.count
-        delta = after - before
-
-        self.assertEqual(delta, 1)
 
 
     def test_sessioncart_has_has_products_property(self):
         '''
         Test that SessionCart.has_products is present.
         '''
-        request = HttpRequest()
-        engine = import_module(settings.SESSION_ENGINE)
-        session_key = None
-        request.session = engine.SessionStore(session_key)
-
-        cart = SessionCart(request.session)
+        cart = SessionCart(self.client.session)
         has_products = getattr(cart, 'has_products', None)
         self.assertIsNotNone(has_products)
 
@@ -170,12 +169,7 @@ class SessionCartTest(TestCase):
         Test that SessionCart.has_products is False when the SessionCart
         contains no items.
         '''
-        request = HttpRequest()
-        engine = import_module(settings.SESSION_ENGINE)
-        session_key = None
-        request.session = engine.SessionStore(session_key)
-
-        cart = SessionCart(request.session)
+        cart = SessionCart(self.client.session)
         has_products = getattr(cart, 'has_products', None)
         self.assertFalse(has_products)
 
@@ -185,12 +179,7 @@ class SessionCartTest(TestCase):
         Test that SessionCart.has_products is True when the SessionCart contains
         items.
         '''
-        request = HttpRequest()
-        engine = import_module(settings.SESSION_ENGINE)
-        session_key = None
-        request.session = engine.SessionStore(session_key)
-
-        cart = SessionCart(request.session)
+        cart = SessionCart(self.client.session)
         cart.add('foo')
         has_products = getattr(cart, 'has_products', None)
         self.assertTrue(has_products)
