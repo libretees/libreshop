@@ -22,8 +22,20 @@ body {
   padding-top: 70px;
 }
 
-#jumbotron-content {
+.jumbotron-content {
   min-height: 500px;
+}
+
+.jumbotron-bill {
+  min-height: 300px;
+  position: relative;
+  top:-35px;
+  left:-33%;
+  width: 166%;
+}
+
+.jumbotron-bill > p {
+  font-size: 14px;
 }
 
 #action-button {

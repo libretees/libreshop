@@ -41,8 +41,11 @@ class HomepageView(FormView):
     def get_context_data(self, **kwargs):
         context = super(HomepageView, self).get_context_data(**kwargs)
 
+        cart = SessionCart(self.request.session)
+        cart = [Variant.objects.get(id=item) for item in cart]
+
         context.update({
-            'cart': SessionCart(self.request.session)
+            'cart': cart
         })
 
         return context

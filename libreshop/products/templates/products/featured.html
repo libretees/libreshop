@@ -3,36 +3,61 @@
 
 {% block content %}
 <!-- Main component for a primary marketing message or call to action -->
-<div class="jumbotron">
-  <div class="row">
-    <div class="col-md-5">
-      <img data-src="holder.js/400x500?bg=555555" class="img-responsive">
-    </div>
-    <div id='jumbotron-content' class="col-md-7">
-      <h1>Lorem Ipsum</h1>
-      <p>dolor sit amet, solet legimus suscipit an vis. Nec autem soluta alienum ne, eos rationibus assueverit et. Has scripta oportere salutatus te, accusata temporibus ut duo, ei nisl mucius has.</p>
-      <p>Ius case detracto ex, at perfecto perpetua neglegentur sed.</p>
+<div class="row">
+{% if cart %}
+  <div class="col-md-9">
+{% else %}
+  <div class="col-md-12">
+{% endif %}
+    <div class="jumbotron">
+      <div class="row">
+        <div class='jumbotron-content col-md-5'>
+          <img data-src="holder.js/400x500?bg=555555" class="img-responsive">
+        </div>
+        <div class='jumbotron-content col-md-7'>
+          <h1>Lorem Ipsum</h1>
+          <p>dolor sit amet, solet legimus suscipit an vis. Nec autem soluta alienum ne, eos rationibus assueverit et.</p>
+          <p>Ius case detracto ex, at perfecto perpetua neglegentur sed.</p>
 
-      <form method='POST'>
-      {% csrf_token %}
-      {% for field in form %}
-        <div class='form-group'>
-          {% for error in field.errors %}
-            <div class="alert alert-danger" role="alert">
-              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-              <span class="sr-only">Error:</span>
-              {{ error }}
+          <form method='POST'>
+          {% csrf_token %}
+          {% for field in form %}
+            <div class='form-group'>
+              {% for error in field.errors %}
+                <div class="alert alert-danger" role="alert">
+                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                  <span class="sr-only">Error:</span>
+                  {{ error }}
+                </div>
+              {% endfor %}
+            {{ field.label_tag }}{{ field|add_class:"form-control" }}
             </div>
           {% endfor %}
-        {{ field.label_tag }}{{ field|add_class:"form-control" }}
-        </div>
-      {% endfor %}
-        <div>
-          <button type='submit' id='action-button' class='btn btn-lg btn-primary pull-right bottom-align btn-xlarge'>Get One! &raquo;</button>
-        </div>
-      </form>
+            <div>
+              <button type='submit' id='action-button' class='btn btn-lg btn-primary pull-right bottom-align btn-xlarge'>Get One! &raquo;</button>
+            </div>
+          </form>
 
+        </div>
+      </div>
     </div>
   </div>
+{% if cart %}
+  <div class="col-md-3">
+    <div class="jumbotron">
+      <div class='jumbotron-bill'>
+        <p>Your cart contains</p>
+        <ul>
+      {% for item in cart %}
+          <li>{{ item }}</li>
+      {% endfor %}
+        </ul>
+        <div>
+          <button type='submit' class='btn btn-primary center-block'>check out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
 </div>
 {% endblock content %}
