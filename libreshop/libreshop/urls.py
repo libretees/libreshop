@@ -15,12 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from products.views import HomepageView
+from products.views import HomepageView, CheckoutView
 import api.urls
 import customers.urls
 
 urlpatterns = [
     url(r'^$', HomepageView.as_view(), name='home'),
+    url(r'^checkout/', CheckoutView.as_view(), name='checkout'),
     url(r'', include('social.apps.django_app.urls', namespace='social')),
     url(r'^api/', include(api.urls)),
     url(r'^user/', include(customers.urls)),

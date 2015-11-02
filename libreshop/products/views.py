@@ -1,5 +1,5 @@
 import logging
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
 from carts import SessionCart
 from products.forms import ProductOrderForm
 from products.models import Product, Variant
@@ -41,11 +41,22 @@ class HomepageView(FormView):
     def get_context_data(self, **kwargs):
         context = super(HomepageView, self).get_context_data(**kwargs)
 
-        cart = SessionCart(self.request.session)
-        cart = [Variant.objects.get(id=item) for item in cart]
+        cart = list()
+        session_cart = SessionCart(self.request.session)
+        for id in session_cart:
+            try:
+                variant = Variant.objects.get(id=id)
+                cart.append(variant)
+            except:
+                pass
 
         context.update({
             'cart': cart
         })
 
         return context
+
+
+class CheckoutView(TemplateView):
+
+    template_name = 'libreshop/base.html'

@@ -47,13 +47,13 @@
     <div class="jumbotron">
       <div class='jumbotron-bill'>
         <p>Your cart contains</p>
-        <ul>
+        <ul class='list-group'>
       {% for item in cart %}
-          <li>{{ item }}</li>
+          <li class='list-group-item'>{{ item }}</li>
       {% endfor %}
         </ul>
         <div>
-          <button type='submit' class='btn btn-primary center-block'>check out</button>
+          <a href='checkout' class='btn btn-primary center-block'>check out</a>
         </div>
       </div>
     </div>
