@@ -34,8 +34,3 @@ class SessionCart(list):
 
         logger.info('Added product to %s.' % self.__class__.__name__)
         logger.debug('request.session: %s' % self.session[UUID])
-
-
-    @property
-    def has_products(self):
-        return bool(len(self))

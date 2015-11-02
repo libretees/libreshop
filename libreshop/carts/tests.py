@@ -153,33 +153,3 @@ class SessionCartTest(TestCase):
         cart = SessionCart(self.client.session)
         session = getattr(cart, 'session', None)
         self.assertIsNotNone(session)
-
-
-    def test_sessioncart_has_has_products_property(self):
-        '''
-        Test that SessionCart.has_products is present.
-        '''
-        cart = SessionCart(self.client.session)
-        has_products = getattr(cart, 'has_products', None)
-        self.assertIsNotNone(has_products)
-
-
-    def test_sessioncart_has_products_property_is_false_when_no_items_are_present(self):
-        '''
-        Test that SessionCart.has_products is False when the SessionCart
-        contains no items.
-        '''
-        cart = SessionCart(self.client.session)
-        has_products = getattr(cart, 'has_products', None)
-        self.assertFalse(has_products)
-
-
-    def test_sessioncart_has_products_property_is_true_when_items_are_present(self):
-        '''
-        Test that SessionCart.has_products is True when the SessionCart contains
-        items.
-        '''
-        cart = SessionCart(self.client.session)
-        cart.add('foo')
-        has_products = getattr(cart, 'has_products', None)
-        self.assertTrue(has_products)
