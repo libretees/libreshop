@@ -2,8 +2,6 @@ import logging
 from django.db import models
 from model_utils.models import TimeStampedModel
 from jsonfield import JSONField
-from customers.models import Customer
-from products.models import Product
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +11,7 @@ class Address(TimeStampedModel):
     class Meta():
         verbose_name_plural = 'addresses'
 
-    customer = models.ForeignKey(Customer,
+    customer = models.ForeignKey('customers.Customer',
                                  null=True,
                                  blank=True)   
     name = models.CharField(max_length=64,
@@ -30,25 +28,10 @@ class Address(TimeStampedModel):
                                    blank=True)
 
 
-
-class Order(TimeStampedModel):
-    customer = models.ForeignKey(Customer,
-                                 null=False)
-    shipping_address = models.CharField(max_length=1024,
-                                        null=True,
-                                        blank=True)
-    billing_addresss = models.CharField(max_length=1024,
-                                        null=True,
-                                        blank=True) 
-    payment_card = models.CharField(max_length=4,
-                                    null=True,
-                                    blank=True)
-
-
 class Purchase(TimeStampedModel):
-    order = models.ForeignKey(Order,
+    order = models.ForeignKey('orders.Order',
                               null=False)
-    product = models.ForeignKey(Product,
+    product = models.ForeignKey('products.Product',
                                 null=False)
     saved_product = JSONField(null=True,
                               blank=True)
@@ -72,7 +55,7 @@ class Category(TimeStampedModel):
                             null=True,
                             blank=True,
                             db_index=True)
-    products = models.ManyToManyField(Product,
+    products = models.ManyToManyField('products.Product',
                                       blank=True)
 
     def __str__(self):
