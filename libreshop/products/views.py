@@ -1,6 +1,6 @@
 import logging
 from django.views.generic import FormView, TemplateView
-from carts import SessionCart
+from carts import SessionList
 from products.forms import ProductOrderForm
 from products.models import Product, Variant
 
@@ -21,7 +21,7 @@ class HomepageView(FormView):
         logger.info('%s is valid' % type(form).__name__)
 
         product = Product.objects.get(sku='1000')
-        cart = SessionCart(self.request.session)
+        cart = SessionList(self.request.session)
 
         variants = Variant.objects.filter(product=product)
         for variant in variants:
@@ -32,7 +32,7 @@ class HomepageView(FormView):
             }
             if relevant_attributes == form.cleaned_data:
                 logger.info('User selected "%s"' % variant)
-                cart.add(variant.id)
+                cart.append(variant.id)
                 break
 
         return super(HomepageView, self).form_valid(form)
@@ -42,7 +42,7 @@ class HomepageView(FormView):
         context = super(HomepageView, self).get_context_data(**kwargs)
 
         cart = list()
-        session_cart = SessionCart(self.request.session)
+        session_cart = SessionList(self.request.session)
         for id in session_cart:
             try:
                 variant = Variant.objects.get(id=id)

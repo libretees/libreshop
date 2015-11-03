@@ -1,1 +1,1 @@
-from .sessioncart import SessionCart
+from .utils import SessionList

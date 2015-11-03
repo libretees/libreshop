@@ -2,7 +2,7 @@ from importlib import import_module
 from django.http import HttpRequest
 from django.conf import settings
 from django.test import TestCase
-from carts import SessionCart
+from carts import SessionList
 from products.forms import ProductOrderForm
 from products.models import Product, Variant
 from ..views import HomepageView
@@ -45,7 +45,7 @@ class HomepageViewTest(TestCase):
 
     def test_view_adds_variant_id_to_cart_when_form_is_valid(self):
         '''
-        Test that a Variant.id is added to a SessionCart when valid POST data is
+        Test that a Variant.id is added to a SessionList when valid POST data is
         submitted.
         '''
         product = Product.objects.create(name='foo', sku='1000')
@@ -62,7 +62,7 @@ class HomepageViewTest(TestCase):
         form.full_clean()
         form = homepage_view.form_valid(form)
 
-        cart = SessionCart(request.session)
+        cart = SessionList(request.session)
         variant_id = product.variant_set.first().id
 
         self.assertIn(variant_id, cart)
@@ -70,7 +70,7 @@ class HomepageViewTest(TestCase):
 
     def test_view_context_includes_session_cart(self):
         '''
-        Test that the context provided by the FormView includes a SessionCart.
+        Test that the context provided by the FormView includes a SessionList.
         '''
         request = HttpRequest()
         engine = import_module(settings.SESSION_ENGINE)
@@ -83,4 +83,4 @@ class HomepageViewTest(TestCase):
 
         cart = context.get('cart', None)
 
-        self.assertIsInstance(cart, SessionCart)
+        self.assertIsInstance(cart, SessionList)
