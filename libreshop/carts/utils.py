@@ -21,6 +21,16 @@ class SessionList(list):
         self.session[UUID] = list(self)
 
 
+    def __setitem__(self, key, value):
+        super(SessionList, self).__setitem__(key, value)
+        self._update_session()
+
+
+    def __delitem__(self, key):
+        super(SessionList, self).__delitem__(key)
+        self._update_session()
+
+
     def __iadd__(self, L):
         super(SessionList, self).__iadd__(L)
         self._update_session()
@@ -30,10 +40,6 @@ class SessionList(list):
         super(SessionList, self).__imul__(i)
         self._update_session()
 
-
-    def __delitem__(self, i):
-        super(SessionList, self).__delitem__(i)
-        self._update_session()
 
     def append(self, x):
         super(SessionList, self).append(x)

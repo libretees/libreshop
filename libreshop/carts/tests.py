@@ -117,6 +117,18 @@ class SessionListTest(TestCase):
         self.assertEqual(session_list3, ['foo'])
 
 
+    def test_sessionlist_can_update_an_item_at_a_given_position(self):
+        '''
+        Test that SessionList can update an item in request.session at a given
+        position.
+        '''
+        session = self.client.session
+        session_list1 = SessionList(session, ['foo'])
+        session_list1[0] = 'bar'
+        session_list2 = SessionList(session)
+        self.assertEqual(session_list2, ['bar'])
+
+
     def test_sessionlist_can_add_a_list_to_itself(self):
         '''
         Test that SessionList can add a list to request.session.
