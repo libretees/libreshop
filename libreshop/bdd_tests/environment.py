@@ -72,7 +72,7 @@ def before_step(context, step):
         user = factories.UserFactory()
     elif step.name in ['I visit the "home" page',]:
         # Create a product.
-        product = factories.ProductFactory(option__size=['Small', 'Medium', 'Large'])
+        product = factories.ProductFactory(option__Size=['Small', 'Medium', 'Large'], option__Color=['Black', 'White'])
 
 def after_step(context, step):
     pass
