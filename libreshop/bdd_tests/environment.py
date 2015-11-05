@@ -70,7 +70,9 @@ def before_step(context, step):
     elif step.name in ['I am an anonymous user',]:
         # Create a User account.
         user = factories.UserFactory()
-
+    elif step.name in ['I visit the "home" page',]:
+        # Create a product.
+        product = factories.ProductFactory(option__size=['Small', 'Medium', 'Large'])
 
 def after_step(context, step):
     pass
