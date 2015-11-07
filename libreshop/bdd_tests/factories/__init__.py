@@ -137,9 +137,19 @@ class ProductFactory(factory.DjangoModelFactory):
             attributes = {'attr__%s' % key:combo[key] for key in combo}
             inventory.append(InventoryFactory(name=str(i), **attributes))
 
-        # Link Inventory items to Variants.
+        # Link Inventory items to Variants and rename Variants.
         variants = obj.variant_set.all()
         for (inventory, variant) in zip(inventory, variants):
+
+            # Link Inventory item to Variant.
             component = variant.component_set.first()
             component.inventory = inventory
             component.save()
+
+            # Rename Variant.
+            attribute_values = [
+                '/'.join(str(value) for value in values)
+                for values in variant.attributes.values()
+            ]
+            variant.name = '%s (%s)' % (obj.name, ' '.join(attribute_values))
+            variant.save()
