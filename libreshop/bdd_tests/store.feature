@@ -33,3 +33,13 @@ Feature: store
        And I select "Black" from the "Color" field
        And I click the "Get One!" button
       Then I will see the text "Your cart contains"
+
+  Scenario: remoe an item from the cart
+     Given I am an anonymous user
+      When I visit the "home" page
+       And I click the "Get One!" button
+       And I select "Small" from the "Size" field
+       And I select "White" from the "Color" field
+       And I click the "Get One!" button
+       And I click the x button next to "foo (White Small)"
+      Then I will not see the text "Your cart contains"
