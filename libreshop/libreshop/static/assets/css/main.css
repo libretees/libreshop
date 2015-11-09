@@ -34,8 +34,13 @@ body {
   width: 166%;
 }
 
-.jumbotron-bill > p {
+.jumbotron-bill p {
   font-size: 14px;
+  display: inline;
+}
+
+.jumbotron-bill button:focus {
+  outline:0;
 }
 
 #action-button {
