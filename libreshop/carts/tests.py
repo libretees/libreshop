@@ -1,4 +1,5 @@
 from importlib import import_module
+from django.shortcuts import resolve_url
 from django.test import TestCase
 from .utils import SessionList
 
@@ -224,3 +225,18 @@ class SessionListTest(TestCase):
         session_list2.reverse()
         session_list3 = SessionList(session)
         self.assertEqual(session_list3, ['foo', 'bar'])
+
+
+class RemoveItemViewTest(TestCase):
+
+    def test_view_redirects_to_home_page_if_next_post_variable_is_not_set(self):
+        '''
+        Test that the view redirects to the Home Page, by default, as part of
+        the Post/Redirect/Get (PRG) flow, when the 'next' POST variable not set.
+        '''
+        url = resolve_url('remove_item')
+        home_url = resolve_url('home')
+
+        response = self.client.post(url, {})
+
+        self.assertRedirects(response, home_url)
