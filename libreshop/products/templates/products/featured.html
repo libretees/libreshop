@@ -12,7 +12,11 @@
     <div class="jumbotron">
       <div class="row">
         <div class='jumbotron-content col-md-5'>
+        {% if cart %}
+          <img data-src="holder.js/285x400?bg=555555" class="img-responsive">
+        {% else %}
           <img data-src="holder.js/400x500?bg=555555" class="img-responsive">
+        {% endif %}
         </div>
         <div class='jumbotron-content col-md-7'>
           <h1>Lorem Ipsum</h1>
@@ -49,7 +53,16 @@
         <p>Your cart contains</p>
         <ul class='list-group'>
       {% for item in cart %}
-          <li class='list-group-item'>{{ item }}</li>
+          <li class='list-group-item'>
+
+            <form action='/cart/remove/' method='POST'>
+              {% csrf_token %}
+              <p>{{ item }}</p>
+              <input type='hidden' name='next' value='{{ request.path }}'>
+              <input type='hidden' name='remove' value='{{ forloop.counter0 }}'>
+              <button type='submit' class='close'>&times;</button>
+            </form>
+          </li>
       {% endfor %}
         </ul>
         <div>
