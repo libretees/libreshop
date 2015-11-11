@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class Warehouse(TimeStampedModel):
 
     name = models.CharField(max_length=64, unique=True, null=False, blank=False)
-    address = models.OneToOneField('shop.Address', null=False, blank=False)
+    address = models.OneToOneField('addresses.Address', null=False, blank=False)
 
 
     def __str__(self):

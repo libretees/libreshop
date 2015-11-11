@@ -6,28 +6,6 @@ from jsonfield import JSONField
 logger = logging.getLogger(__name__)
 
 
-class Address(TimeStampedModel):
-    
-    class Meta():
-        verbose_name_plural = 'addresses'
-
-    customer = models.ForeignKey('customers.Customer',
-                                 null=True,
-                                 blank=True)   
-    name = models.CharField(max_length=64,
-                            null=True,
-                            blank=True)
-    location = models.CharField(max_length=1024,
-                                null=True,
-                                blank=True)
-    state = models.CharField(max_length=16,
-                             null=True,
-                             blank=True)
-    postal_code = models.CharField(max_length=16,
-                                   null=True,
-                                   blank=True)
-
-
 class Purchase(TimeStampedModel):
     order = models.ForeignKey('orders.Order',
                               null=False)
