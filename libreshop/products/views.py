@@ -1,5 +1,5 @@
 import logging
-from django.views.generic import FormView, TemplateView
+from django.views.generic import FormView
 from carts import SessionList
 from products.forms import ProductOrderForm
 from products.models import Product, Variant
@@ -12,8 +12,18 @@ class HomepageView(FormView):
     template_name = 'products/featured.html'
     success_url = '/'
 
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            product = Product.objects.get(sku='1000')
+        except Product.DoesNotExist:
+            product = Product.objects.create(sku='1000', name='foo')
+
+        return super(HomepageView, self).dispatch(request, *args, **kwargs)
+
+
     def get_form(self):
         product = Product.objects.get(sku='1000')
+
         return ProductOrderForm(product, **self.get_form_kwargs())
 
 
@@ -41,6 +51,8 @@ class HomepageView(FormView):
     def get_context_data(self, **kwargs):
         context = super(HomepageView, self).get_context_data(**kwargs)
 
+        product = Product.objects.get(sku='1000')
+
         cart = list()
         session_cart = SessionList(self.request.session)
         for id in session_cart:
@@ -51,12 +63,8 @@ class HomepageView(FormView):
                 pass
 
         context.update({
-            'cart': cart
+            'product': product,
+            'cart': cart,
         })
 
         return context
-
-
-class CheckoutView(TemplateView):
-
-    template_name = 'libreshop/base.html'
