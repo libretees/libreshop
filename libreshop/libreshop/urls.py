@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from products.views import HomepageView, CheckoutView
+from products.views import HomepageView
+from orders.views import CheckoutView
 import api.urls
+import carts.urls
 import customers.urls
 
 urlpatterns = [
@@ -24,6 +26,7 @@ urlpatterns = [
     url(r'^checkout/', CheckoutView.as_view(), name='checkout'),
     url(r'', include('social.apps.django_app.urls', namespace='social')),
     url(r'^api/', include(api.urls)),
+    url(r'^cart/', include(carts.urls)),
     url(r'^user/', include(customers.urls)),
     url(r'^oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     url(r'^admin/', include(admin.site.urls)),
