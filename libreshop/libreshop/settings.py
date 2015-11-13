@@ -50,6 +50,7 @@ THIRD_PARTY_APPS = (
     'rest_framework',
     'nested_inline',
     'widget_tweaks',
+    'django_countries',
 )
 
 LOCAL_APPS = (
