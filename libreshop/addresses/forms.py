@@ -16,7 +16,7 @@ class AddressForm(forms.ModelForm):
             'postal_code': 'ZIP/Postcode/Postal Code',
         }
         widgets = {
-            'street_address': forms.Textarea(attrs={'rows': 2,}),
+            'street_address': forms.Textarea(attrs={'rows': 4,}),
             'country': CountrySelectWidget(),
         }
 
