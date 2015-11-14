@@ -4,8 +4,9 @@ behave==1.2.5
 behave-django==0.2.3
 captcha==0.2
 defusedxml==0.4.1
-Django==1.8.4
+Django==1.9b1
 django-braces==1.8.1
+django-countries==3.4.1
 django-model-utils==2.3.1
 django-nested-inline==0.3.5
 django-oauth-toolkit==0.9.0
