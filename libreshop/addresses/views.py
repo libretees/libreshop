@@ -15,10 +15,7 @@ class ShippingAddressView(FormView):
         ip_address = get_real_ip(self.request)
         if ip_address and not form.is_bound:
             g = GeoIP2()
-            location = g.city(ip_address)
-            form.fields['locality'].initial = location['city']
-            form.fields['postal_code'].initial = location['postal_code']
-            form.fields['region'].initial = location['region']
+            location = g.country(ip_address)
             form.fields['country'].initial = location['country_code']
 
         return form
