@@ -1,17 +1,18 @@
 from django import forms
 from . import models
+from django_countries import Countries
 from django_countries.widgets import CountrySelectWidget
 
 class AddressForm(forms.ModelForm):
     class Meta:
         model = models.Address
-        fields = ('recipient_name', 'street_address', 'locality', 'region',
+        fields = ('recipient_name', 'street_address', 'municipality', 'region',
             'postal_code', 'country',
         )
         labels = {
             'recipient_name': 'Recipient',
             'street_address': 'Address',
-            'locality': 'City/Town',
+            'municipality': 'City/Town',
             'region': 'State/Province/County',
             'postal_code': 'ZIP/Postcode/Postal Code',
         }
@@ -27,3 +28,20 @@ class AddressForm(forms.ModelForm):
                 field.error_messages.update({
                     'required': 'The %s field is required.' % field.label,
                 })
+
+    def clean(self):
+        cleaned_data = super(AddressForm, self).clean()
+
+        country = cleaned_data.get('country')
+        postal_code = cleaned_data.get('postal_code')
+
+        if country and country != 'IE' and not postal_code:
+            label = self.fields['postal_code'].label
+            country_name = Countries().name(country)
+            error_message = (
+                'The %s field is required for addresses within the selected country (%s).' %
+                (label, country_name)
+            )
+            self.add_error('postal_code', error_message)
+
+        return cleaned_data
