@@ -4,6 +4,15 @@ from .models import Address
 # Create your tests here.
 class AddressModelTest(TestCase):
 
+    def test_model_plural_name_is_addresses(self):
+        '''
+        Test that Address model has 'addresses' set as its plural name.
+        '''
+        address = Address()
+        plural_name = address._meta.verbose_name_plural
+        self.assertEqual(plural_name, 'addresses')
+
+
     def test_model_has_customer_field(self):
         '''
         Test that Address.customer is present.
