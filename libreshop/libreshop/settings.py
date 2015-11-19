@@ -224,3 +224,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 # Declare the default `from` email.
 DEFAULT_FROM_EMAIL = 'LibreShop <contact@libreshop.org>'
+
+GEOIP_PATH = os.path.join(BASE_DIR, 'libreshop/geolocation')
