@@ -17,21 +17,6 @@ Feature: store
        And I select "Small" from the "Size" field
        And I select "White" from the "Color" field
        And I click the "Get One!" button
-       And I select "Medium" from the "Size" field
-       And I select "White" from the "Color" field
-       And I click the "Get One!" button
-       And I select "Large" from the "Size" field
-       And I select "White" from the "Color" field
-       And I click the "Get One!" button
-       And I select "Small" from the "Size" field
-       And I select "Black" from the "Color" field
-       And I click the "Get One!" button
-       And I select "Medium" from the "Size" field
-       And I select "Black" from the "Color" field
-       And I click the "Get One!" button
-       And I select "Large" from the "Size" field
-       And I select "Black" from the "Color" field
-       And I click the "Get One!" button
       Then I will see the text "Your cart contains"
 
   Scenario: remoe an item from the cart
