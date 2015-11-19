@@ -35,7 +35,7 @@ body {
 }
 
 .jumbotron-bill p {
-  font-size: 14px;
+  font-size: 12px;
   display: inline;
 }
 
@@ -53,4 +53,15 @@ body {
   /* Set the fixed height of the footer here */
   height: 60px;
   background-color: #f5f5f5;
+}
+
+#product-name {
+  font-size: 18px;
+}
+
+textarea {
+  resize: vertical; /* Not supported by Internet Explorer and Opera browsers. */
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 34px;
 }
