@@ -39,8 +39,8 @@ class AddressForm(forms.ModelForm):
             label = self.fields['postal_code'].label
             country_name = Countries().name(country)
             error_message = (
-                'The %s field is required for addresses within the selected country (%s).' %
-                (label, country_name)
+                ('The %s field is required for addresses within the selected '
+                 'country (%s).') % (label, country_name)
             )
             self.add_error('postal_code', error_message)
 
