@@ -665,7 +665,6 @@ class AddressFormTest(TestCase):
             'country': 'US',
             'postal_code': None,
         }
-        form.cleaned_data = cleaned_data
         clean_mock.return_value = cleaned_data
 
         form.clean()
@@ -682,7 +681,7 @@ class AddressFormTest(TestCase):
 
 
     @patch('django.forms.ModelForm.clean')
-    def test_form_does_not_require_postal_code_for_ireleand(self, clean_mock):
+    def test_form_does_not_require_postal_code_for_ireland(self, clean_mock):
         '''
         Test that a postal code is optional for the country of Ireland.
         '''
@@ -691,11 +690,29 @@ class AddressFormTest(TestCase):
             'country': 'IE',
             'postal_code': None,
         }
-        form.cleaned_data = cleaned_data
         clean_mock.return_value = cleaned_data
 
         form.clean()
 
         form_errors = form.errors.get('postal_code')
-
         self.assertIsNone(form_errors)
+
+
+    @patch('django.forms.ModelForm.clean')
+    def test_form_nullifies_postal_code_for_ireland(self, clean_mock):
+        '''
+        Test that a postal code is nullified when data is entered for this
+        field and the country of Ireland is selected, since a postal code is not
+        used in Ireland.
+        '''
+        form = AddressForm()
+        cleaned_data = {
+            'country': 'IE',
+            'postal_code': '12345',
+        }
+        clean_mock.return_value = cleaned_data
+
+        cleaned_data = form.clean()
+
+        postal_code = cleaned_data.get('postal_code')
+        self.assertIsNone(postal_code)

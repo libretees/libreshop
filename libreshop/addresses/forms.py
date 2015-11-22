@@ -30,10 +30,10 @@ class AddressForm(forms.ModelForm):
                 })
 
     def clean(self):
-        cleaned_data = super(AddressForm, self).clean()
+        self.cleaned_data = super(AddressForm, self).clean()
 
-        country = cleaned_data.get('country')
-        postal_code = cleaned_data.get('postal_code')
+        country = self.cleaned_data.get('country')
+        postal_code = self.cleaned_data.get('postal_code')
 
         if country and country != 'IE' and not postal_code:
             label = self.fields['postal_code'].label
@@ -43,5 +43,9 @@ class AddressForm(forms.ModelForm):
                  'country (%s).') % (label, country_name)
             )
             self.add_error('postal_code', error_message)
+        elif country == 'IE' and postal_code:
+            self.cleaned_data.update({
+                'postal_code': None
+            })
 
-        return cleaned_data
+        return self.cleaned_data
