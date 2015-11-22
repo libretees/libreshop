@@ -8,6 +8,7 @@ from .forms import AddressForm
 class ShippingAddressView(FormView):
 
     template_name = 'addresses/shipping_address.html'
+    success_url = '/'
 
     def get_form(self):
         form = AddressForm(**self.get_form_kwargs())
@@ -19,3 +20,8 @@ class ShippingAddressView(FormView):
             form.fields['country'].initial = location['country_code']
 
         return form
+
+
+    def form_valid(self, form):
+        self.request.session['shipping_address'] = form.cleaned_data
+        return super(ShippingAddressView, self).form_valid(form)

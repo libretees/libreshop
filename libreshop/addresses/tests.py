@@ -1,4 +1,6 @@
+from importlib import import_module
 from unittest.mock import patch
+from django.conf import settings
 from django.forms import Textarea
 from django.http import HttpRequest
 from django.test import TestCase
@@ -453,6 +455,30 @@ class ShippingAddressViewTest(TestCase):
         selected_option = ('<option value="" selected="selected">'
             '---------</option>')
         self.assertIn(selected_option, str(form))
+
+
+    def test_valid_form_cleaned_data_is_saved_within_request_session(self):
+        '''
+        Test that all form.cleaned_data values are saved within the
+        request.session variable.
+        '''
+        request = HttpRequest()
+        engine = import_module(settings.SESSION_ENGINE)
+        session_key = None
+        request.session = engine.SessionStore(session_key)
+        view = ShippingAddressView()
+        view.request = request
+        form_data = {
+            'foo': 'bar',
+        }
+        form = AddressForm(data=form_data)
+        form.cleaned_data = form_data
+
+        view.form_valid(form)
+
+        shipping_address = request.session.get('shipping_address')
+
+        self.assertEqual(shipping_address, {'foo': 'bar'})
 
 
 class AddressFormTest(TestCase):

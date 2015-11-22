@@ -45,7 +45,7 @@ class AddressForm(forms.ModelForm):
             self.add_error('postal_code', error_message)
         elif country == 'IE' and postal_code:
             self.cleaned_data.update({
-                'postal_code': None
+                'postal_code': None,
             })
 
         return self.cleaned_data
