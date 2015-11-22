@@ -459,7 +459,8 @@ class AddressFormTest(TestCase):
 
     def test_form_uses_Address_model(self):
         '''
-        
+        Test that addresses.forms.AddressForm is a ModelForm for the
+        addresses.Address model.
         '''
         form = AddressForm()
 
@@ -470,7 +471,7 @@ class AddressFormTest(TestCase):
 
     def test_recipient_name_field_is_displayed(self):
         '''
-        
+        Test that the `recipient_name` field is displayed on the form.
         '''
         form = AddressForm()
 
@@ -481,7 +482,7 @@ class AddressFormTest(TestCase):
 
     def test_street_address_field_is_displayed(self):
         '''
-        
+        Test that the `street_address` field is displayed on the form.
         '''
         form = AddressForm()
 
@@ -492,7 +493,7 @@ class AddressFormTest(TestCase):
 
     def test_municipality_field_is_displayed(self):
         '''
-        
+        Test that the `municipality` field is displayed on the form.
         '''
         form = AddressForm()
 
@@ -503,7 +504,7 @@ class AddressFormTest(TestCase):
 
     def test_region_field_is_displayed(self):
         '''
-        
+        Test that the `region` field is displayed on the form.
         '''
         form = AddressForm()
 
@@ -514,7 +515,7 @@ class AddressFormTest(TestCase):
 
     def test_postal_code_field_is_displayed(self):
         '''
-        
+        Test that the `postal_code` field is displayed on the form.
         '''
         form = AddressForm()
 
@@ -525,7 +526,7 @@ class AddressFormTest(TestCase):
 
     def test_country_field_is_displayed(self):
         '''
-        
+        Test that the `country` field is displayed on the form.
         '''
         form = AddressForm()
 
@@ -536,7 +537,7 @@ class AddressFormTest(TestCase):
 
     def test_recipient_name_field_has_custom_label(self):
         '''
-        
+        Test that the `recipient_name` field has a custom label.
         '''
         form = AddressForm()
 
@@ -548,7 +549,7 @@ class AddressFormTest(TestCase):
 
     def test_street_address_field_has_custom_label(self):
         '''
-        
+        Test that the `street_address` field has a custom label.
         '''
         form = AddressForm()
 
@@ -560,7 +561,7 @@ class AddressFormTest(TestCase):
 
     def test_municipality_field_has_custom_label(self):
         '''
-        
+        Test that the `municipality` field has a custom label.
         '''
         form = AddressForm()
 
@@ -572,7 +573,7 @@ class AddressFormTest(TestCase):
 
     def test_region_field_has_custom_label(self):
         '''
-        
+        Test that the `region` field has a custom label.
         '''
         form = AddressForm()
 
@@ -584,7 +585,7 @@ class AddressFormTest(TestCase):
 
     def test_postal_code_field_has_custom_label(self):
         '''
-        
+        Test that the `postal_code` field has a custom label.
         '''
         form = AddressForm()
 
@@ -596,7 +597,7 @@ class AddressFormTest(TestCase):
 
     def test_street_address_field_uses_textarea_widget(self):
         '''
-        
+        Test that the `street_address` field uses a Textarea widget.
         '''
         form = AddressForm()
 
@@ -608,7 +609,7 @@ class AddressFormTest(TestCase):
 
     def test_country_field_uses_countryselectwidget_widget(self):
         '''
-        
+        Test that the `country` field uses a CountrySelectWidget widget.
         '''
         form = AddressForm()
 
@@ -620,7 +621,8 @@ class AddressFormTest(TestCase):
 
     def test_required_fields_have_custom_error_message(self):
         '''
-        
+        Test that required form fields display a custom error message specific
+        to that field.
         '''
         form = AddressForm()
         error_messages = [
@@ -638,7 +640,7 @@ class AddressFormTest(TestCase):
 
     def test_optional_fields_have_standard_error_message(self):
         '''
-
+        Test that optional form fields do not have a custom error message set.
         '''
         form = AddressForm()
         error_messages = [
@@ -656,7 +658,7 @@ class AddressFormTest(TestCase):
     def test_form_requires_postal_code_for_all_countries_except_ireleand(self,
         clean_mock):
         '''
-
+        Test that all countries other than Ireland must specify a postal code.
         '''
         form = AddressForm()
         cleaned_data = {
@@ -682,7 +684,7 @@ class AddressFormTest(TestCase):
     @patch('django.forms.ModelForm.clean')
     def test_form_does_not_require_postal_code_for_ireleand(self, clean_mock):
         '''
-
+        Test that a postal code is optional for the country of Ireland.
         '''
         form = AddressForm()
         cleaned_data = {
