@@ -7,7 +7,7 @@ from .forms import AddressForm
 # Create your views here.
 class ShippingAddressView(FormView):
 
-    template_name = 'addresses/shipping_address.html'
+    template_name = 'addresses/address_form.html'
     success_url = '/'
 
     def get_form(self):
