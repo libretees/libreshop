@@ -8,7 +8,6 @@ class Address(TimeStampedModel):
     class Meta():
         verbose_name_plural = 'addresses'
 
-    customer = models.ForeignKey('customers.Customer', null=True, blank=True)
     # Name of the recipient at this address.
     recipient_name = models.CharField(max_length=64, null=True, blank=True)
     # Field for street address.

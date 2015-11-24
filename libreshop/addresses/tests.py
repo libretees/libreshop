@@ -22,47 +22,6 @@ class AddressModelTest(TestCase):
         self.assertEqual(plural_name, 'addresses')
 
 
-    def test_model_has_customer_field(self):
-        '''
-        Test that Address.customer is present.
-        '''
-        address = Address()
-        customer = None
-        try:
-            customer = address._meta.get_field('customer')
-        except:
-            pass
-        self.assertIsNotNone(customer)
-
-
-    def test_model_customer_field_is_not_required(self):
-        '''
-        Test that Address.customer is not required.
-        '''
-        address = Address()
-        customer = None
-        try:
-            customer = address._meta.get_field('customer')
-        except:
-            pass
-        nullable = getattr(customer, 'null', None)
-        self.assertTrue(nullable)
-
-
-    def test_model_customer_field_can_be_blank(self):
-        '''
-        Test that Address.customer allows blank values in forms.
-        '''
-        address = Address()
-        customer = None
-        try:
-            customer = address._meta.get_field('customer')
-        except:
-            pass
-        blank = getattr(customer, 'blank', None)
-        self.assertTrue(blank)
-
-
     def test_model_has_recipient_name_field(self):
         '''
         Test that Address.recipient_name is present.
