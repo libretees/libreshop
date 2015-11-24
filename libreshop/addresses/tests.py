@@ -8,7 +8,8 @@ from django_countries import Countries
 from django_countries.widgets import CountrySelectWidget
 from .models import Address
 from .forms import AddressForm
-from .views import ShippingAddressView
+from .views import (AddressFormView, BillingAddressFormView,
+    ShippingAddressFormView)
 
 # Create your tests here.
 class AddressModelTest(TestCase):
@@ -338,14 +339,14 @@ class AddressModelTest(TestCase):
         self.assertFalse(blank)
 
 
-class ShippingAddressViewTest(TestCase):
+class AddressFormViewTest(TestCase):
 
     def test_view_uses_addressform_form(self):
         '''
         Test that the view uses addresses.forms.AddressForm.
         '''
         request = HttpRequest()
-        view = ShippingAddressView()
+        view = AddressFormView()
         view.request = request
 
         form = view.get_form()
@@ -362,7 +363,7 @@ class ShippingAddressViewTest(TestCase):
         returned by the `django-ipware` package.
         '''
         request = HttpRequest()
-        view = ShippingAddressView()
+        view = AddressFormView()
         view.request = request
         get_real_ip_mock.return_value = '127.0.0.1'
         country_mock.return_value = {
@@ -384,7 +385,7 @@ class ShippingAddressViewTest(TestCase):
         be determined.
         '''
         request = HttpRequest()
-        view = ShippingAddressView()
+        view = AddressFormView()
         view.request = request
         get_real_ip_mock.return_value = None
 
@@ -396,7 +397,7 @@ class ShippingAddressViewTest(TestCase):
 
 
     @patch('addresses.views.get_real_ip')
-    @patch.object(ShippingAddressView, 'get_form_kwargs')
+    @patch.object(AddressFormView, 'get_form_kwargs')
     def test_bound_form_does_not_geolocate_users_country(
         self, get_form_kwargs_mock, get_real_ip_mock):
         '''
@@ -404,7 +405,7 @@ class ShippingAddressViewTest(TestCase):
         bound form.
         '''
         request = HttpRequest()
-        view = ShippingAddressView()
+        view = AddressFormView()
         view.request = request
         get_real_ip_mock.return_value = '127.0.0.1'
         get_form_kwargs_mock.return_value = {'data': request.POST}
@@ -416,6 +417,17 @@ class ShippingAddressViewTest(TestCase):
         self.assertIn(selected_option, str(form))
 
 
+class ShippingAddressFormViewTest(TestCase):
+
+    def test_view_extends_addressformview(self):
+        '''
+        Test that the View extends addresses.views.AddressFormView.
+        '''
+        view = ShippingAddressFormView()
+
+        self.assertIsInstance(view, AddressFormView)
+
+
     def test_valid_form_cleaned_data_is_saved_within_request_session(self):
         '''
         Test that all form.cleaned_data values are saved within the
@@ -425,7 +437,7 @@ class ShippingAddressViewTest(TestCase):
         engine = import_module(settings.SESSION_ENGINE)
         session_key = None
         request.session = engine.SessionStore(session_key)
-        view = ShippingAddressView()
+        view = ShippingAddressFormView()
         view.request = request
         form_data = {
             'foo': 'bar',
@@ -438,6 +450,41 @@ class ShippingAddressViewTest(TestCase):
         shipping_address = request.session.get('shipping_address')
 
         self.assertEqual(shipping_address, {'foo': 'bar'})
+
+
+class BillingAddressFormViewTest(TestCase):
+
+    def test_view_extends_addressformview(self):
+        '''
+        Test that the View extends addresses.views.AddressFormView.
+        '''
+        view = BillingAddressFormView()
+
+        self.assertIsInstance(view, AddressFormView)
+
+
+    def test_valid_form_cleaned_data_is_saved_within_request_session(self):
+        '''
+        Test that all form.cleaned_data values are saved within the
+        request.session variable.
+        '''
+        request = HttpRequest()
+        engine = import_module(settings.SESSION_ENGINE)
+        session_key = None
+        request.session = engine.SessionStore(session_key)
+        view = BillingAddressFormView()
+        view.request = request
+        form_data = {
+            'foo': 'bar',
+        }
+        form = AddressForm(data=form_data)
+        form.cleaned_data = form_data
+
+        view.form_valid(form)
+
+        billing_address = request.session.get('billing_address')
+
+        self.assertEqual(billing_address, {'foo': 'bar'})
 
 
 class AddressFormTest(TestCase):

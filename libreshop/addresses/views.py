@@ -5,7 +5,7 @@ from ipware.ip import get_real_ip
 from .forms import AddressForm
 
 # Create your views here.
-class ShippingAddressView(FormView):
+class AddressFormView(FormView):
 
     template_name = 'addresses/address_form.html'
     success_url = '/'
@@ -22,6 +22,15 @@ class ShippingAddressView(FormView):
         return form
 
 
+class ShippingAddressFormView(AddressFormView):
+
     def form_valid(self, form):
         self.request.session['shipping_address'] = form.cleaned_data
-        return super(ShippingAddressView, self).form_valid(form)
+        return super(ShippingAddressFormView, self).form_valid(form)
+
+
+class BillingAddressFormView(AddressFormView):
+
+    def form_valid(self, form):
+        self.request.session['billing_address'] = form.cleaned_data
+        return super(BillingAddressFormView, self).form_valid(form)
