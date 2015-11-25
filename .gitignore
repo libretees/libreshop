@@ -5,6 +5,8 @@
 *.sqlite3
 docs/build
 browser.png
+MANIFEST
+dist/*
 
 # Vim-specific files
 *.swp
