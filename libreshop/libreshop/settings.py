@@ -226,3 +226,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 DEFAULT_FROM_EMAIL = 'LibreShop <contact@libreshop.org>'
 
 GEOIP_PATH = os.path.join(BASE_DIR, 'libreshop/geolocation')
+
+# Declare carrier-calculated shipping APIs to integrate with.
+SHIPPING_APIS = ('foo')
