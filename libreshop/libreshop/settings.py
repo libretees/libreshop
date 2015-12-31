@@ -15,6 +15,7 @@ import os
 import sys
 from . import patch
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -45,7 +46,8 @@ DEFAULT_APPS = (
 
 THIRD_PARTY_APPS = (
     'behave_django',
-    'social.apps.django_app.default',
+    #'social.apps.django_app.default',
+    'libreshop.apps.PythonSocialAuthConfig',
     'oauth2_provider',
     'rest_framework',
     'nested_inline',
