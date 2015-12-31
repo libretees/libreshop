@@ -19,7 +19,7 @@
         {% endif %}
         </div>
         <div class='jumbotron-content col-md-7'>
-          <h1>Lorem Ipsum</h1>
+          <h1 id='product-name'>{{ product.name }}</h1>
           <p>dolor sit amet, solet legimus suscipit an vis. Nec autem soluta alienum ne, eos rationibus assueverit et.</p>
           <p>Ius case detracto ex, at perfecto perpetua neglegentur sed.</p>
 
@@ -54,10 +54,13 @@
         <ul class='list-group'>
       {% for item in cart %}
           <li class='list-group-item'>
-
             <form action='/cart/remove/' method='POST'>
               {% csrf_token %}
-              <p>{{ item }}</p>
+              <p>
+                <span>{{ item }}</span>
+                <span>{{ item.split_price.major_units }}</span>
+                <span>{{ item.split_price.minor_units }}</span>
+              </p>
               <input type='hidden' name='next' value='{{ request.path }}'>
               <input type='hidden' name='remove' value='{{ forloop.counter0 }}'>
               <button type='submit' class='close'>&times;</button>
@@ -65,6 +68,9 @@
           </li>
       {% endfor %}
         </ul>
+        <div>
+          <p>Subtotal ({{cart|length}} Item{% if cart|length > 1 %}s{% endif %}): {{ total }}</p>
+        </div>
         <div>
           <a href='checkout' class='btn btn-primary center-block'>check out</a>
         </div>

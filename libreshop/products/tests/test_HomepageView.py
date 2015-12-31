@@ -1,18 +1,50 @@
 from importlib import import_module
 from django.http import HttpRequest
 from django.conf import settings
-from django.test import TestCase
+from django.contrib.auth.models import AnonymousUser
+from django.core.urlresolvers import resolve
+from django.test import TestCase, RequestFactory
 from carts import SessionList
 from products.forms import ProductOrderForm
 from products.models import Product, Variant
-from ..views import HomepageView
+from ..views import HomePageView
 
 
-class HomepageViewTest(TestCase):
+class HomePageViewTest(TestCase):
+
+    def test_root_url_resolves_to_home_page_view(self):
+        '''
+        Test that the root URL ('/') resolves to HomePageView.
+        '''
+        found = resolve('/')
+        self.assertEqual(found.func.view_class, HomePageView)
+
+
+    def test_view_displays_correct_title(self):
+        '''
+        Test that the FormView displays the correct title.
+        '''
+        factory = RequestFactory()
+        request = factory.get('/')
+
+        # Set `session` manually, since middleware is not supported.
+        engine = import_module(settings.SESSION_ENGINE)
+        session_key = None
+        request.session = engine.SessionStore(session_key)
+
+        # Set `user` manually, since middleware is not supported.
+        request.user = AnonymousUser()
+
+        view = HomePageView.as_view()
+        response = view(request)
+        response = response.render()
+
+        self.assertIn(b'<title>LibreShop</title>', response.content)
+
 
     def test_view_uses_featured_products_template(self):
         '''
-        Test that the view uses the products/featured.html template.
+        Test that the FormView uses the products/featured.html template.
         '''
         product = Product.objects.create(name='foo', sku='1000')
         response = self.client.get('')
@@ -37,7 +69,7 @@ class HomepageViewTest(TestCase):
         product = Product.objects.create(name='foo', sku='1000')
 
         request = HttpRequest()
-        homepage_view = HomepageView()
+        homepage_view = HomePageView()
         homepage_view.request = request
         form = homepage_view.get_form()
         self.assertIsInstance(form, ProductOrderForm)
@@ -56,7 +88,7 @@ class HomepageViewTest(TestCase):
         session_key = None
         request.session = engine.SessionStore(session_key)
 
-        homepage_view = HomepageView()
+        homepage_view = HomePageView()
         homepage_view.request = request
         form = homepage_view.get_form()
         form.full_clean()
@@ -68,19 +100,19 @@ class HomepageViewTest(TestCase):
         self.assertIn(variant_id, cart)
 
 
-    def test_view_context_includes_session_cart(self):
+    def test_view_context_cart_is_a_list(self):
         '''
-        Test that the context provided by the FormView includes a SessionList.
+        Test that context dict contains a 'cart' key.
         '''
         request = HttpRequest()
         engine = import_module(settings.SESSION_ENGINE)
         session_key = None
         request.session = engine.SessionStore(session_key)
 
-        homepage_view = HomepageView()
+        homepage_view = HomePageView()
         homepage_view.request = request
         context = homepage_view.get_context_data()
 
-        cart = context.get('cart', None)
+        cart = context.get('cart')
 
-        self.assertIsInstance(cart, SessionList)
+        self.assertIsNotNone(cart)

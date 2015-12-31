@@ -1,6 +1,7 @@
 import re
 import logging
 from decimal import Decimal
+from operator import itemgetter
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db import transaction
@@ -32,6 +33,20 @@ class Variant(TimeStampedModel):
             ('product', 'name',),
             ('product', 'sub_sku',),
         )
+
+
+    class Price(object):
+        major_units = None
+        minor_units = None
+
+        def __init__(self, price):
+            major_units, minor_units = itemgetter(0, 1)(str(price).split('.'))
+            self.major_units = major_units
+            self.minor_units = minor_units
+
+        def __str__(self):
+            return '.'.join([self.major_units, self.minor_units])
+
 
     product = models.ForeignKey('products.Product', null=False, blank=False)
     name = models.CharField(max_length=64, null=False, blank=False)
@@ -91,6 +106,11 @@ class Variant(TimeStampedModel):
                                 break
                     attributes[key].add(attribute)
         return attributes
+
+
+    @property
+    def split_price(self):
+        return self.Price(self.price)
 
 
     def validate_unique(self, *args, **kwargs):

@@ -7,7 +7,7 @@ from products.models import Product, Variant
 logger = logging.getLogger(__name__)
 
 # Create your views here.
-class HomepageView(FormView):
+class HomePageView(FormView):
 
     template_name = 'products/featured.html'
     success_url = '/'
@@ -18,11 +18,14 @@ class HomepageView(FormView):
         except Product.DoesNotExist:
             product = Product.objects.create(sku='1000', name='foo')
 
-        return super(HomepageView, self).dispatch(request, *args, **kwargs)
+        return super(HomePageView, self).dispatch(request, *args, **kwargs)
 
 
     def get_form(self):
-        product = Product.objects.get(sku='1000')
+        try:
+            product = Product.objects.get(sku='1000')
+        except Product.DoesNotExist:
+            product = Product.objects.create(sku='1000', name='foo')
 
         return ProductOrderForm(product, **self.get_form_kwargs())
 
@@ -45,26 +48,24 @@ class HomepageView(FormView):
                 cart.append(variant.id)
                 break
 
-        return super(HomepageView, self).form_valid(form)
+        return super(HomePageView, self).form_valid(form)
 
 
     def get_context_data(self, **kwargs):
-        context = super(HomepageView, self).get_context_data(**kwargs)
+        context = super(HomePageView, self).get_context_data(**kwargs)
 
         product = Product.objects.get(sku='1000')
 
-        cart = list()
         session_cart = SessionList(self.request.session)
-        for id in session_cart:
-            try:
-                variant = Variant.objects.get(id=id)
-                cart.append(variant)
-            except:
-                pass
+
+        variant_ids = [id_ for id_ in session_cart]
+        cart = Variant.objects.filter(id__in=variant_ids)
+        total = sum([variant.price for variant in cart])
 
         context.update({
             'product': product,
             'cart': cart,
+            'total': total,
         })
 
         return context
