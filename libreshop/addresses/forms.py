@@ -12,13 +12,13 @@ class AddressForm(forms.ModelForm):
         labels = {
             'recipient_name': 'Recipient',
             'street_address': 'Address',
-            'municipality': 'City/Town',
-            'region': 'State/Province/County',
-            'postal_code': 'ZIP/Postcode/Postal Code',
+            'municipality':   'City/Town',
+            'region':         'State/Province/County',
+            'postal_code':    'ZIP/Postcode/Postal Code',
         }
         widgets = {
             'street_address': forms.Textarea(attrs={'rows': 4,}),
-            'country': CountrySelectWidget(),
+            'country':        CountrySelectWidget(),
         }
 
     def __init__(self, *args, **kwargs):

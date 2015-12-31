@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from django.test import TestCase
 from products.models import Product, Variant, Component
-from shop.models import Address
+from addresses.models import Address
 from .models import Warehouse, Attribute, Inventory, Attribute_Value, Location
 
 # Initialize logger.
