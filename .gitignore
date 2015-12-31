@@ -6,6 +6,7 @@
 docs/build
 browser.png
 MANIFEST
+TODO
 dist/*
 
 # Vim-specific files
