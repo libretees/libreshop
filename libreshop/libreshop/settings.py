@@ -179,6 +179,7 @@ STATIC_ROOT = ''
 # Serve project-wide static files.
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'libreshop/static'),
+    os.path.join(BASE_DIR, 'orders/static'),
 )
 
 # Set up logging.
@@ -215,6 +216,10 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
         'carts': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'orders': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
