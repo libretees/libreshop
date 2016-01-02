@@ -1,0 +1,37 @@
+{% extends "libreshop/base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block content %}
+<!-- Main component for a primary marketing message or call to action -->
+
+{% for i in total_steps %}
+  {% if i == current_position %}
+    <img src="{% static 'images/current.png' %}" />
+  {% elif i < current_position %}
+    <img src="{% static 'images/checked.png' %}" />
+  {% else %}
+    <img src="{% static 'images/circled.png' %}" />
+  {% endif %}
+{% endfor %}
+<h1>{{ description }}</h1>
+<div class="jumbotron">
+  <form method='POST'>
+    {% csrf_token %}
+    {% for field in form %}
+      <div class='form-group'>
+        {% for error in field.errors %}
+          <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            {{ error }}
+          </div>
+        {% endfor %}
+      {{ field.label_tag }}{{ field|add_class:"form-control" }}
+      </div>
+    {% endfor %}
+    <button type='submit'>Submit</button>
+  </form>
+</div>
+
+{% endblock content %}
