@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import FormView
 from ipware.ip import get_real_ip
 from addresses.forms import AddressForm
+from .forms import PaymentForm
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -42,7 +43,7 @@ class CheckoutFormView(FormView):
             },
             {
                 'name': 'payment',
-                'form': AddressForm,
+                'form': PaymentForm,
                 'template': 'orders/checkout.html',
                 'context': {
                     'description': 'how are you paying?',
@@ -83,17 +84,18 @@ class CheckoutFormView(FormView):
 
 
     def get_form_class(self):
+        logger.debug('Getting form class...')
         return self.current_step['form']
 
 
-    def get_form(self):
+    def get_form(self, form_class=None):
         '''
         Get the Form object that will be supplied to the FormView's context.
         '''
+        if form_class is None:
+            form_class = self.get_form_class()
+
         # Instantiate Form.
-
-        form_class = super(CheckoutFormView, self).get_form_class()
-
         logger.debug('Getting a %s form' % (form_class.__name__,))
         form = form_class(**self.get_form_kwargs())
 
