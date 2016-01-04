@@ -92,12 +92,8 @@ class CheckoutFormView(FormView):
         '''
         Get the Form object that will be supplied to the FormView's context.
         '''
-        if form_class is None:
-            form_class = self.get_form_class()
-
         # Instantiate Form.
-        logger.debug('Getting a %s form' % (form_class.__name__,))
-        form = form_class(**self.get_form_kwargs())
+        form = super(CheckoutFormView, self).get_form(form_class=form_class)
 
         if isinstance(form, AddressForm):
             # Determine the IP address associated to the HTTP Request.
@@ -111,8 +107,8 @@ class CheckoutFormView(FormView):
                 form.fields['country'].initial = location['country_code']
 
         logger.debug(
-            'The %s form is %s' % (
-                form_class.__name__, 'bound' if form.is_bound else 'unbound'
+            'Got %s %s form' % (
+                'bound' if form.is_bound else 'unbound', form.__class__.__name__
             )
         )
 
