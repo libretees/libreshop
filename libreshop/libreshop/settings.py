@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import sys
+import braintree
 from . import patch
 
 
@@ -235,4 +236,13 @@ DEFAULT_FROM_EMAIL = 'LibreShop <contact@libreshop.org>'
 GEOIP_PATH = os.path.join(BASE_DIR, 'libreshop/geolocation')
 
 # Declare carrier-calculated shipping APIs to integrate with.
-SHIPPING_APIS = ('foo')
+SHIPPING_APIS = ('foo',)
+
+# Configure the Braintree environment.
+BRAINTREE_ID = os.environ.get('BRAINTREE_ID')
+BRAINTREE_KEY = os.environ.get('BRAINTREE_KEY')
+BRAINTREE_SECRET = os.environ.get('BRAINTREE_SECRET')
+braintree.Configuration.configure(braintree.Environment.Sandbox,
+                                  merchant_id=BRAINTREE_ID,
+                                  public_key=BRAINTREE_KEY,
+                                  private_key=BRAINTREE_SECRET)
