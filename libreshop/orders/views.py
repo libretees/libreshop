@@ -37,14 +37,6 @@ class CheckoutFormView(FormView):
                 }
             },
             {
-                'name': 'billing_address',
-                'form': AddressForm,
-                'template': 'orders/checkout.html',
-                'context': {
-                    'description': 'who are we billing?',
-                }
-            },
-            {
                 'name': 'payment',
                 'form': PaymentForm,
                 'template': 'orders/checkout.html',
@@ -128,6 +120,10 @@ class CheckoutFormView(FormView):
             self.current_step['name']: form.cleaned_data,
         })
         self.request.session.modified = True
+
+        if isinstance(form, PaymentForm):
+            result = form.create_transaction('10.00')
+
 
         return super(CheckoutFormView, self).form_valid(form)
 
