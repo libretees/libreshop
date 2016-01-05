@@ -1,4 +1,5 @@
 import logging
+import braintree
 from django.contrib.gis.geoip2 import GeoIP2
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import FormView
@@ -21,6 +22,8 @@ class CheckoutFormView(FormView):
 
     def __init__(self, *args, **kwargs):
         super(CheckoutFormView, self).__init__(*args, **kwargs)
+
+        client_token = braintree.ClientToken.generate()
 
         self.steps_completed = None
         self.steps_remaining = None
@@ -47,6 +50,7 @@ class CheckoutFormView(FormView):
                 'template': 'orders/checkout.html',
                 'context': {
                     'description': 'how are you paying?',
+                    'client_token': client_token
                 }
             },
         )

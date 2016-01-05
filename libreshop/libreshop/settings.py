@@ -242,6 +242,7 @@ SHIPPING_APIS = ('foo',)
 BRAINTREE_ID = os.environ.get('BRAINTREE_ID')
 BRAINTREE_KEY = os.environ.get('BRAINTREE_KEY')
 BRAINTREE_SECRET = os.environ.get('BRAINTREE_SECRET')
+
 braintree.Configuration.configure(braintree.Environment.Sandbox,
                                   merchant_id=BRAINTREE_ID,
                                   public_key=BRAINTREE_KEY,

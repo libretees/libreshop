@@ -34,4 +34,11 @@
   </form>
 </div>
 
+{% if client_token %}
+  <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
+  <script>
+    braintree.setup("{{ client_token }}", "custom", {id: "checkout"});
+  </script>
+{% endif %}
+
 {% endblock content %}
