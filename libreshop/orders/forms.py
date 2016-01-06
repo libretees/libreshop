@@ -13,22 +13,22 @@ EXPIRATION_YEAR_CHOICES = [
 ]
 
 
-class SensitiveTextInput(forms.TextInput):
+class SensitiveDataMixin(forms.Widget):
+
     def build_attrs(self, extra_attrs=None, **kwargs):
-        attrs = super(SensitiveTextInput, self).build_attrs(extra_attrs, **kwargs)
+        attrs = super(SensitiveDataMixin, self).build_attrs(extra_attrs, **kwargs)
         if 'name' in attrs:
             attrs['data-braintree-name'] = attrs['name']
             del attrs['name']
+
         return attrs
 
 
-class SensitiveSelectInput(forms.Select):
-    def build_attrs(self, extra_attrs=None, **kwargs):
-        attrs = super(SensitiveSelectInput, self).build_attrs(extra_attrs, **kwargs)
-        if 'name' in attrs:
-            attrs['data-braintree-name'] = attrs['name']
-            del attrs['name']
-        return attrs
+class SensitiveSelect(SensitiveDataMixin, forms.Select):
+    pass
+
+class SensitiveTextInput(SensitiveDataMixin, forms.TextInput):
+    pass
 
 
 class PaymentForm(forms.Form):
@@ -49,10 +49,10 @@ class PaymentForm(forms.Form):
                           })
     )
     expiration_month = forms.ChoiceField(choices=EXPIRATION_MONTH_CHOICES,
-                                         widget=SensitiveSelectInput()
+                                         widget=SensitiveSelect()
     )
     expiration_year = forms.ChoiceField(choices=EXPIRATION_YEAR_CHOICES,
-                                        widget=SensitiveSelectInput()
+                                        widget=SensitiveSelect()
     )
     postal_code = forms.CharField(required=True,
                                   widget=SensitiveTextInput()
@@ -84,7 +84,7 @@ class PaymentForm(forms.Form):
             # Restore unbound fields.
             self.fields = self.unbound_fields
 
-            # Remove duplicate validation errors from the Braintree response.
+            # Remove duplicate validation errors from the API response.
             errors = result.errors.deep_errors
             errors = [
                 error for i, error in enumerate(errors)
