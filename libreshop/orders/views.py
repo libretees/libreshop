@@ -121,10 +121,6 @@ class CheckoutFormView(FormView):
         })
         self.request.session.modified = True
 
-        if isinstance(form, PaymentForm):
-            result = form.create_transaction('10.00')
-
-
         return super(CheckoutFormView, self).form_valid(form)
 
 
