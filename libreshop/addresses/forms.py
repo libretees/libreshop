@@ -6,13 +6,13 @@ from django_countries.widgets import CountrySelectWidget
 class AddressForm(forms.ModelForm):
     class Meta:
         model = models.Address
-        fields = ('recipient_name', 'street_address', 'municipality', 'region',
+        fields = ('recipient_name', 'street_address', 'locality', 'region',
             'postal_code', 'country',
         )
         labels = {
             'recipient_name': 'Recipient',
             'street_address': 'Address',
-            'municipality':   'City/Town',
+            'locality':       'City/Town',
             'region':         'State/Province/County',
             'postal_code':    'ZIP/Postcode/Postal Code',
         }
@@ -23,6 +23,7 @@ class AddressForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AddressForm, self).__init__(*args, **kwargs)
+
         for field in self.fields.values():
             if field.required:
                 field.error_messages.update({
