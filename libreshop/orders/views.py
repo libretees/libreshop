@@ -2,6 +2,7 @@ import logging
 import braintree
 from django.contrib.gis.geoip2 import GeoIP2
 from django.core.urlresolvers import reverse_lazy
+from django.template.response import TemplateResponse
 from django.views.generic import FormView
 from ipware.ip import get_real_ip
 from addresses.forms import AddressForm
@@ -9,11 +10,12 @@ from carts import SessionList
 from products.models import Variant
 from .forms import PaymentForm
 
-# Initialize logger.
-logger = logging.getLogger(__name__)
-
 # Set a universally unique identifier (UUID).
 UUID = '9bf75036-ec58-4188-be12-4f983cac7e55'
+
+
+# Initialize logger.
+logger = logging.getLogger(__name__)
 
 # Create views here.
 class CheckoutFormView(FormView):
@@ -25,14 +27,51 @@ class CheckoutFormView(FormView):
     def __init__(self, *args, **kwargs):
         super(CheckoutFormView, self).__init__(*args, **kwargs)
 
-        client_token = braintree.ClientToken.generate()
+        self.client_token = braintree.ClientToken.generate()
 
-        self.steps_completed = None
-        self.steps_remaining = None
+
+    def post(self, request, *args, **kwargs):
+
+        template_response = None
+        if not self.session_data_is_valid():
+            session_data = self.request.session[UUID]
+
+            previous_index = self.steps.index(self.current_step)-1
+            previous_step_key = self.steps[previous_index]['name']
+
+            malformed_data = session_data.get(previous_step_key, None)
+
+            if previous_step_key in session_data:
+                del session_data[previous_step_key]
+                self.request.session.modified = True
+
+            self.current_step = self.get_current_step()
+
+            form_class = self.get_form_class()
+            form = form_class(data=malformed_data)
+
+            if not form.is_valid():
+                form.add_error(None, 'Something went wrong here...')
+
+            template_names = self.get_template_names()
+            context_data = self.get_context_data(form=form)
+
+            template_response = TemplateResponse(
+                request, template_names, context_data
+            )
+
+        return (
+            super(CheckoutFormView, self).post(request, *args, **kwargs)
+            if not template_response else template_response
+        )
+
+
+    def dispatch(self, request, *args, **kwargs):
+
         self.steps = (
             {
                 'name': 'shipping_address',
-                'form': AddressForm,
+                'form_class': AddressForm,
                 'template': 'orders/checkout.html',
                 'context': {
                     'description': 'where are we sending this?',
@@ -40,17 +79,14 @@ class CheckoutFormView(FormView):
             },
             {
                 'name': 'payment',
-                'form': PaymentForm,
+                'form_class': PaymentForm,
                 'template': 'orders/checkout.html',
                 'context': {
                     'description': 'how are you paying?',
-                    'client_token': client_token
+                    'client_token': self.client_token
                 }
             },
         )
-
-
-    def dispatch(self, request, *args, **kwargs):
 
         self.current_step = self.get_current_step()
 
@@ -83,7 +119,16 @@ class CheckoutFormView(FormView):
 
     def get_form_class(self):
         logger.debug('Getting form class...')
-        return self.current_step['form']
+        return self.current_step['form_class']
+
+
+    def get_form_kwargs(self):
+        kwargs = super(CheckoutFormView, self).get_form_kwargs()
+
+        if 'form_kwargs' in self.current_step:
+            kwargs.update(self.current_step['form_kwargs'])
+
+        return kwargs
 
 
     def get_form(self, form_class=None):
@@ -124,6 +169,27 @@ class CheckoutFormView(FormView):
         self.request.session.modified = True
 
         return super(CheckoutFormView, self).form_valid(form)
+
+
+    def session_data_is_valid(self):
+
+        session_data = self.request.session.get(UUID, None)
+
+        is_valid = True
+        if session_data:
+            completed_steps = [
+                step for step in self.steps if step['name'] in session_data
+            ]
+
+            for completed_step in completed_steps:
+                step_name = completed_step['name']
+                form_class = completed_step['form_class']
+
+                form = form_class(data=session_data[step_name])
+                if not form.is_valid():
+                    is_valid = False
+
+        return is_valid
 
 
     def get_success_url(self):
