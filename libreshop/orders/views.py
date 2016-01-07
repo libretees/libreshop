@@ -5,6 +5,8 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import FormView
 from ipware.ip import get_real_ip
 from addresses.forms import AddressForm
+from carts import SessionList
+from products.models import Variant
 from .forms import PaymentForm
 
 # Initialize logger.
@@ -141,12 +143,19 @@ class CheckoutFormView(FormView):
     def get_context_data(self, **kwargs):
         context = super(CheckoutFormView, self).get_context_data(**kwargs)
 
+        session_cart = SessionList(self.request.session)
+
+        variant_ids = [id_ for id_ in session_cart]
+        cart = Variant.objects.filter(id__in=variant_ids)
+        total = sum([variant.price for variant in cart])
+
         current_position = next(
             i for (i, step) in enumerate(self.steps)
             if step['name'] == self.current_step['name']
         )
 
         context.update({
+            'cart': cart,
             'current_position': current_position,
             'total_steps': range(len(self.steps)),
         })
