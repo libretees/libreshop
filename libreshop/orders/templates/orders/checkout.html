@@ -16,8 +16,16 @@
 {% endfor %}
 <h1>{{ description }}</h1>
 <div class="jumbotron">
+
   <form method='POST' id='checkout'>
     {% csrf_token %}
+    {% for error in form.non_field_errors %}
+      <div class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        {{ error }}
+      </div>
+    {% endfor %}
     {% for field in form %}
       <div class='form-group'>
         {% for error in field.errors %}
