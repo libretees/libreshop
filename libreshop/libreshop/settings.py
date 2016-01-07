@@ -239,11 +239,11 @@ GEOIP_PATH = os.path.join(BASE_DIR, 'libreshop/geolocation')
 SHIPPING_APIS = ('foo',)
 
 # Configure the Braintree environment.
-BRAINTREE_ID = os.environ.get('BRAINTREE_ID')
-BRAINTREE_KEY = os.environ.get('BRAINTREE_KEY')
-BRAINTREE_SECRET = os.environ.get('BRAINTREE_SECRET')
+BT_MERCHANT_ID = os.environ.get('BT_MERCHANT_ID')
+BT_PUBLIC_KEY = os.environ.get('BT_PUBLIC_KEY')
+BT_PRIVATE_KEY = os.environ.get('BT_PRIVATE_KEY')
 
 braintree.Configuration.configure(braintree.Environment.Sandbox,
-                                  merchant_id=BRAINTREE_ID,
-                                  public_key=BRAINTREE_KEY,
-                                  private_key=BRAINTREE_SECRET)
+                                  merchant_id=BT_MERCHANT_ID,
+                                  public_key=BT_PUBLIC_KEY,
+                                  private_key=BT_PRIVATE_KEY)
