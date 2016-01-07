@@ -2,6 +2,7 @@ import logging
 import braintree
 from datetime import date
 from django import forms
+from addresses.forms import AddressForm
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -59,6 +60,7 @@ class PaymentForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+
         super(PaymentForm, self).__init__(*args, **kwargs)
 
         if self.is_bound:
@@ -66,13 +68,19 @@ class PaymentForm(forms.Form):
             self.fields = {
                 'payment_method_nonce': forms.CharField(required=True)
             }
-            self.full_clean()
+
+
+    def full_clean(self):
+        super(PaymentForm, self).full_clean()
+
+        if hasattr(self, 'cleaned_data'):
             self.create_transaction('10.00')
 
 
     def create_transaction(self, total):
 
         # Attempt to create a sales transaction.
+        logger.info('Attempting sales transaction...')
         result = braintree.Transaction.sale({
             'amount': total,
             'payment_method_nonce': self.cleaned_data['payment_method_nonce']
@@ -81,7 +89,7 @@ class PaymentForm(forms.Form):
         if not result.is_success:
             logger.error('Error response received from Braintree API')
 
-            # Restore unbound fields.
+            # Restore unbound fields so that error messages can be displayed.
             self.fields = self.unbound_fields
 
             # Remove duplicate validation errors from the API response.
@@ -96,8 +104,11 @@ class PaymentForm(forms.Form):
                 if error.attribute in self.fields:
                     self.add_error(error.attribute, error.message)
                 elif error.code in ['81801']:
+                    # Map Braintree 'base' attribute Error 81801
+                    # "Addresses must have at least one field filled in."
+                    # to `postal_code` field.
                     self.add_error('postal_code', 'Postal code is required.')
-                else:
+                elif error.attribute not in ['base', 'payment_method_nonce']:
                     self.add_error(
                         None,
                         (('There was a problem processing your payment!\n'
@@ -107,5 +118,7 @@ class PaymentForm(forms.Form):
                     'Error %s: %s (\'%s\' attribute)' %
                     (error.code, error.message, error.attribute)
                 )
+        else:
+            logger.info('Sales transaction succeeded!')
 
         return result
