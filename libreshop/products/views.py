@@ -57,10 +57,11 @@ class HomePageView(FormView):
         product = Product.objects.get(sku='1000')
 
         session_cart = SessionList(self.request.session)
-
-        variant_ids = [id_ for id_ in session_cart]
-        cart = Variant.objects.filter(id__in=variant_ids)
-        total = sum([variant.price for variant in cart])
+        cart = [
+            variant for pk in session_cart
+            for variant in Variant.objects.filter(pk=pk)
+        ]
+        total = sum(variant.price for variant in cart)
 
         context.update({
             'product': product,
