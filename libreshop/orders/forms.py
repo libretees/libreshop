@@ -70,11 +70,10 @@ class PaymentForm(forms.Form):
             }
 
 
-    def full_clean(self):
-        super(PaymentForm, self).full_clean()
-
-        if hasattr(self, 'cleaned_data'):
-            self.create_transaction('10.00')
+    def clean(self):
+        self.cleaned_data = super(PaymentForm, self).clean()
+        self.create_transaction('10.00')
+        return self.cleaned_data
 
 
     def create_transaction(self, total):
