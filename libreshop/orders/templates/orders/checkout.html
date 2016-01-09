@@ -7,18 +7,23 @@
 
 <div id='checkout-progress' class='clearfix'>
   {% for i, step in steps %}
-  <div class='pull-left'>
-    {% if i == current_position %}
-    <p class='text-center'>{{ step.name }}</p>
-    <img src="{% static 'images/current.png' %}" />
-    {% elif i < current_position %}
-    <p class='text-center text-success'>{{ step.name }}</p>
-    <img src="{% static 'images/checked.png' %}" />
-    {% else %}
-    <p class='text-center text-muted'>{{ step.name }}</p>
-    <img src="{% static 'images/circled.png' %}" />
-    {% endif %}
-  </div>
+    <div class='pull-left'>
+      {% if i == current_position %}
+        {% if form.is_bound and not form.is_valid %}
+          <p class='text-center text-danger'>{{ step.name }}</p>
+          <img src="{% static 'images/error.png' %}" />
+        {% else %}
+          <p class='text-center'>{{ step.name }}</p>
+          <img src="{% static 'images/current.png' %}" />
+        {% endif %}
+      {% elif i < current_position %}
+        <p class='text-center text-success'>{{ step.name }}</p>
+        <img src="{% static 'images/checked.png' %}" />
+      {% else %}
+        <p class='text-center text-muted'>{{ step.name }}</p>
+        <img src="{% static 'images/circled.png' %}" />
+      {% endif %}
+    </div>
   {% endfor %}
 </div>
 
