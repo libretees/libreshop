@@ -5,16 +5,25 @@
 {% block content %}
 <!-- Main component for a primary marketing message or call to action -->
 
-{% for i in total_steps %}
-  {% if i == current_position %}
+<div id='checkout-progress' class='clearfix'>
+  {% for i, step in steps %}
+  <div class='pull-left'>
+    {% if i == current_position %}
+    <p class='text-center'>{{ step.name }}</p>
     <img src="{% static 'images/current.png' %}" />
-  {% elif i < current_position %}
+    {% elif i < current_position %}
+    <p class='text-center text-success'>{{ step.name }}</p>
     <img src="{% static 'images/checked.png' %}" />
-  {% else %}
+    {% else %}
+    <p class='text-center text-muted'>{{ step.name }}</p>
     <img src="{% static 'images/circled.png' %}" />
-  {% endif %}
-{% endfor %}
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
 <h1>{{ description }}</h1>
+
 <div class="jumbotron">
 
   <form method='POST' id='checkout'>

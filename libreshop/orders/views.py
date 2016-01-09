@@ -70,7 +70,7 @@ class CheckoutFormView(FormView):
 
         self.steps = (
             {
-                'name': 'shipping_address',
+                'name': 'shipping',
                 'form_class': AddressForm,
                 'template': 'orders/checkout.html',
                 'context': {
@@ -223,7 +223,7 @@ class CheckoutFormView(FormView):
         context.update({
             'cart': cart,
             'current_position': current_position,
-            'total_steps': range(len(self.steps)),
+            'steps': enumerate(self.steps),
         })
 
         step_context = self.current_step['context']
