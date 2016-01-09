@@ -61,6 +61,8 @@ class PaymentForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
 
+        self.amount = kwargs.pop('amount', None)
+
         super(PaymentForm, self).__init__(*args, **kwargs)
 
         if self.is_bound:
@@ -72,16 +74,17 @@ class PaymentForm(forms.Form):
 
     def clean(self):
         self.cleaned_data = super(PaymentForm, self).clean()
-        self.create_transaction('10.00')
+        if self.amount:
+            self.create_transaction(self.amount)
         return self.cleaned_data
 
 
-    def create_transaction(self, total):
+    def create_transaction(self, amount):
 
         # Attempt to create a sales transaction.
         logger.info('Attempting sales transaction...')
         result = braintree.Transaction.sale({
-            'amount': total,
+            'amount': amount,
             'payment_method_nonce': self.cleaned_data['payment_method_nonce']
         })
 

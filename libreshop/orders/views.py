@@ -68,6 +68,13 @@ class CheckoutFormView(FormView):
 
     def dispatch(self, request, *args, **kwargs):
 
+        session_cart = SessionList(self.request.session)
+        self.cart = [
+            variant for pk in session_cart
+            for variant in Variant.objects.filter(pk=pk)
+        ]
+        self.total = sum(variant.price for variant in self.cart)
+
         self.steps = (
             {
                 'name': 'shipping',
@@ -81,6 +88,9 @@ class CheckoutFormView(FormView):
                 'name': 'payment',
                 'form_class': PaymentForm,
                 'template': 'orders/checkout.html',
+                'form_kwargs': {
+                    'amount': self.total
+                },
                 'context': {
                     'description': 'how are you paying?',
                     'client_token': self.client_token
@@ -209,19 +219,13 @@ class CheckoutFormView(FormView):
     def get_context_data(self, **kwargs):
         context = super(CheckoutFormView, self).get_context_data(**kwargs)
 
-        session_cart = SessionList(self.request.session)
-
-        variant_ids = [id_ for id_ in session_cart]
-        cart = Variant.objects.filter(id__in=variant_ids)
-        total = sum([variant.price for variant in cart])
-
         current_position = next(
             i for (i, step) in enumerate(self.steps)
             if step['name'] == self.current_step['name']
         )
 
         context.update({
-            'cart': cart,
+            'cart': self.cart,
             'current_position': current_position,
             'steps': enumerate(self.steps),
         })
