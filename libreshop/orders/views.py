@@ -198,6 +198,7 @@ class CheckoutFormView(FormView):
                 form = form_class(data=session_data[step_name])
                 if not form.is_valid():
                     is_valid = False
+                    break
 
         return is_valid
 
@@ -226,6 +227,7 @@ class CheckoutFormView(FormView):
 
         context.update({
             'cart': self.cart,
+            'subtotal': self.total,
             'current_position': current_position,
             'steps': enumerate(self.steps),
         })
