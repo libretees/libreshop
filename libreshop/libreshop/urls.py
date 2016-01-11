@@ -16,14 +16,13 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from products.views import HomePageView
-from orders.views import CheckoutFormView
 import api.urls
 import carts.urls
 import customers.urls
 
 urlpatterns = [
     url(r'^$', HomePageView.as_view(), name='home'),
-    url(r'^checkout/', CheckoutFormView.as_view(), name='checkout'),
+    url(r'^checkout/', include('orders.urls', namespace='checkout')),
     url(r'', include('social.apps.django_app.urls', namespace='social')),
     url(r'^api/', include(api.urls)),
     url(r'^cart/', include(carts.urls)),
