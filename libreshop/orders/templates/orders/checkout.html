@@ -2,6 +2,11 @@
 {% load staticfiles %}
 {% load widget_tweaks %}
 
+{% block head_extension %}
+<!-- Checkout CSS -->
+<link href="{% static 'css/orders.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
 <!-- Main component for a primary marketing message or call to action -->
 
@@ -26,8 +31,26 @@
     </div>
   {% endfor %}
   <div class='pull-right'>
-    <h2>${{ subtotal }}</h2>
-    <p>subtotal</p>
+    <div class='pull-left'>
+      <h2>${{ subtotal }}</h2>
+      <p>subtotal</p>
+    </div>
+    {% if shipping_cost %}
+      <div class='pull-left'>
+        <span class='fa fa-plus math'></span>
+      </div>
+      <div class='pull-left'>
+        <h2>${{ shipping_cost }}</h2>
+        <p>shipping</p>
+      </div>
+      <div class='pull-left'>
+        <span class='fa fa-arrow-right math'></span>
+      </div>
+      <div class='pull-left'>
+        <h2>${{ total }}</h2>
+        <p>total</p>
+      </div>
+    {% endif %}
   </div>
 </div>
 
