@@ -5,7 +5,7 @@ from ..utils import SessionList
 # Create your tests here.
 class SessionListTest(TestCase):
 
-    def test_sessionlist_module_has_uuid(self):
+    def test_session_list_module_has_uuid(self):
         '''
         Test that SessionList uses a universally unique identifier (UUID).
         '''
@@ -14,7 +14,7 @@ class SessionListTest(TestCase):
         self.assertIsNotNone(uuid)
 
 
-    def test_sessionlist_has_session_attribute(self):
+    def test_session_list_has_session_attribute(self):
         '''
         Test that SessionList.session is present.
         '''
@@ -23,7 +23,7 @@ class SessionListTest(TestCase):
         self.assertIsNotNone(session)
 
 
-    def test_sessionlist_creates_key_within_session_variable(self):
+    def test_session_list_creates_key_within_session_variable(self):
         '''
         Test that SessionList creates a key within request.session.
         '''
@@ -35,7 +35,7 @@ class SessionListTest(TestCase):
         self.assertTrue(key_created)
 
 
-    def test_sessionlist_maintains_list_within_session_variable(self):
+    def test_session_list_maintains_list_within_session_variable(self):
         '''
         Test that SessionList maintains a list within request.session.
         '''
@@ -47,7 +47,7 @@ class SessionListTest(TestCase):
         self.assertIsInstance(value, list)
 
 
-    def test_sessionlist_does_not_maintain_self_within_session_variable(self):
+    def test_session_list_does_not_maintain_self_within_session_variable(self):
         '''
         Test that SessionList does not maintain itself within request.session.
         '''
@@ -59,7 +59,7 @@ class SessionListTest(TestCase):
         self.assertNotIsInstance(value, SessionList)
 
 
-    def test_sessionlist_can_be_instantiated_with_a_list(self):
+    def test_session_list_can_be_instantiated_with_a_list(self):
         '''
         Test that SessionList can be instantiated with a list.
         '''
@@ -69,7 +69,7 @@ class SessionListTest(TestCase):
         self.assertEqual(session_list2, ['foo', 'bar'])
 
 
-    def test_sessionlist_can_append_items_to_list(self):
+    def test_session_list_can_append_items_to_list(self):
         '''
         Test that SessionList can append items to request.session.
         '''
@@ -80,7 +80,7 @@ class SessionListTest(TestCase):
         self.assertEqual(session_list2, ['foo'])
 
 
-    def test_sessionlist_can_extend_list_with_another_list(self):
+    def test_session_list_can_extend_list_with_another_list(self):
         '''
         Test that SessionList can extend request.session with another list.
         '''
@@ -91,7 +91,7 @@ class SessionListTest(TestCase):
         self.assertEqual(session_list2, ['foo', 'bar'])
 
 
-    def test_sessionlist_can_insert_an_item_at_a_given_position(self):
+    def test_session_list_can_insert_an_item_at_a_given_position(self):
         '''
         Test that SessionList can insert an item to request.session at a given
         position.
@@ -104,7 +104,7 @@ class SessionListTest(TestCase):
         self.assertEqual(session_list2, ['foo', 'bar'])
 
 
-    def test_sessionlist_can_delete_an_item_at_a_given_position(self):
+    def test_session_list_can_delete_an_item_at_a_given_position(self):
         '''
         Test that SessionList can delete an item from request.session at a given
         position.
@@ -117,7 +117,7 @@ class SessionListTest(TestCase):
         self.assertEqual(session_list3, ['foo'])
 
 
-    def test_sessionlist_can_update_an_item_at_a_given_position(self):
+    def test_session_list_can_update_an_item_at_a_given_position(self):
         '''
         Test that SessionList can update an item in request.session at a given
         position.
@@ -129,7 +129,7 @@ class SessionListTest(TestCase):
         self.assertEqual(session_list2, ['bar'])
 
 
-    def test_sessionlist_can_add_a_list_to_itself(self):
+    def test_session_list_can_add_a_list_to_itself(self):
         '''
         Test that SessionList can add a list to request.session.
         '''
@@ -140,7 +140,7 @@ class SessionListTest(TestCase):
         self.assertEqual(session_list2, ['foo', 'bar'])
 
 
-    def test_sessionlist_can_duplicate_itself_by_an_integer_amount(self):
+    def test_session_list_can_duplicate_itself_by_an_integer_amount(self):
         '''
         Test that SessionList can duplicate itself within request.session.
         '''
@@ -151,7 +151,7 @@ class SessionListTest(TestCase):
         self.assertEqual(session_list2, [1, 1, 1])
 
 
-    def test_sessionlist_can_remove_item(self):
+    def test_session_list_can_remove_item(self):
         '''
         Test that SessionList can remove an item from request.session.
         '''
@@ -163,7 +163,7 @@ class SessionListTest(TestCase):
         self.assertEqual(session_list3, ['foo'])
 
 
-    def test_sessionlist_pop_removes_item_from_session(self):
+    def test_session_list_pop_removes_item_from_session(self):
         '''
         Test that the SessionList.pop function removes an item from a given
         position in request.session.
@@ -176,7 +176,7 @@ class SessionListTest(TestCase):
         self.assertEqual(session_list3, ['foo'])
 
 
-    def test_sessionlist_pop_returns_item_from_session(self):
+    def test_session_list_pop_returns_item_from_session(self):
         '''
         Test that the SessionList.pop function returns an item from a given
         position in request.session.
@@ -190,7 +190,7 @@ class SessionListTest(TestCase):
         self.assertEqual([val1, val2], ['foo', 'bar'])
 
 
-    def test_sessionlist_can_clear_all_items(self):
+    def test_session_list_can_clear_all_items(self):
         '''
         Test that SessionList can clear all items from request.session.
         '''
@@ -202,7 +202,7 @@ class SessionListTest(TestCase):
         self.assertEqual(session_list3, [])
 
 
-    def test_sessionlist_can_sort_items(self):
+    def test_session_list_can_sort_items(self):
         '''
         Test that SessionList can sort the items in request.session.
         '''
@@ -214,7 +214,7 @@ class SessionListTest(TestCase):
         self.assertEqual(session_list3, [1, 2, 3])
 
 
-    def test_sessionlist_can_reverse_items(self):
+    def test_session_list_can_reverse_items(self):
         '''
         Test that SessionList can reverse the items in request.session.
         '''

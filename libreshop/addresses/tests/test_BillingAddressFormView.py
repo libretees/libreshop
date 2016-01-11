@@ -14,7 +14,6 @@ class BillingAddressFormViewTest(TestCase):
         Test that the View extends addresses.views.AddressFormView.
         '''
         view = BillingAddressFormView()
-
         self.assertIsInstance(view, AddressFormView)
 
 

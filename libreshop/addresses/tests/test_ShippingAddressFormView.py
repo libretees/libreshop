@@ -5,7 +5,6 @@ from django.test import TestCase
 from ..forms import AddressForm
 from ..views import AddressFormView, ShippingAddressFormView
 
-
 # Create your tests here.
 class ShippingAddressFormViewTest(TestCase):
 
@@ -14,7 +13,6 @@ class ShippingAddressFormViewTest(TestCase):
         Test that the View extends addresses.views.AddressFormView.
         '''
         view = ShippingAddressFormView()
-
         self.assertIsInstance(view, AddressFormView)
 
 
