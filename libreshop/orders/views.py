@@ -1,9 +1,12 @@
+import importlib
 import logging
 import braintree
+from decimal import Decimal, ROUND_HALF_UP
+from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse
 from django.template.response import TemplateResponse
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
 from ipware.ip import get_real_ip
 from addresses.forms import AddressForm
 from carts import SessionList
@@ -13,11 +16,39 @@ from .forms import PaymentForm
 # Set a universally unique identifier (UUID).
 UUID = '9bf75036-ec58-4188-be12-4f983cac7e55'
 
-
 # Initialize logger.
 logger = logging.getLogger(__name__)
 
+
+def calculate_shipping_cost(*args, **kwargs):
+
+    results = []
+    for api_name in settings.SHIPPING_APIS:
+        index = api_name.rfind('.')
+        module_name, attribute_name = api_name[:index], api_name[index+1:]
+        module, function = None, None
+        try:
+            module = importlib.import_module(module_name)
+            function = getattr(module, attribute_name)
+        except ImportError as e:
+            logger.critical('Unable to import module \'%s\'.' % module_name)
+        except AttributeError as e:
+            logger.critical('\'%s\' module has no attribute \'%s\'.' %
+                (module_name, attribute_name))
+        else:
+            logger.info('Calling \'%s.%s\'...' % (module_name, attribute_name))
+            result = function(*args, **kwargs)
+            logger.info('Called \'%s.%s\'.' % (module_name, attribute_name))
+            results.append(result)
+
+    return Decimal(results[0]).quantize(Decimal('1.00'), rounding=ROUND_HALF_UP) if results else None
+
 # Create views here.
+class ConfirmationView(TemplateView):
+
+    template_name = 'orders/confirmation.html'
+
+
 class CheckoutFormView(FormView):
 
     form_class = AddressForm
@@ -68,12 +99,32 @@ class CheckoutFormView(FormView):
 
     def dispatch(self, request, *args, **kwargs):
 
+        if not self.request.session.has_key(UUID):
+            self.request.session[UUID] = {}
+
         session_cart = SessionList(self.request.session)
         self.cart = [
             variant for pk in session_cart
             for variant in Variant.objects.filter(pk=pk)
         ]
-        self.total = sum(variant.price for variant in self.cart)
+        self.subtotal = sum(variant.price for variant in self.cart)
+
+        self.shipping_address = self.request.session[UUID].get('shipping')
+        self.shipping_cost = None
+
+        if self.shipping_address:
+            products = {
+                'id': 'anvil-fashion-fit-t-shirt',
+                'color': 'Green Apple',
+                'size': 'lrg',
+                'quantity': len(self.cart)
+            }
+            self.shipping_cost = calculate_shipping_cost(
+                address=self.shipping_address,
+                products=products
+            )
+
+        print(type(self.shipping_cost), type(self.subtotal))
 
         self.steps = (
             {
@@ -89,11 +140,19 @@ class CheckoutFormView(FormView):
                 'form_class': PaymentForm,
                 'template': 'orders/checkout.html',
                 'form_kwargs': {
-                    'amount': self.total
+                    'amount': (
+                        (self.subtotal + self.shipping_cost)
+                        if self.shipping_cost else 0.00
+                    )
                 },
                 'context': {
                     'description': 'how are you paying?',
-                    'client_token': self.client_token
+                    'client_token': self.client_token,
+                    'shipping_cost': self.shipping_cost,
+                    'total': (
+                        (self.subtotal + self.shipping_cost)
+                        if self.shipping_cost else 0.00
+                    )
                 }
             },
         )
@@ -170,9 +229,6 @@ class CheckoutFormView(FormView):
 
     def form_valid(self, form):
 
-        if not self.request.session.has_key(UUID):
-            self.request.session[UUID] = {}
-
         self.request.session[UUID].update({
             self.current_step['name']: form.cleaned_data,
         })
@@ -204,15 +260,15 @@ class CheckoutFormView(FormView):
 
 
     def get_success_url(self):
-        logger.debug('Getting Success URL...')
+        logger.info('Getting Success URL...')
 
         if self.get_current_step():
-            url = reverse_lazy('checkout')
+            url = reverse('checkout:main')
         else:
-            url = self.success_url
+            url = reverse('checkout:confirmation')
             del self.request.session[UUID]
 
-        logger.debug('Redirecting to %s' % url)
+        logger.info('Redirecting to %s' % url)
 
         return url
 
@@ -227,7 +283,7 @@ class CheckoutFormView(FormView):
 
         context.update({
             'cart': self.cart,
-            'subtotal': self.total,
+            'subtotal': self.subtotal,
             'current_position': current_position,
             'steps': enumerate(self.steps),
         })
