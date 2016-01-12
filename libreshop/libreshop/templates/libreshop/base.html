@@ -71,9 +71,11 @@
         {% endblock %}
     </div> <!-- /container -->
 
-    <footer class="footer">
-      <div class="container">
-        <p class="text-muted">Id iuvaret meliore mel, vim cu inani elitr primis, eum prompta gloriatur rationibus no.</p>
+    <footer class='footer'>
+      <div class='container'>
+        {% if DEFAULT_FROM_EMAIL %}
+          <p class='text-muted'>Contact us at {{ DEFAULT_FROM_EMAIL }}</p>
+        {% endif %}
       </div>
     </footer>
 
