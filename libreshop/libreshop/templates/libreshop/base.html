@@ -39,43 +39,60 @@
     <![endif]-->
   </head>
   <body>
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="{% url 'home' %}">LibreShop</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            {% if cart %}
-            <li>
-              <a href="#">
-                <span class='fa fa-lg fa-shopping-cart'></span>
-                <span class='badge'>{{ cart|length }}</span>
-              </a>
-            </li>
-            {% endif %}
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+    <div id='main-wrapper'>
 
-    <div class="container">
+      <!-- Fixed navbar -->
+      <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'home' %}">LibreShop</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              {% if cart %}
+              <li>
+                <a href="#">
+                  <span class='fa fa-lg fa-shopping-cart'></span>
+                  <span class='badge'>{{ cart|length }}</span>
+                </a>
+              </li>
+              {% endif %}
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+
+      <div class='container'>
         {% block content %}
         {% endblock %}
-    </div> <!-- /container -->
+      </div> <!-- /container -->
+
+      <div class='push'></div>
+    </div>
 
     <footer class='footer'>
       <div class='container'>
-        {% if DEFAULT_FROM_EMAIL %}
-          <p class='text-muted'>Contact us at {{ DEFAULT_FROM_EMAIL }}</p>
-        {% endif %}
+        <div class='row'>
+          <div class='col-md-6'>
+            <p>Legal</p>
+            <ul>
+              <li><a href='{% url 'return-policy' %}'>Return Policy</a></li>
+              <li><a href='{% url 'privacy-policy' %}'>Privacy Policy</a></li>
+              <li><a href='{% url 'terms-and-conditions' %}'>Terms & Conditions</a></li>
+            </ul>
+          </div>
+          <div class='col-md-6'>
+            {% if EMAIL_ADDRESS %}
+              <p class='text-muted'>Questions? Contact us at {{ EMAIL_ADDRESS }}</p>
+            {% endif %}
+          </div>
+        </div>
       </div>
     </footer>
 
