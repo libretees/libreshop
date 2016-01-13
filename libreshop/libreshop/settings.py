@@ -136,7 +136,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'libreshop.context_processors.default_from_email',
+                'libreshop.context_processors.business',
             ],
         },
     },
@@ -248,3 +248,7 @@ braintree.Configuration.configure(braintree.Environment.Sandbox,
                                   merchant_id=BT_MERCHANT_ID,
                                   public_key=BT_PUBLIC_KEY,
                                   private_key=BT_PRIVATE_KEY)
+
+BUSINESS_NAME = 'LibreShop'
+LEGAL_NAME = 'LibreShop, LLC'
+JURISDICTION = 'The United States'

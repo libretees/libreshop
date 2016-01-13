@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.views.generic import TemplateView
 from products.views import HomePageView
 import api.urls
 import carts.urls
@@ -23,6 +24,27 @@ import customers.urls
 urlpatterns = [
     url(r'^$', HomePageView.as_view(), name='home'),
     url(r'^checkout/', include('orders.urls', namespace='checkout')),
+    # Add URL for Privacy Policy.
+    url(r'^policy/privacy-policy',
+        TemplateView.as_view(
+            template_name='libreshop/privacy_policy.html'
+        ),
+        name='privacy-policy'
+    ),
+    # Add URL for Website Terms and Conditions.
+    url(r'^policy/terms-and-conditions',
+        TemplateView.as_view(
+            template_name='libreshop/terms_and_conditions.html'
+        ),
+        name='terms-and-conditions'
+    ),
+    # Add URL for Refund Policy.
+    url(r'^policy/return-policy',
+        TemplateView.as_view(
+            template_name='libreshop/return_policy.html'
+        ),
+        name='return-policy'
+    ),
     url(r'', include('social.apps.django_app.urls', namespace='social')),
     url(r'^api/', include(api.urls)),
     url(r'^cart/', include(carts.urls)),

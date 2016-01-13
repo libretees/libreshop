@@ -7,10 +7,11 @@ from django.utils.html import format_html
 logger = logging.getLogger(__name__)
 
 
-def default_from_email(request):
+def business(request):
     '''
     If this processor is enabled, every RequestContext will contain a variable
-    DEFAULT_FROM_EMAIL, providing the value of the DEFAULT_FROM_EMAIL setting.
+    EMAIL_ADDRESS, providing a mailto link generated from the DEFAULT_FROM_EMAIL
+    setting, BUSINESS_NAME, LEGAL_NAME, and JURISDICTION.
     '''
     context = {}
     default_from_email = settings.DEFAULT_FROM_EMAIL
@@ -23,11 +24,17 @@ def default_from_email(request):
             logger.error(('Could not extract the email address specified in the'
                 ' DEFAULT_FROM_EMAIL setting.'))
         else:
-            link = format_html(
+            mailto_link = format_html(
                 '<a href=\'mailto:{}\'>{}</a>', email_address, email_address
             )
             context.update({
-                'DEFAULT_FROM_EMAIL': link,
+                'EMAIL_ADDRESS': mailto_link,
             })
+
+    context.update({
+        'BUSINESS_NAME': settings.BUSINESS_NAME,
+        'LEGAL_NAME': settings.LEGAL_NAME,
+        'JURISDICTION': settings.JURISDICTION,
+    })
 
     return context
