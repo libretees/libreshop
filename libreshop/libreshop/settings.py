@@ -252,3 +252,6 @@ braintree.Configuration.configure(braintree.Environment.Sandbox,
 BUSINESS_NAME = 'LibreShop'
 LEGAL_NAME = 'LibreShop, LLC'
 JURISDICTION = 'The United States'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

@@ -30,6 +30,9 @@ class Product(TimeStampedModel):
 
     sku = models.CharField(max_length=8, unique=True, null=False, blank=False)
     name = models.CharField(max_length=64, unique=True, null=False, blank=False)
+    image = models.ImageField(
+        upload_to='images/product', max_length=255, null=True, blank=True
+    )
 
     objects = ProductManager()
 

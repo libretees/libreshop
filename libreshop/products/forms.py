@@ -41,7 +41,7 @@ class RelatedFieldWidgetWrapper(admin.widgets.RelatedFieldWidgetWrapper):
 class ProductChangeForm(forms.ModelForm):
     class Meta:
         model = models.Product
-        fields = ('sku', 'name')
+        fields = ('sku', 'name', 'image',)
 
     variants = forms.ModelMultipleChoiceField(label='Enabled Variants',
         widget=admin.widgets.FilteredSelectMultiple('Variants', False),

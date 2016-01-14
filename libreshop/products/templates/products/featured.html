@@ -12,7 +12,9 @@
     <div class="jumbotron">
       <div class="row">
         <div class='jumbotron-content col-md-5'>
-        {% if cart %}
+        {% if product.image %}
+          <img src="{{ product.image.url }}" class="img-responsive">
+        {% elif cart and not product.image %}
           <img data-src="holder.js/285x400?bg=555555" class="img-responsive">
         {% else %}
           <img data-src="holder.js/400x500?bg=555555" class="img-responsive">
