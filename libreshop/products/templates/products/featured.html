@@ -22,8 +22,7 @@
         </div>
         <div class='jumbotron-content col-md-7'>
           <h1 id='product-name'>{{ product.name }}</h1>
-          <p>dolor sit amet, solet legimus suscipit an vis. Nec autem soluta alienum ne, eos rationibus assueverit et.</p>
-          <p>Ius case detracto ex, at perfecto perpetua neglegentur sed.</p>
+          <p>{{ product.description }}</p>
 
           <form method='POST'>
           {% csrf_token %}

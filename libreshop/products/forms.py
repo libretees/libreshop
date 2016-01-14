@@ -2,7 +2,7 @@ import re
 import logging
 from xml.etree import ElementTree
 from django import forms
-from django.forms.widgets import Select
+from django.forms.widgets import Select, Textarea
 from django.forms.utils import ErrorList
 from django.contrib import admin
 from django.db.models.fields.related import OneToOneRel
@@ -41,7 +41,8 @@ class RelatedFieldWidgetWrapper(admin.widgets.RelatedFieldWidgetWrapper):
 class ProductChangeForm(forms.ModelForm):
     class Meta:
         model = models.Product
-        fields = ('sku', 'name', 'image',)
+        fields = ('sku', 'name', 'description', 'image',)
+        widgets = {'description': Textarea(attrs={'cols': 80, 'rows': 5})}
 
     variants = forms.ModelMultipleChoiceField(label='Enabled Variants',
         widget=admin.widgets.FilteredSelectMultiple('Variants', False),
