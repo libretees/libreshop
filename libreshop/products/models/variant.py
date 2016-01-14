@@ -129,18 +129,21 @@ class Variant(TimeStampedModel):
             if sub_sku_queryset.exists():
                 validation_errors['sub_sku'] = ['Variant Sub-SKU for this Product already exists',]
 
-            similar_skus = (
-                [product.sku + variant.sub_sku
-                    for product in Product.objects.filter(
-                        sku__istartswith=self.product.sku[0]
-                    )
-                    for variant in product.variant_set.filter(
-                        sub_sku__iendswith=self.sub_sku[-1]
-                    )
-                ]
-            )
+            similar_skus = [
+                product.sku + variant.sub_sku
+                for product in Product.objects.filter(
+                    sku__istartswith=self.product.sku[0]
+                ).exclude(pk=self.product.pk)
+                for variant in product.variant_set.filter(
+                    sub_sku__iendswith=self.sub_sku[-1]
+                )
+            ]
 
             if self.sku in similar_skus:
+                logger.error(
+                    'Variant SKU is not unique. SKU \'%s\' found in [%s].' %
+                    (self.sku, ', '.join(similar_skus))
+                )
                 validation_errors['sub_sku'] = ['Product SKU and Variant Sub-SKU are not unique at the catalog level',]
 
         if self.name:
