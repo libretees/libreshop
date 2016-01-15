@@ -2,8 +2,8 @@ import logging
 from django.http import HttpRequest
 from django.test import TestCase
 from inventory.models import Inventory, Attribute, Attribute_Value
-from ..forms import ProductOrderForm
-from ..models import Product, Variant, Component
+from ...forms import ProductOrderForm
+from ...models import Product, Variant, Component
 
 # Initialize logger.
 logger = logging.getLogger(__name__)

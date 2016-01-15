@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from decimal import Decimal
 from django.test import TestCase
 from inventory.models import Inventory, Attribute, Attribute_Value
-from ..models import Product, Variant, Component
+from ...models import Product, Variant, Component
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -256,12 +256,31 @@ class VariantModelTest(TestCase):
         Test that Variant.product and Variant.sub_sku are unique together regardless of character case.
         '''
         product = Product.objects.create(sku='foo', name='foo')
-        variant = Variant.objects.filter(product=product)[0]
+        variant = Variant.objects.get(product=product)
         variant.sub_sku = 'foo'
         variant.save()
         func = Variant.objects.create
         self.assertRaises(ValidationError, func, product=product, name='bar',
             sub_sku='Foo')
+
+
+    def test_model_product_and_sub_sku_fields_do_not_invalidate_self_on_subsequent_save(self):
+        '''
+        Test that Variant.product and Variant.sub_sku does not cause the Variant
+        to raise a ValidationError against its own data on a subsequent save.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.get(product=product)
+        variant.sub_sku = 'foo'
+        variant.save()
+        execption_raised = False
+
+        try:
+            variant.save()
+        except ValidationError as e:
+            execption_raised = True
+
+        self.assertFalse(execption_raised)
 
 
     def test_different_products_can_have_same_variant_sub_sku(self):
