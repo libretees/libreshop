@@ -43,15 +43,15 @@ class AddressFormTest(TestCase):
         self.assertIn('street_address', fields)
 
 
-    def test_municipality_field_is_displayed(self):
+    def test_locality_field_is_displayed(self):
         '''
-        Test that the `municipality` field is displayed on the form.
+        Test that the `locality` field is displayed on the form.
         '''
         form = AddressForm()
 
         fields = form._meta.fields
 
-        self.assertIn('municipality', fields)
+        self.assertIn('locality', fields)
 
 
     def test_region_field_is_displayed(self):
@@ -111,14 +111,14 @@ class AddressFormTest(TestCase):
         self.assertIsNotNone(label)
 
 
-    def test_municipality_field_has_custom_label(self):
+    def test_locality_field_has_custom_label(self):
         '''
-        Test that the `municipality` field has a custom label.
+        Test that the `locality` field has a custom label.
         '''
         form = AddressForm()
 
         labels = form._meta.labels
-        label = labels.get('municipality', None)
+        label = labels.get('locality', None)
 
         self.assertIsNotNone(label)
 
@@ -268,3 +268,54 @@ class AddressFormTest(TestCase):
 
         postal_code = cleaned_data.get('postal_code')
         self.assertIsNone(postal_code)
+
+
+class AddressFormPostalCodeFieldTest(TestCase):
+
+    def get_form_errors(self, country, postal_code):
+        '''
+        Utility function to calculate the AddressForm.errors dict.
+        '''
+        form = AddressForm()
+        cleaned_data = {
+            'country': country,
+            'postal_code': postal_code,
+        }
+
+        with patch('django.forms.ModelForm.clean') as clean_mock:
+            clean_mock.return_value = cleaned_data
+            cleaned_data = form.clean()
+
+        form_errors = form.errors.get('postal_code')
+
+        return form_errors
+
+
+    def assert_valid(self, country, postal_code):
+        form_errors = self.get_form_errors(country, postal_code)
+        self.assertIsNone(form_errors)
+
+
+    def assert_invalid(self, country, postal_code):
+        form_errors = self.get_form_errors(country, postal_code)
+        self.assertIsNotNone(form_errors)
+
+
+    def test_form_properly_validates_postal_codes_used_for_the_united_states(self):
+        '''
+        Test that an error is added to the AddressForm when an invalid Postal
+        Code is used for The United States.
+        '''
+        self.assert_valid('US', '12345')
+        self.assert_valid('US', '12345-1234')
+
+        self.assert_invalid('US', '1234')
+        self.assert_invalid('US', '123456')
+        self.assert_invalid('US', '1234a')
+        self.assert_invalid('US', '12345-')
+        self.assert_invalid('US', '12345-1')
+        self.assert_invalid('US', '12345-12')
+        self.assert_invalid('US', '12345-123')
+        self.assert_invalid('US', '12345 1')
+        self.assert_invalid('US', '12345 12')
+        self.assert_invalid('US', '12345 123')

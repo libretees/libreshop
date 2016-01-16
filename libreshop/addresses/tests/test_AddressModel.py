@@ -124,58 +124,58 @@ class AddressModelTest(TestCase):
         self.assertEqual(max_length, 1024)
 
 
-    def test_model_has_municipality_field(self):
+    def test_model_has_locality_field(self):
         '''
-        Test that Address.municipality is present.
-        '''
-        address = Address()
-        municipality = None
-        try:
-            municipality = address._meta.get_field('municipality')
-        except:
-            pass
-        self.assertIsNotNone(municipality)
-
-
-    def test_model_municipality_field_is_required(self):
-        '''
-        Test that Address.municipality is required.
+        Test that Address.locality is present.
         '''
         address = Address()
-        municipality = None
+        locality = None
         try:
-            municipality = address._meta.get_field('municipality')
+            locality = address._meta.get_field('locality')
         except:
             pass
-        nullable = getattr(municipality, 'null', None)
+        self.assertIsNotNone(locality)
+
+
+    def test_model_locality_field_is_required(self):
+        '''
+        Test that Address.locality is required.
+        '''
+        address = Address()
+        locality = None
+        try:
+            locality = address._meta.get_field('locality')
+        except:
+            pass
+        nullable = getattr(locality, 'null', None)
         self.assertFalse(nullable)
 
 
-    def test_model_municipality_field_cannot_be_blank(self):
+    def test_model_locality_field_cannot_be_blank(self):
         '''
-        Test that Address.municipality does not allow blank values in forms.
+        Test that Address.locality does not allow blank values in forms.
         '''
         address = Address()
-        municipality = None
+        locality = None
         try:
-            municipality = address._meta.get_field('municipality')
+            locality = address._meta.get_field('locality')
         except:
             pass
-        blank = getattr(municipality, 'null', None)
+        blank = getattr(locality, 'null', None)
         self.assertFalse(blank)
 
 
-    def test_model_municipality_field_has_max_length(self):
+    def test_model_locality_field_has_max_length(self):
         '''
-        Test that Address.municipality max length is 16.
+        Test that Address.locality max length is 16.
         '''
         address = Address()
-        municipality = None
+        locality = None
         try:
-            municipality = address._meta.get_field('municipality')
+            locality = address._meta.get_field('locality')
         except:
             pass
-        max_length = getattr(municipality, 'max_length', None)
+        max_length = getattr(locality, 'max_length', None)
         self.assertEqual(max_length, 16)
 
 
