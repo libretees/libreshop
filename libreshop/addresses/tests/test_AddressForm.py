@@ -1,3 +1,4 @@
+import pytest
 from unittest.mock import patch
 from django.forms import Textarea
 from django.test import TestCase
@@ -270,52 +271,51 @@ class AddressFormTest(TestCase):
         self.assertIsNone(postal_code)
 
 
-class AddressFormPostalCodeFieldTest(TestCase):
+def get_form(country, postal_code):
+    '''
+    Utility function to calculate the AddressForm.errors dict.
+    '''
+    form = AddressForm()
+    cleaned_data = {
+        'country': country,
+        'postal_code': postal_code,
+    }
 
-    def get_form_errors(self, country, postal_code):
-        '''
-        Utility function to calculate the AddressForm.errors dict.
-        '''
-        form = AddressForm()
-        cleaned_data = {
-            'country': country,
-            'postal_code': postal_code,
-        }
+    with patch('django.forms.ModelForm.clean') as clean_mock:
+        clean_mock.return_value = cleaned_data
+        cleaned_data = form.clean()
 
-        with patch('django.forms.ModelForm.clean') as clean_mock:
-            clean_mock.return_value = cleaned_data
-            cleaned_data = form.clean()
-
-        form_errors = form.errors.get('postal_code')
-
-        return form_errors
+    return form
 
 
-    def assert_valid(self, country, postal_code):
-        form_errors = self.get_form_errors(country, postal_code)
-        self.assertIsNone(form_errors)
+def assert_valid(country, postal_code):
+    form = get_form(country, postal_code)
+    assert not form.errors
 
 
-    def assert_invalid(self, country, postal_code):
-        form_errors = self.get_form_errors(country, postal_code)
-        self.assertIsNotNone(form_errors)
+def assert_invalid(country, postal_code):
+    form = get_form(country, postal_code)
+    assert form.errors
 
 
-    def test_form_properly_validates_postal_codes_used_for_the_united_states(self):
-        '''
-        Test that an error is added to the AddressForm when an invalid Postal
-        Code is used for The United States.
-        '''
-        self.assert_valid('US', '12345')
-        self.assert_valid('US', '12345-1234')
+@pytest.mark.parametrize('postal_code', [
+    '1234', '123456', '1234a', '12345-', '12345-1', '12345-12', '12345-123',
+    '12345 1', '12345 12', '12345 123'
+])
+def test_form_rejects_invalid_postal_codes_for_the_united_states(postal_code):
+    '''
+    Test that the AddressForm is invalid when an invalid Postal Code is used
+    for an address based in the United States.
+    '''
+    assert_invalid('US', postal_code)
 
-        self.assert_invalid('US', '1234')
-        self.assert_invalid('US', '123456')
-        self.assert_invalid('US', '1234a')
-        self.assert_invalid('US', '12345-')
-        self.assert_invalid('US', '12345-1')
-        self.assert_invalid('US', '12345-12')
-        self.assert_invalid('US', '12345-123')
-        self.assert_invalid('US', '12345 1')
-        self.assert_invalid('US', '12345 12')
-        self.assert_invalid('US', '12345 123')
+
+@pytest.mark.parametrize('postal_code', [
+    '12345', '12345-1234'
+])
+def test_form_accepts_valid_postal_codes_for_the_united_states(postal_code):
+    '''
+    Test that the AddressForm is valid when a valid Postal Code is used for an
+    address based in the United States.
+    '''
+    assert_valid('US', postal_code)
