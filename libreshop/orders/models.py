@@ -8,6 +8,7 @@ class Order(TimeStampedModel):
     shipping_address = models.ForeignKey('addresses.Address', null=True,
         blank=True)
     token = models.CharField(max_length=8, null=False, blank=False, unique=True)
+    fulfilled = models.BooleanField(default=False)
     subtotal = models.DecimalField(max_digits=8, decimal_places=2, null=False,
         blank=False, default=Decimal('0.00'))
     sales_tax = models.DecimalField(max_digits=8, decimal_places=2, null=False,
