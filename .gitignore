@@ -5,6 +5,7 @@
 *.json
 *.sqlite3
 docs/build
+libreshop/media
 browser.png
 MANIFEST
 TODO
