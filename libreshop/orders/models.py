@@ -1,13 +1,35 @@
 from decimal import Decimal
+from random import randrange
 from django.db import models
 from model_utils.models import TimeStampedModel
 
+def get_token(token=None):
+    generate = lambda: '{:08x}'.format(randrange(2**32))
+    if not token:
+        token = generate()
+    while Order.objects.filter(token=token):
+        token = generate()
+    return token
+
 # Create your models here.
+class OrderManager(models.Manager):
+
+    def create(self, *args, **kwargs):
+
+        token = kwargs.pop('token', None)
+        kwargs.update({
+            'token': get_token(token=token)
+        })
+        return super(OrderManager, self).create(*args, **kwargs)
+
+
 class Order(TimeStampedModel):
+
     customer = models.ForeignKey('customers.Customer', null=True, blank=True)
     shipping_address = models.ForeignKey('addresses.Address', null=True,
         blank=True)
-    token = models.CharField(max_length=8, null=False, blank=False, unique=True)
+    token = models.CharField(max_length=8, null=False, blank=False, unique=True,
+        default=get_token)
     fulfilled = models.BooleanField(default=False)
     subtotal = models.DecimalField(max_digits=8, decimal_places=2, null=False,
         blank=False, default=Decimal('0.00'))
@@ -17,6 +39,8 @@ class Order(TimeStampedModel):
         null=False, blank=False, default=Decimal('0.00'))
     total = models.DecimalField(max_digits=8, decimal_places=2, null=False,
         blank=False, default=Decimal('0.00'))
+
+    objects = OrderManager()
 
 
 class Purchase(TimeStampedModel):

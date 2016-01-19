@@ -275,12 +275,11 @@ class CheckoutFormView(FormView):
         self.request.session.modified = True
 
         if not self.get_current_step():
-            self.order_token = '{:08x}'.format(random.randrange(2**32))
             shipping_address = Address.objects.create(**self.shipping_address)
             order = Order.objects.create(shipping_address=shipping_address,
-                token=self.order_token, subtotal=self.subtotal,
-                sales_tax=self.sales_tax, shipping_cost=self.shipping_cost,
-                total=self.total)
+                subtotal=self.subtotal, sales_tax=self.sales_tax,
+                shipping_cost=self.shipping_cost, total=self.total)
+            self.order_token = order.token
             for variant in self.cart:
                 purchase = Purchase.objects.create(
                     order=order, variant=variant, price=variant.price
