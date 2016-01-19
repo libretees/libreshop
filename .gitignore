@@ -2,6 +2,7 @@
 .c9/
 
 # Project-specific files
+*.json
 *.sqlite3
 docs/build
 browser.png
