@@ -1,7 +1,8 @@
 import importlib
 import logging
+import random
 import braintree
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal, ROUND_CEILING
 from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
 from django.core.urlresolvers import reverse
@@ -9,9 +10,11 @@ from django.template.response import TemplateResponse
 from django.views.generic import FormView, TemplateView
 from ipware.ip import get_real_ip
 from addresses.forms import AddressForm
-from carts import SessionList
+from addresses.models import Address
+from carts.utils import SessionList, UUID as CART_UUID
 from products.models import Variant
 from .forms import PaymentForm
+from .models import Order, Purchase, TaxRate
 
 # Set a universally unique identifier (UUID).
 UUID = '9bf75036-ec58-4188-be12-4f983cac7e55'
@@ -41,12 +44,29 @@ def calculate_shipping_cost(*args, **kwargs):
             logger.info('Called \'%s.%s\'.' % (module_name, attribute_name))
             results.append(result)
 
-    return Decimal(results[0]).quantize(Decimal('1.00'), rounding=ROUND_HALF_UP) if results else None
+    return Decimal(results[0]).quantize(Decimal('1.00'), rounding=ROUND_CEILING) if results else Decimal(0.00)
 
 # Create views here.
 class ConfirmationView(TemplateView):
 
     template_name = 'orders/confirmation.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ConfirmationView, self).get_context_data(**kwargs)
+
+        session_data = self.request.session.get(UUID)
+        if session_data:
+            order_token = session_data.get('order_token')
+            if order_token:
+                order = Order.objects.get(token=order_token)
+                purchases = Purchase.objects.filter(order=order)
+                context.update({
+                    'order_token': order_token,
+                    'order': order,
+                    'purchases': purchases,
+                })
+
+        return context
 
 
 class CheckoutFormView(FormView):
@@ -110,7 +130,10 @@ class CheckoutFormView(FormView):
         self.subtotal = sum(variant.price for variant in self.cart)
 
         self.shipping_address = self.request.session[UUID].get('shipping')
-        self.shipping_cost = None
+
+        self.shipping_cost = Decimal(0.00)
+        self.sales_tax = Decimal(0.00)
+        self.total = Decimal(0.00)
 
         if self.shipping_address:
             products = {
@@ -124,7 +147,29 @@ class CheckoutFormView(FormView):
                 products=products
             )
 
-        print(type(self.shipping_cost), type(self.subtotal))
+            if self.shipping_address['country'] == 'US':
+                # Disregard any ZIP+4 information.
+                zip_code = self.shipping_address['postal_code'].split('-')[0]
+
+                tax_rates = {
+                    tax_rate.postal_code: (
+                        tax_rate.state_tax_rate +
+                        tax_rate.district_tax_rate +
+                        tax_rate.county_tax_rate +
+                        tax_rate.local_tax_rate
+                    )
+                    for tax_rate in TaxRate.objects.all()
+                }
+                if zip_code in tax_rates:
+                    sales_tax_rate = Decimal(0.06)
+                    sales_tax = self.subtotal * sales_tax_rate
+                    self.sales_tax = Decimal(sales_tax).quantize(
+                        Decimal('1.00'), rounding=ROUND_CEILING
+                    )
+
+        self.total = (
+            self.subtotal + self.shipping_cost + self.sales_tax
+        )
 
         self.steps = (
             {
@@ -140,19 +185,14 @@ class CheckoutFormView(FormView):
                 'form_class': PaymentForm,
                 'template': 'orders/checkout.html',
                 'form_kwargs': {
-                    'amount': (
-                        (self.subtotal + self.shipping_cost)
-                        if self.shipping_cost else 0.00
-                    )
+                    'amount': self.total
                 },
                 'context': {
                     'description': 'how are you paying?',
                     'client_token': self.client_token,
                     'shipping_cost': self.shipping_cost,
-                    'total': (
-                        (self.subtotal + self.shipping_cost)
-                        if self.shipping_cost else 0.00
-                    )
+                    'sales_tax': self.sales_tax,
+                    'total': self.total
                 }
             },
         )
@@ -234,6 +274,19 @@ class CheckoutFormView(FormView):
         })
         self.request.session.modified = True
 
+        if not self.get_current_step():
+            self.order_token = '{:08x}'.format(random.randrange(2**32))
+            shipping_address = Address.objects.create(**self.shipping_address)
+            order = Order.objects.create(shipping_address=shipping_address,
+                token=self.order_token, subtotal=self.subtotal,
+                sales_tax=self.sales_tax, shipping_cost=self.shipping_cost,
+                total=self.total)
+            for variant in self.cart:
+                purchase = Purchase.objects.create(
+                    order=order, variant=variant, price=variant.price
+                )
+
+
         return super(CheckoutFormView, self).form_valid(form)
 
 
@@ -265,8 +318,12 @@ class CheckoutFormView(FormView):
         if self.get_current_step():
             url = reverse('checkout:main')
         else:
-            url = reverse('checkout:confirmation')
             del self.request.session[UUID]
+            del self.request.session[CART_UUID]
+            self.request.session[UUID] = {
+                'order_token': self.order_token
+            }
+            url = reverse('checkout:confirmation')
 
         logger.info('Redirecting to %s' % url)
 

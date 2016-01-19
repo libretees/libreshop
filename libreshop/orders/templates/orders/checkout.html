@@ -43,6 +43,17 @@
         <h2>${{ shipping_cost }}</h2>
         <p>shipping</p>
       </div>
+    {% endif %}
+    {% if sales_tax %}
+      <div class='pull-left'>
+        <span class='fa fa-plus math'></span>
+      </div>
+      <div class='pull-left'>
+        <h2>${{ sales_tax }}</h2>
+        <p>sales tax</p>
+      </div>
+    {% endif %}
+    {% if shipping_cost or sales_tax %}
       <div class='pull-left'>
         <span class='fa fa-arrow-right math'></span>
       </div>

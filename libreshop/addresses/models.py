@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.safestring import mark_safe
 from model_utils.models import TimeStampedModel
 from django_countries.fields import CountryField
 
@@ -20,3 +21,12 @@ class Address(TimeStampedModel):
     postal_code = models.CharField(max_length=16, null=True, blank=True)
     # Field for country.
     country = CountryField(null=False, blank=False)
+
+    def __str__(self):
+        address = '<br />'.join([
+            self.recipient_name, self.street_address.replace('\r\n', '<br />'),
+            ('%s, %s  %s' % (self.locality, self.region, self.postal_code)),
+            str(self.country.name)
+        ])
+
+        return mark_safe(address)

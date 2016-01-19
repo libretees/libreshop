@@ -6,17 +6,6 @@ from jsonfield import JSONField
 logger = logging.getLogger(__name__)
 
 
-class Purchase(TimeStampedModel):
-    order = models.ForeignKey('orders.Order',
-                              null=False)
-    product = models.ForeignKey('products.Product',
-                                null=False)
-    saved_product = JSONField(null=True,
-                              blank=True)
-    gift_amount = models.DecimalField(max_digits=8,
-                                      decimal_places=2)
-
-
 class Category(TimeStampedModel):
 
     class Meta():

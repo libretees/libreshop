@@ -5,6 +5,26 @@
 {% block content %}
 <!-- Main component for a primary marketing message or call to action -->
 
-<h1>THANK YOU!</h1>
+<h1><strong>Thank you!</strong></h1>
+
+<h2>Order <strong>{{ order_token }}</strong> has been received!</h2>
+
+<p><strong>It will be shipped to:</strong></p>
+<p>{{ order.shipping_address }}</p>
+
+<p><strong>Your order contains:</strong></p>
+<ul class='list-group'>
+  {% for purchase in purchases %}
+    <li class='list-group-item'>{{ purchase.variant.name }}: {{ purchase.price }}</li>
+  {% endfor %}
+</ul>
+
+<p><strong>Summary:</strong></p>
+<ul class='list-group'>
+  <li class='list-group-item'>Subtotal: {{ order.subtotal }}</li>
+  <li class='list-group-item'>Shipping: {{ order.shipping_cost }}</li>
+  <li class='list-group-item'>Sales Tax: {{ order.sales_tax }}</li>
+  <li class='list-group-item'><strong>Total</strong>: {{ order.total }}</li>
+</ul>
 
 {% endblock content %}
