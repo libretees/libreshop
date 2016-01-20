@@ -39,7 +39,7 @@
             </div>
           {% endfor %}
             <div>
-              <button type='submit' id='action-button' class='btn btn-lg btn-primary pull-right bottom-align btn-xlarge'>Get One! &raquo;</button>
+              <button type='submit' id='action-button' class='btn btn-lg btn-primary pull-right btn-xlarge'>Get One! &raquo;</button>
             </div>
           </form>
 
@@ -49,11 +49,10 @@
   </div>
 {% if cart %}
   <div class="col-md-3">
-    <div class="jumbotron">
-      <div class='jumbotron-bill'>
-        <p>Your cart contains</p>
-        <ul class='list-group'>
-      {% for item in cart %}
+    <div class="jumbotron bill">
+      <p>Your cart contains</p>
+      <ul class='list-group'>
+        {% for item in cart %}
           <li class='list-group-item'>
             <form action='/cart/remove/' method='POST'>
               {% csrf_token %}
@@ -67,14 +66,13 @@
               <button type='submit' class='close'>&times;</button>
             </form>
           </li>
-      {% endfor %}
-        </ul>
-        <div>
-          <p>Subtotal ({{cart|length}} Item{% if cart|length > 1 %}s{% endif %}): {{ total }}</p>
-        </div>
-        <div>
-          <a href='checkout' class='btn btn-primary center-block'>check out</a>
-        </div>
+        {% endfor %}
+      </ul>
+      <div>
+        <p>Subtotal ({{cart|length}} Item{% if cart|length > 1 %}s{% endif %}): {{ total }}</p>
+      </div>
+      <div>
+        <a href='checkout' class='btn btn-primary center-block'>check out</a>
       </div>
     </div>
   </div>

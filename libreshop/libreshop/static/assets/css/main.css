@@ -1,16 +1,10 @@
-.bottom-align {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-}
-
 .btn-xlarge {
-    padding: 18px 28px;
-    font-size: 28px; //change this to your desired size
-    line-height: normal;
-    -webkit-border-radius: 8px;
-       -moz-border-radius: 8px;
-            border-radius: 8px;
+  padding: 18px 28px;
+  font-size: 28px; //change this to your desired size
+  line-height: normal;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
 }
 
 .navbar-static-top {
@@ -21,26 +15,42 @@
   min-height: 500px;
 }
 
-.jumbotron-bill {
-  min-height: 300px;
-  position: relative;
-  top:-35px;
-  left:-33%;
-  width: 166%;
+@media (min-width: 768px) { /* For small devices, tablets, and up: */
+  .bill {
+    min-height: 300px;
+  }
 }
 
-.jumbotron-bill p {
+.bill {
+  padding: 5% 5% !important; /* Override the .jumbotron media rule. */
+}
+
+.bill p {
   font-size: 12px;
   display: inline;
 }
 
-.jumbotron-bill button:focus {
+.bill button:focus {
   outline:0;
 }
 
 #action-button {
   background: #ff7300;
   width: 250px;
+}
+
+@media (max-width: 767px) { /* For small devices and phones: */
+  #action-button {
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) { /* For small devices, tablets, and up: */
+  #action-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
 }
 
 #product-name {
@@ -53,6 +63,9 @@ textarea {
   max-width: 100%;
   min-height: 34px;
 }
+
+
+/* Implement a sticky footer. */
 
 * {
   margin: 0;
