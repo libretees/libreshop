@@ -81,6 +81,37 @@ class CheckoutFormView(FormView):
         self.client_token = braintree.ClientToken.generate()
 
 
+    def get(self, request, *args, **kwargs):
+
+        template_response = None
+        for key in request.GET:
+            session_data = self.request.session[UUID]
+            previous_step_data = session_data.get(key, None)
+
+            del session_data[key]
+            request.session.modified = True
+
+            self.current_step = self.get_current_step()
+
+            form_class = self.get_form_class()
+            form = form_class(data=previous_step_data)
+
+            if not form.is_valid():
+                form.add_error(None, 'Something went wrong here...')
+
+            template_names = self.get_template_names()
+            context_data = self.get_context_data(form=form)
+
+            template_response = TemplateResponse(
+                request, template_names, context_data
+            )
+
+        return (
+            super(CheckoutFormView, self).get(request, *args, **kwargs)
+            if not template_response else template_response
+        )
+
+
     def post(self, request, *args, **kwargs):
 
         template_response = None

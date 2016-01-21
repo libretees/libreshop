@@ -15,16 +15,16 @@
 <p><strong>Your order contains:</strong></p>
 <ul class='list-group'>
   {% for purchase in purchases %}
-    <li class='list-group-item'>{{ purchase.variant.name }}: {{ purchase.price }}</li>
+    <li class='list-group-item'>{{ purchase.variant.name }}: ${{ purchase.price }}</li>
   {% endfor %}
 </ul>
 
 <p><strong>Summary:</strong></p>
 <ul class='list-group'>
-  <li class='list-group-item'>Subtotal: {{ order.subtotal }}</li>
-  <li class='list-group-item'>Shipping: {{ order.shipping_cost }}</li>
-  <li class='list-group-item'>Sales Tax: {{ order.sales_tax }}</li>
-  <li class='list-group-item'><strong>Total</strong>: {{ order.total }}</li>
+  <li class='list-group-item'>Subtotal: ${{ order.subtotal }}</li>
+  <li class='list-group-item'>Shipping: ${{ order.shipping_cost }}</li>
+  <li class='list-group-item'>Sales Tax: ${{ order.sales_tax }}</li>
+  <li class='list-group-item'><strong>Total</strong>: ${{ order.total }}</li>
 </ul>
 
 {% endblock content %}

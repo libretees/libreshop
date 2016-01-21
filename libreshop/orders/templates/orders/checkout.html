@@ -23,7 +23,9 @@
         {% endif %}
       {% elif i < current_position %}
         <p class='text-center text-success'>{{ step.name }}</p>
-        <img src="{% static 'images/checked.png' %}" />
+        <a href="{% url 'checkout:main' %}?{{ step.name }}={{ step.name }}" alt='Edit previous step.'>
+          <img src="{% static 'images/checked.png' %}" />
+        </a>
       {% else %}
         <p class='text-center text-muted'>{{ step.name }}</p>
         <img src="{% static 'images/circled.png' %}" />
