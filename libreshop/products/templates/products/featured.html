@@ -58,9 +58,7 @@
               {% csrf_token %}
               <p>
                 <span>{{ item }}</span>
-                <span>{{ item.split_price.major_units }}</span>
-                <span>{{ item.split_price.minor_units }}</span>
-              </p>
+                <span>${{ item.price }}</span></p>
               <input type='hidden' name='next' value='{{ request.path }}'>
               <input type='hidden' name='remove' value='{{ forloop.counter0 }}'>
               <button type='submit' class='close'>&times;</button>
