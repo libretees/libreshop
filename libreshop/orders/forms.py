@@ -82,7 +82,6 @@ class PaymentForm(forms.Form):
                 'payment_method_nonce': forms.CharField(required=True)
             }
 
-
     def clean(self):
         self.cleaned_data = super(PaymentForm, self).clean()
         if self.amount:
@@ -96,7 +95,10 @@ class PaymentForm(forms.Form):
         logger.info('Attempting sales transaction...')
         result = braintree.Transaction.sale({
             'amount': amount,
-            'payment_method_nonce': self.cleaned_data['payment_method_nonce']
+            'payment_method_nonce': self.cleaned_data['payment_method_nonce'],
+            'options': {
+                'submit_for_settlement': True
+            }
         })
 
         if not result.is_success:
