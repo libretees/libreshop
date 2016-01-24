@@ -17,7 +17,9 @@ EXPIRATION_YEAR_CHOICES = [
 class SensitiveDataMixin(forms.Widget):
 
     def build_attrs(self, extra_attrs=None, **kwargs):
-        attrs = super(SensitiveDataMixin, self).build_attrs(extra_attrs, **kwargs)
+        attrs = super(SensitiveDataMixin, self).build_attrs(
+            extra_attrs, **kwargs
+        )
         if 'name' in attrs:
             attrs['data-braintree-name'] = attrs['name']
             del attrs['name']
@@ -34,30 +36,39 @@ class SensitiveTextInput(SensitiveDataMixin, forms.TextInput):
 
 class PaymentForm(forms.Form):
 
-    cardholder_name = forms.CharField(required=True,
-                                      widget=SensitiveTextInput()
+    cardholder_name = forms.CharField(
+        label='Cardholder Name',
+        widget=SensitiveTextInput()
     )
-    number = forms.CharField(label='Card number',
-                             widget=SensitiveTextInput(attrs={
-                                 'autocomplete': 'off'
-                             })
+    number = forms.CharField(
+        label='Card Number',
+        widget=SensitiveTextInput(attrs={
+            'autocomplete': 'off'
+        })
     )
-    cvv = forms.CharField(label='CVV',
-                          min_length=3,
-                          max_length=4,
-                          widget=SensitiveTextInput(attrs={
-                              'autocomplete': 'off'
-                          })
+    cvv = forms.CharField(
+        label='CVV',
+        min_length=3,
+        max_length=4,
+        widget=SensitiveTextInput(attrs={
+            'autocomplete': 'off'
+        })
     )
-    expiration_month = forms.ChoiceField(choices=EXPIRATION_MONTH_CHOICES,
-                                         widget=SensitiveSelect()
+    expiration_month = forms.ChoiceField(
+        label='Expiration Month',
+        choices=EXPIRATION_MONTH_CHOICES,
+        widget=SensitiveSelect()
     )
-    expiration_year = forms.ChoiceField(choices=EXPIRATION_YEAR_CHOICES,
-                                        widget=SensitiveSelect()
+    expiration_year = forms.ChoiceField(
+        label='Expiration Year',
+        choices=EXPIRATION_YEAR_CHOICES,
+        widget=SensitiveSelect()
     )
-    postal_code = forms.CharField(required=True,
-                                  widget=SensitiveTextInput()
+    postal_code = forms.CharField(
+        label='ZIP/Postcode/Postal Code',
+        widget=SensitiveTextInput()
     )
+
 
     def __init__(self, *args, **kwargs):
 
@@ -91,6 +102,12 @@ class PaymentForm(forms.Form):
         if not result.is_success:
             logger.error('Error response received from Braintree API')
 
+            self.add_error(
+                None,
+                ('There was a problem processing your payment! Your card was '
+                 'not charged. Please correct the errors below and try again.')
+            )
+
             # Restore unbound fields so that error messages can be displayed.
             self.fields = self.unbound_fields
 
@@ -109,7 +126,10 @@ class PaymentForm(forms.Form):
                     # Map Braintree 'base' attribute Error 81801
                     # "Addresses must have at least one field filled in."
                     # to `postal_code` field.
-                    self.add_error('postal_code', 'Postal code is required.')
+                    self.add_error(
+                        'postal_code',
+                        'The ZIP/Postcode/Postal Code field is required.'
+                    )
                 elif error.attribute not in ['base', 'payment_method_nonce']:
                     self.add_error(
                         None,
