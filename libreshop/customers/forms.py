@@ -22,7 +22,7 @@ from django.db.models.fields.related import ManyToManyRel
 from captcha.image import ImageCaptcha
 from captcha.audio import AudioCaptcha
 
-from products.models import Product
+from products.models import Product, Variant
 from carts.models import Cart
 from .models import Customer
 from .widgets import CaptchaWidget
@@ -34,19 +34,19 @@ class CustomerChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
         model = Customer
 
-    selected_products = forms.ModelMultipleChoiceField(Product.objects.all(),
-                                                       widget=admin.widgets.FilteredSelectMultiple('Products', False),
+    selected_variants = forms.ModelMultipleChoiceField(Variant.objects.all(),
+                                                       widget=admin.widgets.FilteredSelectMultiple('Variant', False),
                                                        required=False)
 
     def __init__(self, *args, **kwargs):
         super(CustomerChangeForm, self).__init__(*args, **kwargs)
 
         if self.instance.pk:
-            self.initial['selected_products'] = [customer_cart.product for customer_cart in Cart.objects.filter(customer__user=self.instance.pk)]
+            self.initial['selected_variants'] = [customer_cart.product for customer_cart in Cart.objects.filter(customer__user=self.instance.pk)]
             relation = ManyToManyRel(field=Customer,
-                                     to=Product,
+                                     to=Variant,
                                      through=Cart)
-            self.fields['selected_products'].widget = admin.widgets.RelatedFieldWidgetWrapper(self.fields['selected_products'].widget,
+            self.fields['selected_variants'].widget = admin.widgets.RelatedFieldWidgetWrapper(self.fields['selected_variants'].widget,
                                                                                               relation,
                                                                                               admin.site)
 
@@ -55,17 +55,17 @@ class CustomerChangeForm(UserChangeForm):
 
         if instance.pk:
             for selected_product in [customer_cart.product for customer_cart in Cart.objects.filter(customer__user=self.instance.pk)]:
-                if selected_product not in self.cleaned_data['selected_products']:
+                if selected_product not in self.cleaned_data['selected_variants']:
                     # remove a product that has been unselected
                     customer = Customer.objects.get(pk=instance.pk)
                     Cart.objects.filter(customer__pk=customer.pk, product__pk=selected_product.pk)[0].delete()
 
-            for product in self.cleaned_data['selected_products']:
+            for product in self.cleaned_data['selected_variants']:
                 if product not in [customer_cart.product for customer_cart in Cart.objects.filter(customer__user=self.instance.pk)]:
                     # add newly-selected products
                     customer = Customer.objects.get(user=instance.pk)
-                    saved_product = serializers.serialize('json', [product], fields=('name', 'attributes'))
                     Cart.objects.create(customer=customer, product=product, saved_product=saved_product)
+
         return instance
 
 
@@ -81,7 +81,7 @@ class CustomerAdmin(UserAdmin):
                                in UserAdmin.fieldsets])
 
     fieldsets = UserAdmin.fieldsets + (
-        (('Cart'), {'fields': ('selected_products',)}),
+        (('Cart'), {'fields': ('selected_variants',)}),
     )
 
 

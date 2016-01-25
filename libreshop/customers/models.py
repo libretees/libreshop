@@ -22,8 +22,8 @@ class Customer(TimeStampedModel):
                                 primary_key=True)
     addresses = models.ManyToManyField('addresses.Address', null=False,
         blank=True)
-    selected_products = models.ManyToManyField('products.Product',
-        through='carts.Cart', through_fields=('customer', 'product'))
+    selected_products = models.ManyToManyField('products.Variant',
+        through='carts.Cart', through_fields=('customer', 'variant'))
 
     def __str__(self):
           return "%s's profile" % self.user

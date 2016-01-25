@@ -51,6 +51,7 @@ class Variant(TimeStampedModel):
     product = models.ForeignKey('products.Product', null=False, blank=False)
     name = models.CharField(max_length=64, null=False, blank=False)
     sub_sku = models.CharField(max_length=8, null=True, blank=False)
+    api_params = models.CharField(max_length=128, null=True, blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2, null=False,
         blank=False, default=Decimal('0.00'))
     enabled = models.BooleanField(default=True)
