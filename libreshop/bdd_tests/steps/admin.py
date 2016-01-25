@@ -2,6 +2,7 @@ import os
 import string
 import random
 from behave import when, given, then
+from selenium.webdriver.support.ui import Select
 
 
 ADMIN_USER = os.environ.get('ADMIN_USER') or 'admin'
@@ -50,11 +51,34 @@ def step_impl(context, text):
 
 @when(u'I add a product called "{text}"')
 def step_impl(context, text):
+    # Enter text into the SKU field.
+    input_box = context.browser.find_element_by_id('id_sku')
+    input_box.send_keys('1000')
+
     # Enter text into the Name field.
-    inputbox = context.browser.find_element_by_id('id_name')
-    inputbox.send_keys(text)
+    input_box = context.browser.find_element_by_id('id_name')
+    input_box.send_keys(text)
 
     # Click the save button on the Add Product page.
+    submit_button = context.browser.find_element_by_xpath("//input[@class='default']")
+    submit_button.click()
+
+    # Find the Sub-SKU input box for the default Variant.
+    xpath = (
+        ("//h2[text()='Variants']/../table//"
+         "input[@value='%s']/../following::input[1]") % text
+    )
+    input_box = context.browser.find_element_by_xpath(xpath)
+    input_box.send_keys('01')
+
+    select = Select(
+        context.browser.find_element_by_xpath(
+            "//h2[text()='Variants']/../table//select"
+        )
+    )
+    select.select_by_visible_text('foo')
+
+    # Click the save button on the Change Product page.
     submit_button = context.browser.find_element_by_xpath("//input[@class='default']")
     submit_button.click()
 

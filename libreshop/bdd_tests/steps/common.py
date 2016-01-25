@@ -1,12 +1,14 @@
 import os
 from behave import when, given, then
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.ui import Select
 
 
 @given(u'I am an admin')
 def step_impl(context):
     context.username = 'admin'
     context.password = 'admin'
-    
+
 
 @given(u'I am a staff member')
 def step_impl(context):
@@ -161,3 +163,20 @@ def step_impl(context, text):
     icon = context.browser.find_element_by_class_name(class_name)
 
     context.test.assertIsNotNone(icon)
+
+
+@when(u'I select "{option}" from the "{select}" field')
+def step_impl(context, option, select):
+
+    try:
+        # Try to find the select element using the `id` attribute.
+        select_element = context.browser.find_element_by_id('id_%s' % select)
+    except NoSuchElementException as e:
+        # Try to find the select element within an InlineModelAdmin.
+        select_element = context.browser.find_element_by_xpath(
+            "//td[@class='field-%s']//select" % select
+        )
+
+    select = Select(select_element)
+
+    select.select_by_visible_text(option)

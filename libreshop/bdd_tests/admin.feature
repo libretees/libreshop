@@ -1,3 +1,4 @@
+@wip
 Feature: admin
   As a staff member
   I want to use the admin panel
@@ -25,7 +26,6 @@ Feature: admin
        And I add a user named "new_user"
       Then I will see a link for "new_user"
 
-
   Scenario: add a product via the admin panel
      Given I am an admin
       When I visit the admin login page
@@ -35,16 +35,19 @@ Feature: admin
       Then I will see a link for "new_product"
 
 
-  Scenario: add a product via the change user page
+  Scenario: add a variant via the change user page
      Given I am an admin
       When I visit the admin login page
        And I log in to the site admin page
        And I click the "Add" link next to "Users"
        And I add a user named "new_user"
        And I click the "new_user" link
-       And I click the plus icon next to the "Selected products" field
+       And I click the plus icon next to the "Selected variants" field
        And I switch to the popup window
-       And I enter "thing" in the "Name" field
+       And I select "foo" from the "product" field
+       And I enter "bar" in the "Name" field
+       And I enter "01" in the "Sub-SKU" field
+       And I select "foo" from the "inventory" field
        And I click the "Save" button
        And I switch to the main window
-      Then I will see "thing" in the "Selected products" select box
+      Then I will see "bar" in the "Selected variants" select box
