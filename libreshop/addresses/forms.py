@@ -1,35 +1,36 @@
 import logging
 import re
-from django import forms
-from . import models
+from django.forms import ModelForm, Textarea
 from django_countries import Countries
 from django_countries.widgets import CountrySelectWidget
+from .models import Address
 
 # Initialize logger
 logger = logging.getLogger(__name__)
 
 # Define regex patterns for postal codes, specific to each country.
 POSTAL_CODE_PATTERNS = {
-    'US': r'^[0-9]{5}(?:-[0-9]{4})?$',
+    'US': r'^[0-9]{5}(?:-[0-9]{4})?$'
 }
 
 
-class AddressForm(forms.ModelForm):
+class AddressForm(ModelForm):
     class Meta:
-        model = models.Address
-        fields = ('recipient_name', 'street_address', 'locality', 'region',
-            'postal_code', 'country',
+        model = Address
+        fields = (
+            'recipient_name', 'street_address', 'locality', 'region',
+            'postal_code', 'country'
         )
         labels = {
             'recipient_name': 'Recipient',
             'street_address': 'Address',
             'locality':       'City/Town',
             'region':         'State/Province/County',
-            'postal_code':    'ZIP/Postcode/Postal Code',
+            'postal_code':    'ZIP/Postcode/Postal Code'
         }
         widgets = {
-            'street_address': forms.Textarea(attrs={'rows': 4,}),
-            'country':        CountrySelectWidget(),
+            'street_address': Textarea(attrs={'rows': 4,}),
+            'country':        CountrySelectWidget()
         }
 
     def __init__(self, *args, **kwargs):
@@ -51,8 +52,9 @@ class AddressForm(forms.ModelForm):
             if not match:
                 error_message = (
                     ('The %s specified (%s) is invalid for the selected '
-                     'country (%s).') %
-                    (self.postal_code_label, postal_code, self.country_name)
+                    'country (%s).') %
+                    (self.fields['postal_code'].label, postal_code,
+                    self.country_name)
                 )
                 self.add_error('postal_code', error_message)
 
@@ -63,12 +65,12 @@ class AddressForm(forms.ModelForm):
         country = self.cleaned_data.get('country')
         postal_code = self.cleaned_data.get('postal_code')
 
-        self.postal_code_label = self.fields['postal_code'].label
         self.country_name = Countries().name(country)
         if country and country != 'IE' and not postal_code:
             error_message = (
                 ('The %s field is required for addresses within the selected '
-                 'country (%s).') % (self.postal_code_label, self.country_name)
+                'country (%s).') %
+                (self.fields['postal_code'].label, self.country_name)
             )
             self.add_error('postal_code', error_message)
         elif country == 'IE' and postal_code:
