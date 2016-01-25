@@ -55,7 +55,7 @@ def before_scenario(context, scenario):
         # Create 3 users.
         users = [factories.UserFactory(username='user%s' % i) for i in range(3)]
     elif scenario.name in [
-        'add a variant via the change user page' # steps/admin.py 
+        'add a variant via the change user page' # steps/admin.py
     ]:
         product = factories.ProductFactory()
         inventory = factories.InventoryFactory()

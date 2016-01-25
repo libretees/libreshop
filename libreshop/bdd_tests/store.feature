@@ -8,7 +8,6 @@ Feature: store
      Given I am an anonymous user
       When I visit the "home" page
       Then I will see the text "LibreShop"
-       And I will see a "shopping cart" icon
 
   Scenario: add an item to cart
      Given I am an anonymous user
@@ -17,7 +16,9 @@ Feature: store
        And I select "Small" from the "Size" field
        And I select "White" from the "Color" field
        And I click the "Get One!" button
-      Then I will see the text "Your cart contains"
+      Then I will see a "shopping cart" icon
+       And I will see the text "Your cart contains"
+
 
   Scenario: remove an item from the cart
      Given I am an anonymous user

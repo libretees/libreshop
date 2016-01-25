@@ -1,22 +1,18 @@
-@wip
 Feature: admin
   As a staff member
   I want to use the admin panel
   So that I can manage the website effectively
-
 
   Scenario: access the admin login page
      Given I am an admin
       When I visit the admin login page
       Then I will see "Log in | Django site admin" in the browser title
 
-
   Scenario: log in to the admin panel
      Given I am an admin
       When I visit the admin login page
        And I log in to the site admin page
       Then I will see "Site administration | Django site admin" in the browser title
-
 
   Scenario: add a user via the admin panel
      Given I am an admin
@@ -33,7 +29,6 @@ Feature: admin
        And I click the "Add" link next to "Products"
        And I add a product called "new_product"
       Then I will see a link for "new_product"
-
 
   Scenario: add a variant via the change user page
      Given I am an admin
