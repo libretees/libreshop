@@ -1,5 +1,5 @@
 [behave]
-paths=bdd_tests/
+paths=tests/
 stderr_capture=True
 stdout_capture=True
 
