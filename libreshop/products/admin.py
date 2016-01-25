@@ -134,3 +134,4 @@ class VariantAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Product, ProductAdmin)
 admin.site.register(models.Variant, VariantAdmin)
+admin.site.register(models.Category)

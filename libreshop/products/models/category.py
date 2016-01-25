@@ -1,11 +1,11 @@
 import logging
 from django.db import models
 from model_utils.models import TimeStampedModel
-from jsonfield import JSONField
 
+# Initialize logger.
 logger = logging.getLogger(__name__)
 
-
+# Create your models here.
 class Category(TimeStampedModel):
 
     class Meta():
