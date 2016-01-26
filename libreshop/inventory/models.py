@@ -100,10 +100,14 @@ class Location(TimeStampedModel):
         unique_together = ('inventory', 'warehouse')
 
 
-    inventory = models.ForeignKey('Inventory', null=False, blank=False)
-    warehouse = models.ForeignKey('Warehouse', null=False, blank=False)
-    quantity = models.DecimalField(max_digits=8, decimal_places=2,
-        validators=[MinValueValidator(Decimal('0.00'))])
+    inventory = models.ForeignKey('Inventory', null=True, blank=True)
+    warehouse = models.ForeignKey('Warehouse', null=True, blank=True)
+    quantity = models.DecimalField(
+        max_digits=8, decimal_places=2, null=True, blank=True,
+        validators=[
+            MinValueValidator(Decimal('0.00'))
+        ]
+    )
 
 
     def __str__(self):
@@ -117,8 +121,12 @@ class Inventory(TimeStampedModel):
 
 
     name = models.CharField(max_length=64, null=False, blank=False)
-    warehouses = models.ManyToManyField('Warehouse', through='Location',
-        through_fields=('inventory', 'warehouse'))
+
+    warehouses = models.ManyToManyField(
+        'Warehouse', through='Location',
+        through_fields=('inventory', 'warehouse'), blank=True
+    )
+
     attributes = models.ManyToManyField('Attribute', through='Attribute_Value',
         through_fields=('inventory', 'attribute'))
     alternatives = models.ManyToManyField('self', blank=True)
