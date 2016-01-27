@@ -130,8 +130,13 @@ class Inventory(TimeStampedModel):
     attributes = models.ManyToManyField('Attribute', through='Attribute_Value',
         through_fields=('inventory', 'attribute'))
     alternatives = models.ManyToManyField('self', blank=True)
-    cost = models.DecimalField(max_digits=8, decimal_places=2,
-        default=Decimal(0.00), validators=[MinValueValidator(Decimal('0.00'))])
+
+    cost = models.DecimalField(
+        max_digits=8, decimal_places=2, default=Decimal(0.00),
+        validators=[
+            MinValueValidator(Decimal('0.00'))
+        ]
+    )
 
 
     def delete(self, *args, **kwargs):

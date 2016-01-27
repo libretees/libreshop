@@ -3,6 +3,7 @@ import logging
 from decimal import Decimal
 from operator import itemgetter
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db import transaction
 from model_utils.models import TimeStampedModel
@@ -12,6 +13,41 @@ from .component import Component
 logger = logging.getLogger(__name__)
 
 # Create your models here.
+class Manufacturer(TimeStampedModel):
+
+    name = models.CharField(max_length=64, unique=True, null=False, blank=False)
+
+    def __str__(self):
+        return self.name
+
+
+class DropShipmentSetting(TimeStampedModel):
+
+    class Meta:
+        unique_together = ('manufacturer', 'name')
+
+    manufacturer = models.ForeignKey('Manufacturer', null=True, blank=True)
+    name = models.CharField(max_length=64, unique=True, null=False, blank=False)
+
+    def __str__(self):
+        return '%s: %s' % (self.manufacturer.name, self.name)
+
+
+class DropShipmentSettingValue(TimeStampedModel):
+
+    class Meta:
+        verbose_name = 'drop shipment setting'
+        verbose_name_plural = 'drop shipment settings'
+        unique_together = ('setting', 'variant')
+
+    setting = models.ForeignKey(
+        'DropShipmentSetting', null=True, blank=True
+    )
+    variant = models.ForeignKey('Variant', null=True, blank=True)
+    value = models.CharField(max_length=128, null=True, blank=True)
+
+
+
 class VariantManager(models.Manager):
 
     def create(self, *args, **kwargs):
@@ -51,9 +87,16 @@ class Variant(TimeStampedModel):
     product = models.ForeignKey('products.Product', null=False, blank=False)
     name = models.CharField(max_length=64, null=False, blank=False)
     sub_sku = models.CharField(max_length=8, null=True, blank=False)
-    api_params = models.CharField(max_length=128, null=True, blank=True)
-    price = models.DecimalField(max_digits=8, decimal_places=2, null=False,
-        blank=False, default=Decimal('0.00'))
+    price = models.DecimalField(
+        max_digits=8, decimal_places=2, default=Decimal('0.00'),
+        validators=[
+            MinValueValidator(Decimal('0.00'))
+        ]
+    )
+    drop_shipment_settings = models.ManyToManyField(
+        'DropShipmentSetting', through='DropShipmentSettingValue',
+        through_fields=('variant', 'setting'), blank=True
+    )
     enabled = models.BooleanField(default=True)
 
     objects = VariantManager()
