@@ -36,8 +36,8 @@ class DropShipmentSetting(TimeStampedModel):
 class DropShipmentSettingValue(TimeStampedModel):
 
     class Meta:
-        verbose_name = 'drop shipment setting'
-        verbose_name_plural = 'drop shipment settings'
+        verbose_name = 'Drop Shipment Setting'
+        verbose_name_plural = 'Drop Shipment Settings'
         unique_together = ('setting', 'variant')
 
     setting = models.ForeignKey(

@@ -12,10 +12,8 @@ logger = logging.getLogger(__name__)
 # Register your models here.
 admin.site.register(models.Component)
 
-class ComponentInline(admin.TabularInline):
-    model = models.Component
-    min_num = 1
-    extra = 0
+
+
 
 
 class ComponentNestedInline(NestedTabularInline):
@@ -25,9 +23,12 @@ class ComponentNestedInline(NestedTabularInline):
     show_change_link = False # Does not work with Nested Inlines.
 
 
-class VariantNestedInline(NestedTabularInline):
+
+
+
+class VariantNestedInline(admin.TabularInline):
     model = models.Variant
-    inlines = [ComponentNestedInline,]
+    # inlines = [ComponentNestedInline,]
     fields = ('name', 'sub_sku', 'price', 'enabled')
     extra = 0
     fk_name = 'product'
@@ -37,7 +38,7 @@ class VariantNestedInline(NestedTabularInline):
         return models.Variant.objects.filter(product=obj).count() if obj else 1
 
 
-class ProductAdmin(NestedModelAdmin):
+class ProductAdmin(admin.ModelAdmin):
 
     list_display = ('name', 'sku', '_salable', '_salable_variants')
 
@@ -77,6 +78,7 @@ class ProductAdmin(NestedModelAdmin):
         else:
             return True
 
+
     def has_change_permission(self, request, obj=None):
         """
         Disable 'Edit' icon when prepopulating fields.
@@ -115,10 +117,29 @@ class ProductAdmin(NestedModelAdmin):
                                                       post_url_continue)
 
 
+class DropShipmentSettingAdmin(admin.ModelAdmin):
+
+    def get_model_perms(self, request):
+        """
+        Hide the the model from admin index by returning an empty perms dict.
+        """
+        return {}
+
+
+class ManufacturerAdmin(admin.TabularInline):
+    model = models.DropShipmentSettingValue
+    extra = 0
+
+
+class ComponentInline(admin.TabularInline):
+    model = models.Component
+    extra = 0
+
+
 class VariantAdmin(admin.ModelAdmin):
 
     add_form = VariantCreationForm
-    inlines = (ComponentInline,)
+    inlines = (ComponentInline, ManufacturerAdmin)
 
     def __init__(self, *args, **kwargs):
         super(VariantAdmin, self).__init__(*args, **kwargs)
@@ -126,12 +147,15 @@ class VariantAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         defaults = {}
         if obj is None:
-            defaults['form'] = PopulatedFormFactory(request, models.Variant,
-                self.add_form)
+            defaults['form'] = PopulatedFormFactory(
+                request, models.Variant, self.add_form
+            )
         defaults.update(kwargs)
         return super(VariantAdmin, self).get_form(request, obj, **defaults)
 
 
+admin.site.register(models.Category)
+admin.site.register(models.Manufacturer)
+admin.site.register(models.DropShipmentSetting, DropShipmentSettingAdmin)
 admin.site.register(models.Product, ProductAdmin)
 admin.site.register(models.Variant, VariantAdmin)
-admin.site.register(models.Category)
