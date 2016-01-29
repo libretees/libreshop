@@ -13,11 +13,15 @@ from . import models
 logger = logging.getLogger(__name__)
 
 class RelatedFieldWidgetWrapper(admin.widgets.RelatedFieldWidgetWrapper):
+
     def __init__(self, widget, rel, admin_site, values, can_add_related=None,
         can_change_related=False, can_delete_related=False):
+
         super(RelatedFieldWidgetWrapper, self).__init__(widget, rel, admin_site,
             can_add_related, can_change_related, can_delete_related)
+
         self.values = values
+
 
     def render(self, name, value, *args, **kwargs):
         html = super(RelatedFieldWidgetWrapper, self).render(name, value, *args,
@@ -44,36 +48,47 @@ class ProductChangeForm(forms.ModelForm):
         fields = ('sku', 'name', 'description', 'image',)
         widgets = {'description': Textarea(attrs={'cols': 80, 'rows': 5})}
 
-    variants = forms.ModelMultipleChoiceField(label='Enabled Variants',
+    variants = forms.ModelMultipleChoiceField(
+        label='Enabled Variants',
         widget=admin.widgets.FilteredSelectMultiple('Variants', False),
-        required=False, queryset=None
+        required=False,
+        queryset=None
     )
 
     def __init__(self, *args, **kwargs):
         super(ProductChangeForm, self).__init__(*args, **kwargs)
-        self.fields['variants'].queryset = (models.Variant.objects.
-            filter(product=self.instance)
+
+        self.fields['variants'].queryset = (
+            models.Variant.objects. filter(product=self.instance)
         )
+
         self.initial['variants'] = models.Variant.objects.filter(
                 product=self.instance, enabled=True
         )
-        relation = OneToOneRel(field=models.Product, to=models.Variant,
-            field_name='id'
+
+        relation = OneToOneRel(
+            field=models.Product, to=models.Variant, field_name='id'
         )
 
         prepopulated_values = [('product', self.instance.pk)]
+
         self.fields['variants'].widget = RelatedFieldWidgetWrapper(
-            self.fields['variants'].widget, relation, admin.site,
+            self.fields['variants'].widget,
+            relation,
+            admin.site,
             prepopulated_values
         )
+
 
     def save(self, *args, **kwargs):
         instance = super(ProductChangeForm, self).save(*args, **kwargs)
 
         if instance.pk:
 
-            enabled_variants = ([variant for variant in models.Variant.objects.
-                filter(product=instance.pk, enabled=True)])
+            enabled_variants = ([
+                variant for variant in
+                models.Variant.objects.filter(product=instance.pk, enabled=True)
+            ])
 
             # Disable a Variant that has been unselected.
             for variant in enabled_variants:

@@ -4,35 +4,25 @@ from django.contrib.admin.options import IS_POPUP_VAR
 from . import models
 from .forms import (ProductCreationForm, ProductChangeForm, VariantCreationForm,
     PopulatedFormFactory)
-from nested_inline.admin import NestedTabularInline, NestedModelAdmin
 
 # Initialize logger
 logger = logging.getLogger(__name__)
 
-# Register your models here.
-admin.site.register(models.Component)
+
+class UnindexedAdmin(admin.ModelAdmin):
+
+    def get_model_perms(self, request):
+        """
+        Hide the the model from admin index by returning an empty perms dict.
+        """
+        return {}
 
 
-
-
-
-class ComponentNestedInline(NestedTabularInline):
-    model = models.Component
-    extra = 0
-    fk_name = 'variant'
-    show_change_link = False # Does not work with Nested Inlines.
-
-
-
-
-
-class VariantNestedInline(admin.TabularInline):
+class VariantInline(admin.TabularInline):
     model = models.Variant
-    # inlines = [ComponentNestedInline,]
-    fields = ('name', 'sub_sku', 'price', 'enabled')
+    fields = ('name', 'sub_sku', 'price')
     extra = 0
-    fk_name = 'product'
-    show_change_link = False # Does not work with Nested Inlines.
+    show_change_link = True
 
     def get_max_num(self, request, obj=None, **kwargs):
         return models.Variant.objects.filter(product=obj).count() if obj else 1
@@ -61,7 +51,7 @@ class ProductAdmin(admin.ModelAdmin):
 
         if obj:
             inlines = set(self.inlines)
-            inlines = inlines.union({VariantNestedInline,})
+            inlines = inlines.union({VariantInline,})
             self.inlines = list(inlines)
         else:
             self.inlines = []
@@ -117,15 +107,6 @@ class ProductAdmin(admin.ModelAdmin):
                                                       post_url_continue)
 
 
-class DropShipmentSettingAdmin(admin.ModelAdmin):
-
-    def get_model_perms(self, request):
-        """
-        Hide the the model from admin index by returning an empty perms dict.
-        """
-        return {}
-
-
 class ManufacturerAdmin(admin.TabularInline):
     model = models.DropShipmentSettingValue
     extra = 0
@@ -136,13 +117,14 @@ class ComponentInline(admin.TabularInline):
     extra = 0
 
 
-class VariantAdmin(admin.ModelAdmin):
+class VariantAdmin(UnindexedAdmin, admin.ModelAdmin):
 
     add_form = VariantCreationForm
     inlines = (ComponentInline, ManufacturerAdmin)
 
     def __init__(self, *args, **kwargs):
         super(VariantAdmin, self).__init__(*args, **kwargs)
+
 
     def get_form(self, request, obj=None, **kwargs):
         defaults = {}
@@ -154,8 +136,10 @@ class VariantAdmin(admin.ModelAdmin):
         return super(VariantAdmin, self).get_form(request, obj, **defaults)
 
 
+# Register your models here.
 admin.site.register(models.Category)
+admin.site.register(models.Component, UnindexedAdmin)
+admin.site.register(models.DropShipmentSetting, UnindexedAdmin)
 admin.site.register(models.Manufacturer)
-admin.site.register(models.DropShipmentSetting, DropShipmentSettingAdmin)
 admin.site.register(models.Product, ProductAdmin)
 admin.site.register(models.Variant, VariantAdmin)

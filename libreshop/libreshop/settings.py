@@ -51,7 +51,6 @@ THIRD_PARTY_APPS = (
     'libreshop.apps.PythonSocialAuthConfig',
     'oauth2_provider',
     'rest_framework',
-    'nested_inline',
     'widget_tweaks',
     'django_countries',
 )
