@@ -20,7 +20,7 @@ class AttributeAdmin(admin.TabularInline):
 
 class InventoryAdmin(admin.ModelAdmin):
     form = forms.InventoryCreationForm
-    inlines = [AttributeAdmin, LocationAdmin,]
+    inlines = [AttributeAdmin, LocationAdmin]
 
 
 admin.site.register(models.Inventory, InventoryAdmin)

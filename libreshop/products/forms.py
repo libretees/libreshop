@@ -43,10 +43,12 @@ class RelatedFieldWidgetWrapper(admin.widgets.RelatedFieldWidgetWrapper):
 
 
 class ProductChangeForm(forms.ModelForm):
+
     class Meta:
         model = models.Product
         fields = ('sku', 'name', 'description', 'image',)
         widgets = {'description': Textarea(attrs={'cols': 80, 'rows': 5})}
+
 
     variants = forms.ModelMultipleChoiceField(
         label='Enabled Variants',
@@ -54,6 +56,7 @@ class ProductChangeForm(forms.ModelForm):
         required=False,
         queryset=None
     )
+
 
     def __init__(self, *args, **kwargs):
         super(ProductChangeForm, self).__init__(*args, **kwargs)
@@ -81,6 +84,7 @@ class ProductChangeForm(forms.ModelForm):
 
 
     def save(self, *args, **kwargs):
+
         instance = super(ProductChangeForm, self).save(*args, **kwargs)
 
         if instance.pk:
@@ -108,6 +112,7 @@ class ProductChangeForm(forms.ModelForm):
 
 
 class ProductCreationForm(forms.ModelForm):
+
     class Meta:
         model = models.Product
         fields = ('sku', 'name')
@@ -118,6 +123,7 @@ class ProductCreationForm(forms.ModelForm):
 
 
 class VariantCreationForm(forms.ModelForm):
+
     class Meta:
         model = models.Variant
         fields = ('product', 'name', 'sub_sku', 'price')
@@ -174,6 +180,7 @@ def PopulatedFormFactory(request, cls, form=forms.ModelForm):
 
 class ProductOrderForm(forms.Form):
 
+
     def __init__(self, product, **kwargs):
         super(ProductOrderForm, self).__init__(**kwargs)
 
@@ -183,8 +190,10 @@ class ProductOrderForm(forms.Form):
                 choices.insert(0, ('', 'Choose a %s' % key))
                 self.fields[key] = forms.fields.ChoiceField(choices=choices)
 
+
     def __str__(self):
         return self.as_div()
+
 
     def as_div(self):
         '''
@@ -196,7 +205,3 @@ class ProductOrderForm(forms.Form):
             row_ender='</div>',
             help_text_html=' <span class="helptext">%s</span>',
             errors_on_separate_row=True)
-
-    def clean(self):
-        cleaned_data = super(ProductOrderForm, self).clean()
-        return {key:{cleaned_data[key]} for key in cleaned_data}

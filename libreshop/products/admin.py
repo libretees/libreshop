@@ -103,8 +103,9 @@ class ProductAdmin(admin.ModelAdmin):
         # * We are adding a user in a popup
         if '_addanother' not in request.POST and IS_POPUP_VAR not in request.POST:
             request.POST['_continue'] = 1
-        return super(ProductAdmin, self).response_add(request, obj,
-                                                      post_url_continue)
+        return super(ProductAdmin, self).response_add(
+            request, obj, post_url_continue
+        )
 
 
 class ManufacturerAdmin(admin.TabularInline):
@@ -120,7 +121,7 @@ class ComponentInline(admin.TabularInline):
 class VariantAdmin(UnindexedAdmin, admin.ModelAdmin):
 
     add_form = VariantCreationForm
-    inlines = (ComponentInline, ManufacturerAdmin)
+    inlines = [ComponentInline, ManufacturerAdmin]
 
     def __init__(self, *args, **kwargs):
         super(VariantAdmin, self).__init__(*args, **kwargs)
