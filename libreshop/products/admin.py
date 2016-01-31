@@ -1,6 +1,7 @@
 import logging
 from django.contrib import admin
 from django.contrib.admin.options import IS_POPUP_VAR
+from contrib.forms import UniqueTogetherFormSet
 from . import models
 from .forms import (ProductCreationForm, ProductChangeForm, VariantCreationForm,
     PopulatedFormFactory)
@@ -109,11 +110,14 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class ManufacturerAdmin(admin.TabularInline):
+
     model = models.DropShipmentSettingValue
+    formset = UniqueTogetherFormSet
     extra = 0
 
 
 class ComponentInline(admin.TabularInline):
+
     model = models.Component
     extra = 0
 
