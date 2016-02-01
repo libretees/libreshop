@@ -56,14 +56,15 @@ THIRD_PARTY_APPS = (
 )
 
 LOCAL_APPS = (
+    'addresses',
     'api',
+    'carts',
     'contrib',
     'customers',
+    'fulfillment',
+    'orders',
     'products',
     'inventory',
-    'carts',
-    'orders',
-    'addresses',
 )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
