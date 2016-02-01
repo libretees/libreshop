@@ -57,6 +57,7 @@ THIRD_PARTY_APPS = (
 
 LOCAL_APPS = (
     'api',
+    'contrib',
     'customers',
     'products',
     'inventory',
@@ -209,6 +210,12 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple_yellow',
         },
+        'debug_console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple_yellow',
+        },
     },
     'loggers': {
         'products': {
@@ -222,6 +229,10 @@ LOGGING = {
         'orders': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'contrib': {
+            'handlers': ['debug_console'],
+            'level': 'DEBUG',
         },
     },
 }
