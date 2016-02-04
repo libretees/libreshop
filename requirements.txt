@@ -1,13 +1,18 @@
 alabaster==0.7.6
+amqp==1.4.9
+anyjson==0.3.3
 Babel==2.0
 behave==1.2.5
 behave-django==0.2.3
+billiard==3.3.0.22
 boto==2.36.0
 braintree==3.23.0
 captcha==0.2
+celery==3.1.20
 defusedxml==0.4.1
 Django==1.9
 django-braces==1.8.1
+django-celery==3.1.17
 django-countries==3.4.1
 django-ipware==1.1.2
 django-model-utils==2.3.1
@@ -20,6 +25,7 @@ factory-boy==2.5.2
 geoip2==2.2.0
 Jinja2==2.8
 jsonfield==1.0.3
+kombu==3.0.33
 lxml==3.5.0
 MarkupSafe==0.23
 maxminddb==1.2.0
