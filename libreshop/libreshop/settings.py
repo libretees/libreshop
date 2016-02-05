@@ -14,7 +14,6 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 import sys
 import braintree
-import djcelery
 from . import patch
 
 
@@ -48,7 +47,6 @@ DEFAULT_APPS = (
 
 THIRD_PARTY_APPS = (
     'behave_django',
-    'djcelery',
     #'social.apps.django_app.default',
     'libreshop.apps.PythonSocialAuthConfig',
     'oauth2_provider',
@@ -267,6 +265,3 @@ JURISDICTION = 'The United States'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-
-# Enable Django-Celery
-djcelery.setup_loader()
