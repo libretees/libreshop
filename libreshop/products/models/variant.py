@@ -1,5 +1,6 @@
 import re
 import logging
+from datetime import timedelta
 from decimal import Decimal
 from operator import itemgetter
 from django.core.exceptions import ValidationError
@@ -16,6 +17,12 @@ logger = logging.getLogger(__name__)
 class Manufacturer(TimeStampedModel):
 
     name = models.CharField(max_length=64, unique=True, null=False, blank=False)
+    filfillment_period = models.DurationField(
+        help_text='Specify time delta in [DD] [HH:[MM:]]ss[.uuuuuu] format.',
+        default=timedelta(),
+        null=False,
+        blank=False
+    )
 
     def __str__(self):
         return self.name
