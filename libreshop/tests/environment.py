@@ -20,7 +20,7 @@ def before_all(context):
     context.browser = webdriver.Firefox()
     context.browser.set_window_size(1366, 768)
 
-    # Wait a maximum of 3 seconds if an element is not present.
+    # Wait a maximum of 5 seconds if an element is not present.
     context.browser.implicitly_wait(5)
 
     # Store Live Server URL.

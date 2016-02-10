@@ -205,3 +205,11 @@ class ProductOrderForm(forms.Form):
             row_ender='</div>',
             help_text_html=' <span class="helptext">%s</span>',
             errors_on_separate_row=True)
+
+
+    def clean(self):
+        '''
+        Provide cleaned data as a dict of sets.
+        '''
+        cleaned_data = super(ProductOrderForm, self).clean()
+        return {key:{value} for key, value in cleaned_data.items()}

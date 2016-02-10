@@ -19,7 +19,6 @@ Feature: store
       Then I will see a "shopping cart" icon
        And I will see the text "Your cart contains"
 
-
   Scenario: remove an item from the cart
      Given I am an anonymous user
       When I visit the "home" page
