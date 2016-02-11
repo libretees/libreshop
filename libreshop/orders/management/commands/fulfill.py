@@ -1,4 +1,5 @@
 import logging
+import time
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q
 from orders.models import Order
@@ -15,6 +16,9 @@ class Command(BaseCommand):
         Set up command line arguments for the management command.
         '''
         parser.add_argument('order_tokens', nargs='*', type=str)
+        parser.add_argument(
+            '-s', '--server', action='store_true', dest='server'
+        )
 
 
     def handle(self, *args, **options):
@@ -24,7 +28,28 @@ class Command(BaseCommand):
         logger.info('Processing \'fulfill\' management command...')
 
         # Get command line arguments from 'options' dict.
+        server = options['server']
         tokens = options['order_tokens']
+
+        logger.debug('Received the following arguments...')
+        logger.debug(options)
+
+        if server:
+            self.run_server(*args, **options)
+        else:
+            self.fulfill_orders(tokens)
+
+
+    def run_server(self, *args, **options):
+        while True:
+            logger.debug('Fulfillment server process starting...')
+
+            logger.debug('Fulfillment server process finished.')
+            # Sleep for one second.
+            time.sleep(1)
+
+
+    def fulfill_orders(self, tokens=[]):
 
         # Get Orders by using the Order Token specified on the command line, or
         # get all unfulfilled orders, by default.
