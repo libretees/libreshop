@@ -1,5 +1,7 @@
 import logging
+import signal
 import time
+import sys
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q
 from orders.models import Order
@@ -21,6 +23,22 @@ class Command(BaseCommand):
         )
 
 
+    def server_callback(self, *args, **options):
+        logger.info('Fulfillment server starting...')
+        while True:
+            logger.debug('Fulfillment server loop starting...')
+
+            logger.debug('Fulfillment server loop finished.')
+
+            # Sleep for one second.
+            time.sleep(1)
+
+
+    def exit_callback(self, *args, **options):
+        logger.info('Fulfillment server exiting...')
+        sys.exit(0)
+
+
     def handle(self, *args, **options):
         '''
         Handle management command processing.
@@ -34,19 +52,17 @@ class Command(BaseCommand):
         logger.debug('Received the following arguments...')
         logger.debug(options)
 
-        if server:
-            self.run_server(*args, **options)
-        else:
+        # Fulfill any orders specified on the command line.
+        if tokens:
             self.fulfill_orders(tokens)
 
-
-    def run_server(self, *args, **options):
-        while True:
-            logger.debug('Fulfillment server process starting...')
-
-            logger.debug('Fulfillment server process finished.')
-            # Sleep for one second.
-            time.sleep(1)
+        # Enter the server loop if the '--server' option was specified.
+        if server:
+            # Set up SIGINT signal to call on ctrl-c.
+            signal.signal(
+                signal.SIGINT, lambda sig, frame: self.exit_callback()
+            )
+            self.server_callback(*args, **options)
 
 
     def fulfill_orders(self, tokens=[]):
