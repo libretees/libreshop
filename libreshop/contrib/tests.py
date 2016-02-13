@@ -87,3 +87,25 @@ class UniqueTogetherFormSetTest(TestCase):
         formset = FormSet(data=self.post_data)
 
         self.assertFalse(formset.is_valid())
+
+
+    def test_formset_handles_null_values(self):
+        '''
+        Test that UniqueTogetherFormSet does not raise a KeyError exception if a
+        Null value is specified within the FormSet.
+        '''
+        warehouse = Warehouse.objects.create(name='foo')
+
+        self.post_data.update({
+            'location_set-0-warehouse': warehouse.pk,
+            'location_set-1-warehouse': None,
+        })
+
+        FormSet = inlineformset_factory(
+            Inventory, Location, formset=UniqueTogetherFormSet,
+            fields=('inventory', 'warehouse')
+        )
+
+        formset = FormSet(data=self.post_data)
+
+        self.assertTrue(formset.is_valid())

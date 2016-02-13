@@ -28,7 +28,7 @@ class UniqueTogetherFormSet(BaseInlineFormSet):
             for fields in unique_together:
                 # Convert Form values for 'unique together' fields into a tuple.
                 form_values = tuple(
-                    form.cleaned_data[field] for field in fields
+                    form.cleaned_data.get(field) for field in fields
                 )
 
                 # Raise an exception if these values have already been seen.
