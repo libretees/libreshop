@@ -2,12 +2,16 @@ import logging
 import signal
 import time
 import sys
+import schedule
 from django.core.management.base import BaseCommand, CommandError
-from django.db.models import Q
 from orders.models import Order
+from products.models import Manufacturer
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
+
+SECONDS_IN_DAY = 86400
+
 
 class Command(BaseCommand):
 
@@ -25,8 +29,29 @@ class Command(BaseCommand):
 
     def server_callback(self, *args, **options):
         logger.info('Fulfillment server starting...')
+
+        manufacturers = Manufacturer.objects.all()
+        for manufacturer in manufacturers:
+            period = (
+                manufacturer.fulfillment_period.days * SECONDS_IN_DAY +
+                manufacturer.fulfillment_period.seconds
+            )
+            logger.debug(
+                ('Scheduling fulfillment of (%s) products for every (%s) '
+                 'seconds...') % (manufacturer.name, period)
+            )
+            schedule.every(period).seconds.do(
+                self.fulfill_dropship, manufacturer.name
+            )
+            logger.debug(
+                ('Scheduled fulfillment of (%s) products for every (%s) '
+                 'seconds.') % (manufacturer.name, period)
+            )
+
         while True:
             logger.debug('Fulfillment server loop starting...')
+
+            schedule.run_pending()
 
             logger.debug('Fulfillment server loop finished.')
 
@@ -63,6 +88,15 @@ class Command(BaseCommand):
                 signal.SIGINT, lambda sig, frame: self.exit_callback()
             )
             self.server_callback(*args, **options)
+
+
+    def fulfill_dropship(self, manufacturer_name):
+        logger.info(
+            'Fulfilling products manufactured by (%s)...' % manufacturer_name
+        )
+        logger.info(
+            'Fulfilled products manufactured by (%s).' % manufacturer_name
+        )
 
 
     def fulfill_orders(self, tokens=[]):
