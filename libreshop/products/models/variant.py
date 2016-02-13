@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class Manufacturer(TimeStampedModel):
 
     name = models.CharField(max_length=64, unique=True, null=False, blank=False)
-    filfillment_period = models.DurationField(
+    fulfillment_period = models.DurationField(
         help_text='Specify time delta in [DD] [HH:[MM:]]ss[.uuuuuu] format.',
         default=timedelta(),
         null=False,
