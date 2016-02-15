@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.db.models import Count
 from .models import Order, Purchase, TaxRate
 
+
 class OrderAdmin(admin.ModelAdmin):
 
     list_display = (

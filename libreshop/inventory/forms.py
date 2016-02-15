@@ -11,9 +11,10 @@ logger = logging.getLogger(__name__)
 class InventoryCreationForm(forms.ModelForm):
     class Meta:
         model = Inventory
-        fields = ('name', 'alternatives', 'cost',)
+        fields = ('name', 'alternatives', 'cost')
 
     def __init__(self, *args, **kwargs):
         super(InventoryCreationForm, self).__init__(*args, **kwargs)
         self.fields['alternatives'].queryset = Inventory.objects.exclude(
-            id__exact=self.instance.id)
+            id__exact=self.instance.id
+        )

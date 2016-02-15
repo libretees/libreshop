@@ -2,7 +2,6 @@ import logging
 import braintree
 from datetime import date
 from django import forms
-from addresses.forms import AddressForm
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
