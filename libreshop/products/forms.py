@@ -2,12 +2,14 @@ import re
 import logging
 from xml.etree import ElementTree
 from django import forms
+from django.conf import settings
 from django.forms.widgets import Select, Textarea
 from django.forms.utils import ErrorList
 from django.contrib import admin
 from django.db.models.fields.related import OneToOneRel
 from django.utils.safestring import mark_safe
 from . import models
+
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -213,3 +215,19 @@ class ProductOrderForm(forms.Form):
         '''
         cleaned_data = super(ProductOrderForm, self).clean()
         return {key:{value} for key, value in cleaned_data.items()}
+
+
+def get_fulfillment_backends():
+    return settings.FULFILLMENT_BACKENDS
+
+
+class ManufacturerCreationForm(forms.ModelForm):
+    class Meta:
+        model = models.Manufacturer
+        fields = ('name', 'fulfillment_backend', 'fulfillment_time')
+
+    def __init__(self, *args, **kwargs):
+        super(ManufacturerCreationForm, self).__init__(*args, **kwargs)
+        self.fields['fulfillment_backend'] = forms.ChoiceField(
+            choices=get_fulfillment_backends
+        )

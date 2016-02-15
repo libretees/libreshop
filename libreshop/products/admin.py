@@ -3,8 +3,10 @@ from django.contrib import admin
 from django.contrib.admin.options import IS_POPUP_VAR
 from contrib.forms import UniqueTogetherFormSet
 from . import models
-from .forms import (ProductCreationForm, ProductChangeForm, VariantCreationForm,
-    PopulatedFormFactory)
+from .forms import (
+    ManufacturerCreationForm, PopulatedFormFactory, ProductCreationForm,
+    ProductChangeForm, VariantCreationForm
+)
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -109,7 +111,12 @@ class ProductAdmin(admin.ModelAdmin):
         )
 
 
-class ManufacturerAdmin(admin.TabularInline):
+class ManufacturerAdmin(admin.ModelAdmin):
+
+    form = ManufacturerCreationForm
+
+
+class ManufacturerInline(admin.TabularInline):
 
     model = models.DropShipmentSettingValue
     formset = UniqueTogetherFormSet
@@ -125,7 +132,7 @@ class ComponentInline(admin.TabularInline):
 class VariantAdmin(UnindexedAdmin, admin.ModelAdmin):
 
     add_form = VariantCreationForm
-    inlines = [ComponentInline, ManufacturerAdmin]
+    inlines = [ComponentInline, ManufacturerInline]
 
     def __init__(self, *args, **kwargs):
         super(VariantAdmin, self).__init__(*args, **kwargs)
@@ -145,6 +152,6 @@ class VariantAdmin(UnindexedAdmin, admin.ModelAdmin):
 admin.site.register(models.Category)
 admin.site.register(models.Component, UnindexedAdmin)
 admin.site.register(models.DropShipmentSetting, UnindexedAdmin)
-admin.site.register(models.Manufacturer)
+admin.site.register(models.Manufacturer, ManufacturerAdmin)
 admin.site.register(models.Product, ProductAdmin)
 admin.site.register(models.Variant, VariantAdmin)

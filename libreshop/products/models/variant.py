@@ -17,6 +17,9 @@ logger = logging.getLogger(__name__)
 class Manufacturer(TimeStampedModel):
 
     name = models.CharField(max_length=64, unique=True, null=False, blank=False)
+    fulfillment_backend = models.CharField(
+        max_length=128, null=False, blank=False
+    )
     fulfillment_time = models.TimeField(null=True, blank=True)
 
     def __str__(self):

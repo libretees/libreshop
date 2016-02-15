@@ -61,7 +61,6 @@ LOCAL_APPS = (
     'carts',
     'contrib',
     'customers',
-    'fulfillment',
     'orders',
     'products',
     'inventory',
@@ -228,8 +227,8 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
         'orders': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'handlers': ['debug_console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },
         'contrib': {
             'handlers': ['debug_console'],
@@ -265,3 +264,8 @@ JURISDICTION = 'The United States'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# Set fulfillment backends.
+FULFILLMENT_BACKENDS = [
+    ('django.core.mail.backends.locmem.EmailBackend', 'Email')
+]
