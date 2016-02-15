@@ -17,6 +17,11 @@ class Command(BaseCommand):
 
     help = 'Fulfills the specified order via drop shipment.'
 
+    def __init__(self, *args, **kwargs):
+        super(Command, self).__init__(*args, **kwargs)
+        self.run_queue = dict()
+
+
     def add_arguments(self, parser):
         '''
         Set up command line arguments for the management command.
@@ -27,19 +32,24 @@ class Command(BaseCommand):
         )
 
 
-    def server_callback(self, *args, **options):
-        logger.info('Fulfillment server starting...')
+    def initialize_run_queue(self, manufacturer_name=None):
 
-        manufacturers = Manufacturer.objects.all()
+        manufacturers = (
+            Manufacturer.objects.filter(name__in=[manufacturer_name]) or
+            Manufacturer.objects.all()
+        )
 
         for manufacturer in manufacturers:
+
+            job = None
+
             if manufacturer.fulfillment_time:
                 scheduled_time = manufacturer.fulfillment_time.strftime('%H:%M')
                 logger.debug(
                     'Scheduling fulfillment of (%s) products for (%s)...' %
                     (manufacturer.name, scheduled_time)
                 )
-                schedule.every().day.at(scheduled_time).do(
+                job = schedule.every().day.at(scheduled_time).do(
                     self.fulfill_dropship, manufacturer.name
                 )
                 logger.debug(
@@ -51,7 +61,7 @@ class Command(BaseCommand):
                     ('Scheduling fulfillment of (%s) products for every (%s) '
                      'second...') % (manufacturer.name, 1)
                 )
-                schedule.every(1).seconds.do(
+                job = schedule.every(1).seconds.do(
                     self.fulfill_dropship, manufacturer.name
                 )
                 logger.debug(
@@ -59,12 +69,65 @@ class Command(BaseCommand):
                      'second.') % (manufacturer.name, 1)
                 )
 
+            self.run_queue.update({
+                manufacturer.name: (job, manufacturer.modified)
+            })
+
+
+    def maintain_run_queue(self):
+
+        manufacturers = Manufacturer.objects.all()
+
+        for manufacturer in manufacturers:
+            job_info = self.run_queue.get(manufacturer.name)
+
+            if job_info:
+                job, modified_time = job_info
+
+                if modified_time < manufacturer.modified:
+                    # Update the run queue with new job schedule information.
+                    logger.info(
+                        'Rescheduling (%s) fulfillment...' % manufacturer.name
+                    )
+                    schedule.cancel_job(job)
+                    self.initialize_run_queue(manufacturer.name)
+                    logger.info(
+                        'Rescheduled (%s) fulfillment.' % manufacturer.name
+                    )
+            else:
+                # Add new manufacturers to the run queue.
+                self.initialize_run_queue(manufacturer.name)
+
+        # Determine which jobs on run queue should be removed.
+        discontinued_jobs = {
+            name:self.run_queue[name]
+            for name in self.run_queue if name not in
+            [manufacturer.name for manufacturer in manufacturers]
+        }
+
+        # Remove stale entries from the run queue.
+        for manufacturer_name, job_info in discontinued_jobs.items():
+            logger.info(
+                'Canceling (%s) fulfillment...' % manufacturer_name
+            )
+
+            job, _ = job_info
+            schedule.cancel_job(job)
+            del self.run_queue[manufacturer_name]
+
+            logger.info(
+                'Canceled (%s) fulfillment.' % manufacturer_name
+            )
+
+
+    def server_callback(self, *args, **options):
+        logger.info('Fulfillment server starting...')
+
+        self.initialize_run_queue()
+
         while True:
-            logger.debug('Fulfillment server loop starting...')
-
+            self.maintain_run_queue()
             schedule.run_pending()
-
-            logger.debug('Fulfillment server loop finished.')
 
             # Sleep for one second.
             time.sleep(1)
