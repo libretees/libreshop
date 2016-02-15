@@ -31,22 +31,33 @@ class Command(BaseCommand):
         logger.info('Fulfillment server starting...')
 
         manufacturers = Manufacturer.objects.all()
+
         for manufacturer in manufacturers:
-            period = (
-                manufacturer.fulfillment_period.days * SECONDS_IN_DAY +
-                manufacturer.fulfillment_period.seconds
-            )
-            logger.debug(
-                ('Scheduling fulfillment of (%s) products for every (%s) '
-                 'seconds...') % (manufacturer.name, period)
-            )
-            schedule.every(period).seconds.do(
-                self.fulfill_dropship, manufacturer.name
-            )
-            logger.debug(
-                ('Scheduled fulfillment of (%s) products for every (%s) '
-                 'seconds.') % (manufacturer.name, period)
-            )
+            if manufacturer.fulfillment_time:
+                scheduled_time = manufacturer.fulfillment_time.strftime('%H:%M')
+                logger.debug(
+                    'Scheduling fulfillment of (%s) products for (%s)...' %
+                    (manufacturer.name, scheduled_time)
+                )
+                schedule.every().day.at(scheduled_time).do(
+                    self.fulfill_dropship, manufacturer.name
+                )
+                logger.debug(
+                    'Scheduled fulfillment of (%s) products for (%s).' %
+                    (manufacturer.name, scheduled_time)
+                )
+            else:
+                logger.debug(
+                    ('Scheduling fulfillment of (%s) products for every (%s) '
+                     'second...') % (manufacturer.name, 1)
+                )
+                schedule.every(1).seconds.do(
+                    self.fulfill_dropship, manufacturer.name
+                )
+                logger.debug(
+                    ('Scheduled fulfillment of (%s) products for every (%s) '
+                     'second.') % (manufacturer.name, 1)
+                )
 
         while True:
             logger.debug('Fulfillment server loop starting...')
