@@ -61,6 +61,7 @@ LOCAL_APPS = (
     'carts',
     'contrib',
     'customers',
+    'fulfillment',
     'orders',
     'products',
     'inventory',
