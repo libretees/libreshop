@@ -4,8 +4,8 @@ import time
 import sys
 import schedule
 from django.core.management.base import BaseCommand, CommandError
+from fulfillment.models import Manufacturer
 from orders.models import Order
-from products.models import Manufacturer
 
 # Initialize logger.
 logger = logging.getLogger(__name__)

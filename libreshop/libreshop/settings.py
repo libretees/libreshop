@@ -219,21 +219,25 @@ LOGGING = {
         },
     },
     'loggers': {
-        'products': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-        },
         'carts': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'contrib': {
+            'handlers': ['debug_console'],
+            'level': 'DEBUG',
+        },
+        'fulfillment': {
+            'handlers': ['debug_console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },
         'orders': {
             'handlers': ['debug_console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },
-        'contrib': {
-            'handlers': ['debug_console'],
-            'level': 'DEBUG',
+        'products': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
     },
 }

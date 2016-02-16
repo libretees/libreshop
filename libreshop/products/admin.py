@@ -1,24 +1,16 @@
 import logging
 from django.contrib import admin
 from django.contrib.admin.options import IS_POPUP_VAR
-from contrib.forms import UniqueTogetherFormSet
+from contrib.admin import UnindexedAdmin
+from fulfillment.admin import DropShipmentSettingValueInline
 from . import models
 from .forms import (
-    ManufacturerCreationForm, PopulatedFormFactory, ProductCreationForm,
-    ProductChangeForm, VariantCreationForm
+    PopulatedFormFactory, ProductCreationForm, ProductChangeForm,
+    VariantCreationForm
 )
 
 # Initialize logger
 logger = logging.getLogger(__name__)
-
-
-class UnindexedAdmin(admin.ModelAdmin):
-
-    def get_model_perms(self, request):
-        """
-        Hide the the model from admin index by returning an empty perms dict.
-        """
-        return {}
 
 
 class VariantInline(admin.TabularInline):
@@ -111,18 +103,6 @@ class ProductAdmin(admin.ModelAdmin):
         )
 
 
-class ManufacturerAdmin(admin.ModelAdmin):
-
-    form = ManufacturerCreationForm
-
-
-class ManufacturerInline(admin.TabularInline):
-
-    model = models.DropShipmentSettingValue
-    formset = UniqueTogetherFormSet
-    extra = 0
-
-
 class ComponentInline(admin.TabularInline):
 
     model = models.Component
@@ -132,7 +112,7 @@ class ComponentInline(admin.TabularInline):
 class VariantAdmin(UnindexedAdmin, admin.ModelAdmin):
 
     add_form = VariantCreationForm
-    inlines = [ComponentInline, ManufacturerInline]
+    inlines = [ComponentInline, DropShipmentSettingValueInline]
 
     def __init__(self, *args, **kwargs):
         super(VariantAdmin, self).__init__(*args, **kwargs)
@@ -151,7 +131,5 @@ class VariantAdmin(UnindexedAdmin, admin.ModelAdmin):
 # Register your models here.
 admin.site.register(models.Category)
 admin.site.register(models.Component, UnindexedAdmin)
-admin.site.register(models.DropShipmentSetting, UnindexedAdmin)
-admin.site.register(models.Manufacturer, ManufacturerAdmin)
 admin.site.register(models.Product, ProductAdmin)
 admin.site.register(models.Variant, VariantAdmin)
