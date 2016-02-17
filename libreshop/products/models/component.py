@@ -1,4 +1,5 @@
 import logging
+from collections import OrderedDict
 from decimal import Decimal
 from django.db import models
 from django.db import transaction
@@ -33,9 +34,11 @@ class Component(TimeStampedModel):
 
     @property
     def attributes(self):
-        return ({attribute.name:attribute.value
-            for attribute in self.inventory.attribute_value_set.all()}
-            if self.inventory else {})
+        return OrderedDict() if not self.inventory else OrderedDict(
+            (attribute.name, attribute.value)
+            for attribute
+            in self.inventory.attribute_value_set.all().order_by('-created')
+        )
 
 
     def delete_invalid_components(self):

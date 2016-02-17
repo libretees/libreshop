@@ -66,7 +66,8 @@ class InventoryFactory(factory.DjangoModelFactory):
 
     @factory.post_generation
     def attr(obj, create, extracted, **kwargs):
-        for key in kwargs:
+
+        for key in sorted(kwargs):
 
             attribute = None
             try:
@@ -101,6 +102,7 @@ class ProductFactory(factory.DjangoModelFactory):
             component = variant.component_set.first()
             component.inventory = inventory
             component.save()
+
 
     @factory.post_generation
     def option(obj, create, extracted, **kwargs):

@@ -1,5 +1,6 @@
 import re
 import logging
+from collections import OrderedDict
 from decimal import Decimal
 from operator import itemgetter
 from django.core.exceptions import ValidationError
@@ -93,8 +94,10 @@ class Variant(TimeStampedModel):
         """
         regex = re.compile(numeric_pattern, re.VERBOSE)
 
-        attributes = {}
-        for component in self.component_set.all().order_by('-created'):
+        attributes = OrderedDict()
+        components = self.component_set.all().order_by('-created')
+
+        for component in components:
             for key in component.attributes:
                 attribute = component.attributes[key]
                 if key not in attributes:
@@ -115,6 +118,7 @@ class Variant(TimeStampedModel):
                                 attributes[key].discard(value)
                                 break
                     attributes[key].add(attribute)
+
         return attributes
 
 

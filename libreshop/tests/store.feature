@@ -26,5 +26,5 @@ Feature: store
        And I select "Small" from the "Size" field
        And I select "White" from the "Color" field
        And I click the "Get One!" button
-       And I click the x button next to "foo (White Small)"
+       And I click the x button next to "foo (Small White)"
       Then I will not see the text "Your cart contains"
