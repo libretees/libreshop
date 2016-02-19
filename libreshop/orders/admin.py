@@ -7,7 +7,7 @@ class OrderAdmin(admin.ModelAdmin):
 
     list_display = (
         'token', '_recipient', '_purchases', 'subtotal', 'sales_tax',
-        'shipping_cost', 'total', 'created', 'fulfilled'
+        'shipping_cost', 'total', 'created'
     )
 
     def _purchases(self, instance):

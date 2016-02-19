@@ -30,7 +30,6 @@ class Order(TimeStampedModel):
         blank=True)
     token = models.CharField(max_length=8, null=False, blank=False, unique=True,
         default=get_token)
-    fulfilled = models.BooleanField(default=False)
     subtotal = models.DecimalField(max_digits=8, decimal_places=2, null=False,
         blank=False, default=Decimal('0.00'))
     sales_tax = models.DecimalField(max_digits=8, decimal_places=2, null=False,
@@ -48,6 +47,7 @@ class Purchase(TimeStampedModel):
     variant = models.ForeignKey('products.Variant', null=False)
     price = models.DecimalField(max_digits=8, decimal_places=2, null=False,
             blank=False, default=Decimal('0.00'))
+    fulfilled = models.BooleanField(default=False)
 
 
 class TaxRate(TimeStampedModel):
