@@ -5,12 +5,10 @@ import sys
 import schedule
 from django.core.management.base import BaseCommand, CommandError
 from fulfillment.models import Manufacturer
-from orders.models import Order
+from orders.models import Order, Purchase
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
-
-SECONDS_IN_DAY = 86400
 
 
 class Command(BaseCommand):
@@ -99,14 +97,14 @@ class Command(BaseCommand):
                 self.initialize_run_queue(manufacturer.name)
 
         # Determine which jobs on run queue should be removed.
-        discontinued_jobs = {
+        canceled_jobs = {
             name:self.run_queue[name]
             for name in self.run_queue if name not in
             [manufacturer.name for manufacturer in manufacturers]
         }
 
         # Remove stale entries from the run queue.
-        for manufacturer_name, job_info in discontinued_jobs.items():
+        for manufacturer_name, job_info in canceled_jobs.items():
             logger.info(
                 'Canceling (%s) fulfillment...' % manufacturer_name
             )
@@ -153,7 +151,7 @@ class Command(BaseCommand):
 
         # Fulfill any orders specified on the command line.
         if tokens:
-            self.fulfill_orders(tokens)
+            self.fulfill_orders(tokens=tokens)
 
         # Enter the server loop if the '--server' option was specified.
         if server:
@@ -162,6 +160,9 @@ class Command(BaseCommand):
                 signal.SIGINT, lambda sig, frame: self.exit_callback()
             )
             self.server_callback(*args, **options)
+        else:
+            # Fulfill all orders, if no command line arguments were provided.
+            self.fulfill_orders()
 
 
     def fulfill_dropship(self, manufacturer_name):
@@ -179,7 +180,10 @@ class Command(BaseCommand):
         # get all unfulfilled orders, by default.
         orders = (
             Order.objects.filter(token__in=tokens) or
-            Order.objects.filter(fulfilled=False)
+            Order.objects.filter(pk__in=[
+                purchase.order.pk
+                for purchase in Purchase.objects.filter(fulfilled=False)
+            ])
         )
 
         # Check for and report any invalid Order Tokens.
@@ -202,8 +206,10 @@ class Command(BaseCommand):
 
         # Fullfill orders.
         for order in orders:
-            order.fulfilled = True
-            order.save()
+            purchases = Purchase.objects.filter(order=order.pk, fulfilled=False)
+            for purchase in purchases:
+                purchase.fulfilled = True
+                purchase.save()
 
             self.stdout.write(self.style.SUCCESS(
                 'Order %s has been fulfilled.' % order.token
