@@ -17,7 +17,7 @@ class Command(BaseCommand):
 
     def __init__(self, *args, **kwargs):
         super(Command, self).__init__(*args, **kwargs)
-        self.run_queue = dict()
+        self.task_queue = dict()
 
 
     def add_arguments(self, parser):
@@ -30,7 +30,7 @@ class Command(BaseCommand):
         )
 
 
-    def initialize_run_queue(self, manufacturer_name=None):
+    def initialize_task_queue(self, manufacturer_name=None):
 
         manufacturers = (
             Manufacturer.objects.filter(name__in=[manufacturer_name]) or
@@ -67,17 +67,17 @@ class Command(BaseCommand):
                      'second.') % (manufacturer.name, 1)
                 )
 
-            self.run_queue.update({
+            self.task_queue.update({
                 manufacturer.name: (job, manufacturer.modified)
             })
 
 
-    def maintain_run_queue(self):
+    def maintain_task_queue(self):
 
         manufacturers = Manufacturer.objects.all()
 
         for manufacturer in manufacturers:
-            job_info = self.run_queue.get(manufacturer.name)
+            job_info = self.task_queue.get(manufacturer.name)
 
             if job_info:
                 job, modified_time = job_info
@@ -88,18 +88,18 @@ class Command(BaseCommand):
                         'Rescheduling (%s) fulfillment...' % manufacturer.name
                     )
                     schedule.cancel_job(job)
-                    self.initialize_run_queue(manufacturer.name)
+                    self.initialize_task_queue(manufacturer.name)
                     logger.info(
                         'Rescheduled (%s) fulfillment.' % manufacturer.name
                     )
             else:
                 # Add new manufacturers to the run queue.
-                self.initialize_run_queue(manufacturer.name)
+                self.initialize_task_queue(manufacturer.name)
 
         # Determine which jobs on run queue should be removed.
         canceled_jobs = {
-            name:self.run_queue[name]
-            for name in self.run_queue if name not in
+            name:self.task_queue[name]
+            for name in self.task_queue if name not in
             [manufacturer.name for manufacturer in manufacturers]
         }
 
@@ -111,7 +111,7 @@ class Command(BaseCommand):
 
             job, _ = job_info
             schedule.cancel_job(job)
-            del self.run_queue[manufacturer_name]
+            del self.task_queue[manufacturer_name]
 
             logger.info(
                 'Canceled (%s) fulfillment.' % manufacturer_name
@@ -121,10 +121,10 @@ class Command(BaseCommand):
     def server_callback(self, *args, **options):
         logger.info('Fulfillment server starting...')
 
-        self.initialize_run_queue()
+        self.initialize_task_queue()
 
         while True:
-            self.maintain_run_queue()
+            self.maintain_task_queue()
             schedule.run_pending()
 
             # Sleep for one second.
@@ -215,6 +215,8 @@ class Command(BaseCommand):
                 'Order %s has been fulfilled.' % order.token
             ))
         else:
-            logger.info('%s Orders were fulfilled.' % len(orders))
+            logger.info('%s %s fulfilled.' %
+                (len(orders), 'Orders were' if len(orders) > 1 else 'Order was')
+            )
 
         logger.info('Processed \'fulfill\' management command...')
