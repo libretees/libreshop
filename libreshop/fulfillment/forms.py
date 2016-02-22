@@ -1,8 +1,11 @@
 import importlib
+import logging
 from django.conf import settings
 from django import forms
 from . import models
 
+# Initialize logger.
+logger = logging.getLogger(__name__)
 
 def get_fulfillment_backend_choices():
 

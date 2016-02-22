@@ -182,21 +182,27 @@ class Command(BaseCommand):
 
         supplier = Manufacturer.objects.get(name=manufacturer_name)
 
-        purchases = {
+        unfulfilled_purchases = {
             purchase
             for setting in supplier.dropshipmentsetting_set.all()
             for variant in setting.variant_set.all()
             for purchase in variant.purchase_set.filter(fulfilled=False)
         }
 
-        for purchase in purchases:
-            purchase.fulfilled = True
-            purchase.save()
-            self.stdout.write(self.style.SUCCESS(
-                'SKU %s (%s) under Order %s has been fulfilled.' %
-                (purchase.variant.sku, purchase.variant.name,
-                purchase.order.token)
-            ))
+        if unfulfilled_purchases:
+
+            fulfillment_backend = supplier.load_fulfillment_backend()
+            success = fulfillment_backend(unfulfilled_purchases)
+
+            if success:
+                for purchase in unfulfilled_purchases:
+                    purchase.fulfilled = True
+                    purchase.save()
+                    self.stdout.write(self.style.SUCCESS(
+                        'SKU %s (%s) under Order %s has been fulfilled.' %
+                        (purchase.variant.sku, purchase.variant.name,
+                        purchase.order.token)
+                    ))
 
         logger.info(
             'Fulfilled products manufactured by (%s).' % manufacturer_name
