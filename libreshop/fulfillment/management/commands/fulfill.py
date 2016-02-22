@@ -4,6 +4,7 @@ import time
 import sys
 import schedule
 from django.core.management.base import BaseCommand, CommandError
+from daemon import DaemonContext
 from fulfillment.models import Manufacturer
 from orders.models import Order, Purchase
 
@@ -25,6 +26,9 @@ class Command(BaseCommand):
         Set up command line arguments for the management command.
         '''
         parser.add_argument('order_tokens', nargs='*', type=str)
+        parser.add_argument(
+            '-d', '--daemon', action='store_true', dest='daemon'
+        )
         parser.add_argument(
             '-s', '--server', action='store_true', dest='server'
         )
@@ -143,7 +147,8 @@ class Command(BaseCommand):
         logger.info('Processing \'fulfill\' management command...')
 
         # Get command line arguments from 'options' dict.
-        server = options['server']
+        daemon = options['daemon']
+        server = options['server'] or daemon
         tokens = options['order_tokens']
 
         logger.debug('Received the following arguments...')
@@ -159,7 +164,12 @@ class Command(BaseCommand):
             signal.signal(
                 signal.SIGINT, lambda sig, frame: self.exit_callback()
             )
-            self.server_callback(*args, **options)
+            if daemon:
+                logger.info('Daemonizing server process...')
+                with DaemonContext():
+                    self.server_callback(*args, **options)
+            else:
+                self.server_callback(*args, **options)
         else:
             # Fulfill all orders, if no command line arguments were provided.
             self.fulfill_orders()
@@ -169,6 +179,25 @@ class Command(BaseCommand):
         logger.info(
             'Fulfilling products manufactured by (%s)...' % manufacturer_name
         )
+
+        supplier = Manufacturer.objects.get(name=manufacturer_name)
+
+        purchases = {
+            purchase
+            for setting in supplier.dropshipmentsetting_set.all()
+            for variant in setting.variant_set.all()
+            for purchase in variant.purchase_set.filter(fulfilled=False)
+        }
+
+        for purchase in purchases:
+            purchase.fulfilled = True
+            purchase.save()
+            self.stdout.write(self.style.SUCCESS(
+                'SKU %s (%s) under Order %s has been fulfilled.' %
+                (purchase.variant.sku, purchase.variant.name,
+                purchase.order.token)
+            ))
+
         logger.info(
             'Fulfilled products manufactured by (%s).' % manufacturer_name
         )
@@ -212,7 +241,7 @@ class Command(BaseCommand):
                 purchase.save()
 
             self.stdout.write(self.style.SUCCESS(
-                'Order %s has been fulfilled.' % order.token
+                'Fulfilled Order %s.' % order.token
             ))
         else:
             logger.info('%s %s fulfilled.' %
