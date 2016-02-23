@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.db.models.aggregates import Count, Sum, IntegerField
 from django.db.models.expressions import Case, When
+from common.admin import UnindexedAdmin
 from .models import Order, Purchase, TaxRate
 
 
@@ -61,5 +62,5 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 # Register your models here.
-admin.site.register(Purchase)
+admin.site.register(Purchase, UnindexedAdmin)
 admin.site.register(TaxRate)
