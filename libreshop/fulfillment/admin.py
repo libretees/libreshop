@@ -1,7 +1,7 @@
 import logging
 from django.contrib import admin
-from contrib.admin import UnindexedAdmin
-from contrib.forms import UniqueTogetherFormSet
+from common.admin import UnindexedAdmin
+from common.forms import UniqueTogetherFormSet
 from .forms import SupplierCreationForm
 from .models import DropShipmentSetting, DropShipmentSettingValue, Supplier
 

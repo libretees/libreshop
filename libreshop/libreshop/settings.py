@@ -59,7 +59,7 @@ LOCAL_APPS = (
     'addresses',
     'api',
     'carts',
-    'contrib',
+    'common',
     'customers',
     'fulfillment',
     'orders',
@@ -223,7 +223,7 @@ LOGGING = {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
-        'contrib': {
+        'common': {
             'handlers': ['debug_console'],
             'level': 'DEBUG',
         },

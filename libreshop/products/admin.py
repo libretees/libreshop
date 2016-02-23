@@ -1,7 +1,7 @@
 import logging
 from django.contrib import admin
 from django.contrib.admin.options import IS_POPUP_VAR
-from contrib.admin import UnindexedAdmin
+from common.admin import UnindexedAdmin
 from fulfillment.admin import DropShipmentSettingValueInline
 from . import models
 from .forms import (

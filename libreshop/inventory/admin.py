@@ -1,6 +1,6 @@
 import logging
 from django.contrib import admin
-from contrib.forms import UniqueTogetherFormSet
+from common.forms import UniqueTogetherFormSet
 from . import forms
 from . import models
 
