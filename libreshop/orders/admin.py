@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.db.models.aggregates import Count, Sum, IntegerField
-from django.db.models.expressions import Case, When
+from django.db.models.expressions import Case, F, When
 from common.admin import UnindexedAdmin
 from .models import Order, Purchase, TaxRate
 
@@ -61,6 +61,30 @@ class OrderAdmin(admin.ModelAdmin):
         return queryset
 
 
+@admin.register(TaxRate)
+class TaxRateAdmin(admin.ModelAdmin):
+
+    list_display = (
+        'postal_code', '_tax_rate', 'city', 'county', 'district', 'state'
+    )
+
+
+    def _tax_rate(self, instance):
+        return '%s%%' % (instance.tax_rate * 100).normalize()
+    _tax_rate.short_description = 'Tax Rate'
+    _tax_rate.admin_order_field = 'tax_rate'
+
+
+    def get_queryset(self, request):
+        queryset = super(TaxRateAdmin, self).get_queryset(request)
+        queryset = queryset.annotate(
+            tax_rate=(
+                F('local_tax_rate') + F('county_tax_rate') +
+                F('district_tax_rate') + F('state_tax_rate')
+            )
+        )
+        return queryset
+
+
 # Register your models here.
 admin.site.register(Purchase, UnindexedAdmin)
-admin.site.register(TaxRate)
