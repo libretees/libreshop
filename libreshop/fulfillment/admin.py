@@ -2,8 +2,8 @@ import logging
 from django.contrib import admin
 from contrib.admin import UnindexedAdmin
 from contrib.forms import UniqueTogetherFormSet
-from .forms import ManufacturerCreationForm
-from .models import DropShipmentSetting, DropShipmentSettingValue, Manufacturer
+from .forms import SupplierCreationForm
+from .models import DropShipmentSetting, DropShipmentSettingValue, Supplier
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -16,10 +16,10 @@ class DropShipmentSettingValueInline(admin.TabularInline):
     extra = 0
 
 
-class ManufacturerAdmin(admin.ModelAdmin):
+class SupplierAdmin(admin.ModelAdmin):
 
-    form = ManufacturerCreationForm
+    form = SupplierCreationForm
 
 
 admin.site.register(DropShipmentSetting, UnindexedAdmin)
-admin.site.register(Manufacturer, ManufacturerAdmin)
+admin.site.register(Supplier, SupplierAdmin)

@@ -28,13 +28,13 @@ def get_fulfillment_backend_choices():
     return fulfillment_backends
 
 
-class ManufacturerCreationForm(forms.ModelForm):
+class SupplierCreationForm(forms.ModelForm):
     class Meta:
-        model = models.Manufacturer
+        model = models.Supplier
         fields = ('name', 'fulfillment_backend', 'fulfillment_time')
 
     def __init__(self, *args, **kwargs):
-        super(ManufacturerCreationForm, self).__init__(*args, **kwargs)
+        super(SupplierCreationForm, self).__init__(*args, **kwargs)
         self.fields['fulfillment_backend'] = forms.ChoiceField(
             choices=get_fulfillment_backend_choices
         )

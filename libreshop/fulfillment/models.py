@@ -7,7 +7,7 @@ from model_utils.models import TimeStampedModel
 logger = logging.getLogger(__name__)
 
 # Create your models here.
-class Manufacturer(TimeStampedModel):
+class Supplier(TimeStampedModel):
 
     name = models.CharField(max_length=64, unique=True, null=False, blank=False)
     fulfillment_backend = models.CharField(
@@ -41,13 +41,13 @@ class Manufacturer(TimeStampedModel):
 class DropShipmentSetting(TimeStampedModel):
 
     class Meta:
-        unique_together = ('manufacturer', 'name')
+        unique_together = ('supplier', 'name')
 
-    manufacturer = models.ForeignKey('Manufacturer', null=True, blank=True)
+    supplier = models.ForeignKey('Supplier', null=True, blank=True)
     name = models.CharField(max_length=64, unique=True, null=False, blank=False)
 
     def __str__(self):
-        return '%s: %s' % (self.manufacturer.name, self.name)
+        return '%s: %s' % (self.supplier.name, self.name)
 
 
 class DropShipmentSettingValue(TimeStampedModel):

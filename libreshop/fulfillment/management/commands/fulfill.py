@@ -5,7 +5,7 @@ import sys
 import schedule
 from django.core.management.base import BaseCommand, CommandError
 from daemon import DaemonContext
-from fulfillment.models import Manufacturer
+from fulfillment.models import Supplier
 from orders.models import Order, Purchase
 
 # Initialize logger.
@@ -34,91 +34,91 @@ class Command(BaseCommand):
         )
 
 
-    def initialize_task_queue(self, manufacturer_name=None):
+    def initialize_task_queue(self, supplier_name=None):
 
-        manufacturers = (
-            Manufacturer.objects.filter(name__in=[manufacturer_name]) or
-            Manufacturer.objects.all()
+        suppliers = (
+            Supplier.objects.filter(name__in=[supplier_name]) or
+            Supplier.objects.all()
         )
 
-        for manufacturer in manufacturers:
+        for supplier in suppliers:
 
             job = None
 
-            if manufacturer.fulfillment_time:
-                scheduled_time = manufacturer.fulfillment_time.strftime('%H:%M')
+            if supplier.fulfillment_time:
+                scheduled_time = supplier.fulfillment_time.strftime('%H:%M')
                 logger.debug(
                     'Scheduling fulfillment of (%s) products for (%s)...' %
-                    (manufacturer.name, scheduled_time)
+                    (supplier.name, scheduled_time)
                 )
                 job = schedule.every().day.at(scheduled_time).do(
-                    self.fulfill_dropship, manufacturer.name
+                    self.fulfill_dropship, supplier.name
                 )
                 logger.debug(
                     'Scheduled fulfillment of (%s) products for (%s).' %
-                    (manufacturer.name, scheduled_time)
+                    (supplier.name, scheduled_time)
                 )
             else:
                 logger.debug(
                     ('Scheduling fulfillment of (%s) products for every (%s) '
-                     'second...') % (manufacturer.name, 1)
+                     'second...') % (supplier.name, 1)
                 )
                 job = schedule.every(1).seconds.do(
-                    self.fulfill_dropship, manufacturer.name
+                    self.fulfill_dropship, supplier.name
                 )
                 logger.debug(
                     ('Scheduled fulfillment of (%s) products for every (%s) '
-                     'second.') % (manufacturer.name, 1)
+                     'second.') % (supplier.name, 1)
                 )
 
             self.task_queue.update({
-                manufacturer.name: (job, manufacturer.modified)
+                supplier.name: (job, supplier.modified)
             })
 
 
     def maintain_task_queue(self):
 
-        manufacturers = Manufacturer.objects.all()
+        suppliers = Supplier.objects.all()
 
-        for manufacturer in manufacturers:
-            job_info = self.task_queue.get(manufacturer.name)
+        for supplier in suppliers:
+            job_info = self.task_queue.get(supplier.name)
 
             if job_info:
                 job, modified_time = job_info
 
-                if modified_time < manufacturer.modified:
+                if modified_time < supplier.modified:
                     # Update the run queue with new job schedule information.
                     logger.info(
-                        'Rescheduling (%s) fulfillment...' % manufacturer.name
+                        'Rescheduling (%s) fulfillment...' % supplier.name
                     )
                     schedule.cancel_job(job)
-                    self.initialize_task_queue(manufacturer.name)
+                    self.initialize_task_queue(supplier.name)
                     logger.info(
-                        'Rescheduled (%s) fulfillment.' % manufacturer.name
+                        'Rescheduled (%s) fulfillment.' % supplier.name
                     )
             else:
-                # Add new manufacturers to the run queue.
-                self.initialize_task_queue(manufacturer.name)
+                # Add new suppliers to the run queue.
+                self.initialize_task_queue(supplier.name)
 
         # Determine which jobs on run queue should be removed.
         canceled_jobs = {
             name:self.task_queue[name]
             for name in self.task_queue if name not in
-            [manufacturer.name for manufacturer in manufacturers]
+            [supplier.name for supplier in suppliers]
         }
 
         # Remove stale entries from the run queue.
-        for manufacturer_name, job_info in canceled_jobs.items():
+        for supplier_name, job_info in canceled_jobs.items():
             logger.info(
-                'Canceling (%s) fulfillment...' % manufacturer_name
+                'Canceling (%s) fulfillment...' % supplier_name
             )
 
             job, _ = job_info
             schedule.cancel_job(job)
-            del self.task_queue[manufacturer_name]
+            del self.task_queue[supplier_name]
 
             logger.info(
-                'Canceled (%s) fulfillment.' % manufacturer_name
+                'Canceled (%s) fulfillment.' % supplier_name
             )
 
 
@@ -175,12 +175,12 @@ class Command(BaseCommand):
             self.fulfill_orders()
 
 
-    def fulfill_dropship(self, manufacturer_name):
+    def fulfill_dropship(self, supplier_name):
         logger.info(
-            'Fulfilling products manufactured by (%s)...' % manufacturer_name
+            'Fulfilling products manufactured by (%s)...' % supplier_name
         )
 
-        supplier = Manufacturer.objects.get(name=manufacturer_name)
+        supplier = Supplier.objects.get(name=supplier_name)
 
         unfulfilled_purchases = {
             purchase
@@ -205,7 +205,7 @@ class Command(BaseCommand):
                     ))
 
         logger.info(
-            'Fulfilled products manufactured by (%s).' % manufacturer_name
+            'Fulfilled products manufactured by (%s).' % supplier_name
         )
 
 
