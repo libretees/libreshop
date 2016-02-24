@@ -85,6 +85,5 @@ class TaxRateAdmin(admin.ModelAdmin):
         )
         return queryset
 
-
 # Register your models here.
 admin.site.register(Purchase, UnindexedAdmin)

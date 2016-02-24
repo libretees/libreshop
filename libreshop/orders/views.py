@@ -194,12 +194,7 @@ class CheckoutFormView(FormView):
                 zip_code = self.shipping_address['postal_code'].split('-')[0]
 
                 tax_rates = {
-                    tax_rate.postal_code: (
-                        tax_rate.state_tax_rate +
-                        tax_rate.district_tax_rate +
-                        tax_rate.county_tax_rate +
-                        tax_rate.local_tax_rate
-                    )
+                    tax_rate.postal_code:tax_rate.tax_rate
                     for tax_rate in TaxRate.objects.all()
                 }
                 if zip_code in tax_rates:
