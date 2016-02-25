@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('quantity', models.DecimalField(decimal_places=2, max_digits=8)),
-                ('inventory', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contrib.Inventory')),
+                ('inventory', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='common.Inventory')),
             ],
         ),
         migrations.CreateModel(
@@ -38,12 +38,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='location',
             name='warehouse',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contrib.Warehouse'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='common.Warehouse'),
         ),
         migrations.AddField(
             model_name='inventory',
             name='qux',
-            field=models.ManyToManyField(through='contrib.Location', to='contrib.Warehouse'),
+            field=models.ManyToManyField(through='common.Location', to='common.Warehouse'),
         ),
         migrations.AlterUniqueTogether(
             name='location',

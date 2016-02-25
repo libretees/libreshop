@@ -1,5 +1,5 @@
 import logging
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
 from carts import SessionList
 from products.forms import ProductOrderForm
 from products.models import Product, Variant
@@ -7,7 +7,13 @@ from products.models import Product, Variant
 logger = logging.getLogger(__name__)
 
 # Create your views here.
-class HomePageView(FormView):
+class HomePageView(TemplateView):
+
+    template_name = 'products/featured.html'
+    success_url = '/'
+
+
+class ProductView(FormView):
 
     template_name = 'products/featured.html'
     success_url = '/'
@@ -18,7 +24,7 @@ class HomePageView(FormView):
         except Product.DoesNotExist:
             product = Product.objects.create(sku='1000', name='foo')
 
-        return super(HomePageView, self).dispatch(request, *args, **kwargs)
+        return super(ProductView, self).dispatch(request, *args, **kwargs)
 
 
     def get_form(self):
@@ -48,11 +54,11 @@ class HomePageView(FormView):
                 cart.append(variant.id)
                 break
 
-        return super(HomePageView, self).form_valid(form)
+        return super(ProductView, self).form_valid(form)
 
 
     def get_context_data(self, **kwargs):
-        context = super(HomePageView, self).get_context_data(**kwargs)
+        context = super(ProductView, self).get_context_data(**kwargs)
 
         product = Product.objects.get(sku='1000')
 

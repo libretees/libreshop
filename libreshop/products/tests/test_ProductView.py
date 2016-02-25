@@ -7,18 +7,10 @@ from django.test import TestCase, RequestFactory
 from carts import SessionList
 from products.forms import ProductOrderForm
 from products.models import Product, Variant
-from ..views import HomePageView
+from ..views import ProductView
 
 
-class HomePageViewTest(TestCase):
-
-    def test_root_url_resolves_to_home_page_view(self):
-        '''
-        Test that the root URL ('/') resolves to HomePageView.
-        '''
-        found = resolve('/')
-        self.assertEqual(found.func.view_class, HomePageView)
-
+class ProductViewTest(TestCase):
 
     def test_view_displays_correct_title(self):
         '''
@@ -35,7 +27,7 @@ class HomePageViewTest(TestCase):
         # Set `user` manually, since middleware is not supported.
         request.user = AnonymousUser()
 
-        view = HomePageView.as_view()
+        view = ProductView.as_view()
         response = view(request)
         response = response.render()
 
@@ -69,7 +61,7 @@ class HomePageViewTest(TestCase):
         product = Product.objects.create(name='foo', sku='1000')
 
         request = HttpRequest()
-        homepage_view = HomePageView()
+        homepage_view = ProductView()
         homepage_view.request = request
         form = homepage_view.get_form()
         self.assertIsInstance(form, ProductOrderForm)
@@ -88,7 +80,7 @@ class HomePageViewTest(TestCase):
         session_key = None
         request.session = engine.SessionStore(session_key)
 
-        homepage_view = HomePageView()
+        homepage_view = ProductView()
         homepage_view.request = request
         form = homepage_view.get_form()
         form.full_clean()
@@ -109,7 +101,7 @@ class HomePageViewTest(TestCase):
         session_key = None
         request.session = engine.SessionStore(session_key)
 
-        homepage_view = HomePageView()
+        homepage_view = ProductView()
         homepage_view.request = request
         context = homepage_view.get_context_data()
 

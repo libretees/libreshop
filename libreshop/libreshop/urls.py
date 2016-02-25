@@ -47,6 +47,7 @@ urlpatterns = [
         ),
         name='return-policy'
     ),
+    url(r'^products/', include('products.urls', namespace='products')),
     url(r'', include('social.apps.django_app.urls', namespace='social')),
     url(r'^api/', include(api.urls)),
     url(r'^cart/', include(carts.urls)),
