@@ -9,8 +9,28 @@ logger = logging.getLogger(__name__)
 # Create your views here.
 class HomePageView(TemplateView):
 
-    template_name = 'products/featured.html'
-    success_url = '/'
+    template_name = 'products/home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(HomePageView, self).get_context_data(**kwargs)
+
+        session_cart = SessionList(self.request.session)
+        cart = [
+            variant for pk in session_cart
+            for variant in Variant.objects.filter(pk=pk)
+        ]
+        total = sum(variant.price for variant in cart)
+
+        context.update({
+            'products': [
+                product for product in Product.objects.all() if product.salable
+            ],
+            'cart': cart,
+            'total': total,
+        })
+
+        return context
+
 
 
 class ProductView(FormView):
@@ -19,30 +39,30 @@ class ProductView(FormView):
     success_url = '/'
 
     def dispatch(self, request, *args, **kwargs):
+
+        slug = kwargs.get('slug')
+
+        product = None
         try:
-            product = Product.objects.get(sku='1000')
+            product = Product.objects.get(slug=slug)
         except Product.DoesNotExist:
-            product = Product.objects.create(sku='1000', name='foo')
+            pass
+
+        self.product = product
 
         return super(ProductView, self).dispatch(request, *args, **kwargs)
 
 
     def get_form(self):
-        try:
-            product = Product.objects.get(sku='1000')
-        except Product.DoesNotExist:
-            product = Product.objects.create(sku='1000', name='foo')
-
-        return ProductOrderForm(product, **self.get_form_kwargs())
+        return ProductOrderForm(self.product, **self.get_form_kwargs())
 
 
     def form_valid(self, form):
         logger.info('%s is valid' % type(form).__name__)
 
-        product = Product.objects.get(sku='1000')
         cart = SessionList(self.request.session)
 
-        variants = Variant.objects.filter(product=product)
+        variants = Variant.objects.filter(product=self.product)
         for variant in variants:
             relevant_attributes = {
                 key:variant.attributes[key]
@@ -60,8 +80,6 @@ class ProductView(FormView):
     def get_context_data(self, **kwargs):
         context = super(ProductView, self).get_context_data(**kwargs)
 
-        product = Product.objects.get(sku='1000')
-
         session_cart = SessionList(self.request.session)
         cart = [
             variant for pk in session_cart
@@ -70,7 +88,7 @@ class ProductView(FormView):
         total = sum(variant.price for variant in cart)
 
         context.update({
-            'product': product,
+            'product': self.product,
             'cart': cart,
             'total': total,
         })

@@ -62,7 +62,7 @@ class ProductChangeForm(forms.ModelForm):
         super(ProductChangeForm, self).__init__(*args, **kwargs)
 
         self.fields['variants'].queryset = (
-            models.Variant.objects. filter(product=self.instance)
+            models.Variant.objects.filter(product=self.instance)
         )
 
         self.initial['variants'] = models.Variant.objects.filter(

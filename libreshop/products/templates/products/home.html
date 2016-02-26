@@ -1,0 +1,50 @@
+{% extends "libreshop/base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<!-- Main component for a primary marketing message or call to action -->
+<div class="row">
+{% if cart %}
+  <div class="col-md-9">
+{% else %}
+  <div class="col-md-12">
+{% endif %}
+  {% for product in products %}
+    <div class='row'>
+      <div class="col-md-12">
+        <a href="{% url 'products:product' slug=product.slug %}">{{ product.name }}</a>
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+{% if cart %}
+  <div class="col-md-3">
+    <div class="jumbotron bill">
+      <p>Your cart contains</p>
+      <ul class='list-group'>
+        {% for item in cart %}
+          <li class='list-group-item'>
+            <form action='/cart/remove/' method='POST'>
+              {% csrf_token %}
+              <p>
+                <span>{{ item }}</span>
+                <span>${{ item.price }}</span>
+              </p>
+              <input type='hidden' name='next' value='{{ request.path }}'>
+              <input type='hidden' name='remove' value='{{ forloop.counter0 }}'>
+              <button type='submit' class='close'>&times;</button>
+            </form>
+          </li>
+        {% endfor %}
+      </ul>
+      <div>
+        <p>Subtotal ({{cart|length}} Item{% if cart|length > 1 %}s{% endif %}): {{ total }}</p>
+      </div>
+      <div>
+        <a href='checkout' class='btn btn-primary center-block'>check out</a>
+      </div>
+    </div>
+  </div>
+{% endif %}
+</div>
+{% endblock content %}
