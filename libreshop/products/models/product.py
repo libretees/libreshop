@@ -1,7 +1,7 @@
 import logging
 from django.core.exceptions import ValidationError
-from django.db import models
-from django.db import transaction
+from django.db import models, transaction
+from django.template.defaultfilters import slugify
 from model_utils.models import TimeStampedModel
 from .variant import Variant
 
@@ -34,8 +34,10 @@ class Product(TimeStampedModel):
     image = models.ImageField(
         upload_to='images/product', max_length=255, null=True, blank=True
     )
+    slug = models.SlugField(unique=True, null=True, blank=True)
 
     objects = ProductManager()
+
 
     def __init__(self, *args, **kwargs):
         super(Product, self).__init__(*args, **kwargs)
@@ -98,6 +100,10 @@ class Product(TimeStampedModel):
 
         product = None
         with transaction.atomic():
+
+            if not self.slug:
+                self.slug = slugify(self.name)
+
             logger.info('Creating product...')
             product = super(Product, self).save(*args, **kwargs)
             logger.info('Created product.')
@@ -113,6 +119,7 @@ class Product(TimeStampedModel):
                 variant.save(*args, **kwargs)
 
         return product
+
 
     def __str__(self):
         return self.name
