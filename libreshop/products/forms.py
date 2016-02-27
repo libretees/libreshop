@@ -184,7 +184,8 @@ class ProductOrderForm(forms.Form):
     def __init__(self, product, **kwargs):
         super(ProductOrderForm, self).__init__(**kwargs)
 
-        for key, values in product.attributes.items():
+        attributes = getattr(product, 'attributes', {})
+        for key, values in attributes.items():
             choices = [(value, value) for value in values]
             if len(choices) > 1:
                 choices.insert(0, ('', 'Choose a %s' % key))
