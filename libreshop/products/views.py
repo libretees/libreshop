@@ -1,8 +1,9 @@
 import logging
 from django.views.generic import FormView, TemplateView
+from django.shortcuts import redirect
 from carts import SessionList
-from products.forms import ProductOrderForm
-from products.models import Product, Variant
+from .forms import ProductOrderForm
+from .models import Product, Variant
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +51,10 @@ class ProductView(FormView):
 
         self.product = product
 
-        return super(ProductView, self).dispatch(request, *args, **kwargs)
+        return (
+            redirect('products:home') if not product else
+            super(ProductView, self).dispatch(request, *args, **kwargs)
+        )
 
 
     def get_form(self):
