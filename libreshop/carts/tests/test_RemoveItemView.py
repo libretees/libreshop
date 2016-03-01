@@ -14,7 +14,7 @@ class RemoveItemViewTest(TestCase):
         Test that the view redirects to the Home Page, by default, as part of
         the Post/Redirect/Get (PRG) flow, when the 'next' POST variable not set.
         '''
-        url = reverse('remove_item')
+        url = reverse('remove')
         home_url = reverse('home')
 
         response = self.client.post(url, {})
@@ -27,7 +27,7 @@ class RemoveItemViewTest(TestCase):
         Test that the view redirects to the location set in the 'next' POST
         variable, as part of the Post/Redirect/Get (PRG) flow.
         '''
-        url = reverse('remove_item')
+        url = reverse('remove')
 
         response = self.client.post(url, {'next': 'http://www.example.com'})
 
@@ -43,7 +43,7 @@ class RemoveItemViewTest(TestCase):
         engine = import_module(settings.SESSION_ENGINE)
         session_key = None
         request.session = engine.SessionStore(session_key)
-        url = reverse('remove_item')
+        url = reverse('remove')
         session_list1 = SessionList(request.session, ['foo', 'bar'])
         request.POST['remove'] = '1'
 
@@ -63,7 +63,7 @@ class RemoveItemViewTest(TestCase):
         engine = import_module(settings.SESSION_ENGINE)
         session_key = None
         request.session = engine.SessionStore(session_key)
-        url = reverse('remove_item')
+        url = reverse('remove')
         session_list1 = SessionList(request.session, ['foo', 'bar'])
         request.POST['remove'] = '3'
 

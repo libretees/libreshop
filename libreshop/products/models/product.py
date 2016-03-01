@@ -70,6 +70,25 @@ class Product(TimeStampedModel):
         return attributes
 
 
+    @property
+    def minimum_price(self):
+
+        price = min([
+            variant.price
+            for variant in self.variant_set.all() if variant.salable
+        ])
+
+        return ('free' if price == 0.00 else ('$%s' % str(price)))
+
+
+    @property
+    def variants(self):
+        return [
+            variant
+            for variant in self.variant_set.all() if variant.salable
+        ]
+
+
     def validate_unique(self, *args, **kwargs):
         super(Product, self).validate_unique(*args, **kwargs)
 

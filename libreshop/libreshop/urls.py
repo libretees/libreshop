@@ -19,9 +19,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 from products.views import HomePageView
-import api.urls
-import carts.urls
-import customers.urls
+
 
 urlpatterns = [
     url(r'^$', HomePageView.as_view(), name='home'),
@@ -49,9 +47,9 @@ urlpatterns = [
     ),
     url(r'^products/', include('products.urls', namespace='products')),
     url(r'', include('social.apps.django_app.urls', namespace='social')),
-    url(r'^api/', include(api.urls)),
-    url(r'^cart/', include(carts.urls)),
-    url(r'^user/', include(customers.urls)),
+    url(r'^api/', include('api.urls')),
+    url(r'^cart/', include('carts.urls', namespace='cart')),
+    url(r'^user/', include('customers.urls')),
     url(r'^oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     url(r'^admin/', include(admin.site.urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -9,13 +9,63 @@
 {% else %}
   <div class="col-md-12">
 {% endif %}
-  {% for product in products %}
     <div class='row'>
-      <div class="col-md-12">
-        <a href="{% url 'products:product' slug=product.slug %}">{{ product.name }}</a>
+    {% for product in products %}
+      <div class='col-md-6' style='padding:0px 0px 0px 15px;'>
+        <div style='background:rgb(238, 238, 238);min-height:200px;border-radius:6px;margin-bottom:15px;padding:15px;'>
+          <div>
+            <a href="{% url 'products:product' slug=product.slug %}">
+              <img data-src='holder.js/540x200?bg=555555' class='img-responsive' />
+            </a>
+          </div>
+          <div style='padding:10px 0 10px 0;'>
+            <a href="{% url 'products:product' slug=product.slug %}">
+              <span>{{ product.name }}</span>
+            </a>
+          {% if product.variants|length > 1 %}
+            <div class='dropdown pull-right'>
+              <button id='price-button-{{ forloop.counter }}' type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>
+                from {{ product.minimum_price }}<span class='caret'></span>
+              </button>
+          {% else %}
+            <div class='pull-right'>
+              <form action='/cart/add/' method='POST'>
+                {% csrf_token %}
+                <input type='hidden' name='next' value='{{ request.path }}'>
+                <input type='hidden' name='sku' value='{{ product.variants.0.sku }}'>
+                <button id='price-button-{{ forloop.counter }}' type='submit' class='btn btn-default'>
+                  {{ product.minimum_price }}
+                </button>
+              </form>
+          {% endif %}
+
+            {% if product.variants|length > 1 %}
+              <ul class='dropdown-menu' aria-labelledby='price-dropdown-{{ forloop.counter }}'>
+                {% for variant in product.variants %}
+                  <li>
+                    <a href='#'>
+                      <form action='/cart/add/' method='POST'>
+                        {% csrf_token %}
+                        <input type='hidden' name='next' value='{{ request.path }}'>
+                        <input type='hidden' name='sku' value='{{ variant.sku }}'>
+                        <button type='submit' style='background:none;border:0px;padding:0px;'>
+                          {{ variant.name }} @ ${{ variant.price }}
+                        </button>
+                      </form>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+
+            </div>
+          </div>
+        </div>
       </div>
+    {% empty %}
+      <p>There are no products available.</p>
+    {% endfor %}
     </div>
-  {% endfor %}
   </div>
 {% if cart %}
   <div class="col-md-3">

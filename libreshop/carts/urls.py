@@ -1,6 +1,7 @@
 from django.conf.urls import include, url
-from .views import RemoveItemView
+from .views import AddItemView, RemoveItemView
 
 urlpatterns = [
-    url(r'^remove/$', RemoveItemView.as_view(), name='remove_item'),
+    url(r'^add/$', AddItemView.as_view(), name='add'),
+    url(r'^remove/$', RemoveItemView.as_view(), name='remove')
 ]
