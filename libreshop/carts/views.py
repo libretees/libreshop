@@ -12,7 +12,10 @@ class AddItemView(View):
 
         if sku:
             try:
-                enabled_variants = Variant.objects.filter(enabled=True)
+                enabled_variants = Variant.objects.filter(
+                    enabled=True, product__sku__istartswith=sku[0],
+                    sub_sku__iendswith=sku[-1]
+                )
                 variant = next(
                     (_ for _ in enabled_variants if _.sku == sku),
                     None
