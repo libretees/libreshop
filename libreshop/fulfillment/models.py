@@ -38,7 +38,7 @@ class Supplier(TimeStampedModel):
         return self.name
 
 
-class DropShipmentSetting(TimeStampedModel):
+class FulfillmentSetting(TimeStampedModel):
 
     class Meta:
         unique_together = ('supplier', 'name')
@@ -50,15 +50,15 @@ class DropShipmentSetting(TimeStampedModel):
         return '%s: %s' % (self.supplier.name, self.name)
 
 
-class DropShipmentSettingValue(TimeStampedModel):
+class FulfillmentSettingValue(TimeStampedModel):
 
     class Meta:
-        verbose_name = 'Drop Shipment Setting'
-        verbose_name_plural = 'Drop Shipment Settings'
+        verbose_name = 'Fulfillment Setting'
+        verbose_name_plural = 'Fulfillment Settings'
         unique_together = ('setting', 'variant')
 
     setting = models.ForeignKey(
-        'DropShipmentSetting', null=True, blank=True
+        'FulfillmentSetting', null=True, blank=True
     )
     variant = models.ForeignKey('products.Variant', null=True, blank=True)
     value = models.CharField(max_length=128, null=True, blank=True)

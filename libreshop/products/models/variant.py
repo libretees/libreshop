@@ -60,8 +60,8 @@ class Variant(TimeStampedModel):
         ]
     )
     drop_shipment_settings = models.ManyToManyField(
-        'fulfillment.DropShipmentSetting',
-        through='fulfillment.DropShipmentSettingValue',
+        'fulfillment.FulfillmentSetting',
+        through='fulfillment.FulfillmentSettingValue',
         through_fields=('variant', 'setting'), blank=True
     )
     enabled = models.BooleanField(default=True)

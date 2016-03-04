@@ -2,7 +2,7 @@ import logging
 from django.contrib import admin
 from django.contrib.admin.options import IS_POPUP_VAR
 from common.admin import UnindexedAdmin
-from fulfillment.admin import DropShipmentSettingValueInline
+from fulfillment.admin import FulfillmentSettingValueInline
 from . import models
 from .forms import (
     PopulatedFormFactory, ProductCreationForm, ProductChangeForm,
@@ -112,7 +112,7 @@ class ComponentInline(admin.TabularInline):
 class VariantAdmin(UnindexedAdmin, admin.ModelAdmin):
 
     add_form = VariantCreationForm
-    inlines = [ComponentInline, DropShipmentSettingValueInline]
+    inlines = [ComponentInline, FulfillmentSettingValueInline]
 
     def __init__(self, *args, **kwargs):
         super(VariantAdmin, self).__init__(*args, **kwargs)
