@@ -119,6 +119,7 @@ class Product(TimeStampedModel):
         if not self.slug:
             # Generate slug.
             slug = slugify(self.name)
+            available_slug = slug
 
             # Check whether the slug is available and regenerate if necessary.
             slug_used, iterations = (bool(Product.objects.filter(slug=slug)), 1)
@@ -126,10 +127,8 @@ class Product(TimeStampedModel):
                 available_slug = slug + str(iterations)
                 slug_used = bool(Product.objects.filter(slug=available_slug))
                 iterations += 1
-            else:
-                slug = available_slug
 
-            self.slug = slug
+            self.slug = available_slug
 
         exclude = kwargs.pop('exclude', None)
         self.validate_unique(exclude)
