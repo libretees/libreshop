@@ -300,20 +300,6 @@ class ComponentModelTest(TestCase):
         self.assertEqual(num_components, 1)
 
 
-    def test_new_component_is_created_when_parents_only_child_is_deleted(self):
-        '''
-        Test that a new Component is created when the only child to the parent
-        Variant is deleted.
-        '''
-        product = Product.objects.create(sku='foo', name='foo')
-        variant = Variant.objects.create(product=product, name='bar')
-        component = Component.objects.filter(variant=variant)[0]
-        original_component_id = component.id
-        component.delete()
-        component = Component.objects.filter(variant=variant)[0]
-        self.assertNotEqual(original_component_id, component.id)
-
-
     def test_invalid_child_component_is_deleted_when_valid_child_component_is_created(self):
         '''
         Test that invalid child Components are deleted when a valid child

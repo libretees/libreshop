@@ -1,4 +1,5 @@
 import logging
+from django.forms import Form
 from django.views.generic import FormView, TemplateView
 from django.shortcuts import redirect
 from carts import SessionList
@@ -24,7 +25,7 @@ class HomePageView(TemplateView):
 
         context.update({
             'products': [
-                product for product in Product.objects.all() if product.salable
+                product for product in Product.objects.all()
             ],
             'cart': cart,
             'total': total,
@@ -36,29 +37,35 @@ class HomePageView(TemplateView):
 
 class ProductView(FormView):
 
+    form_class = Form
     template_name = 'products/featured.html'
     success_url = '/'
+
+    def __init__(self, *args, **kwargs):
+        self.product = None
+        super(ProductView, self).__init__(*args, **kwargs)
+
 
     def dispatch(self, request, *args, **kwargs):
 
         slug = kwargs.get('slug')
 
-        product = None
         try:
-            product = Product.objects.get(slug=slug)
+            self.product = Product.objects.get(slug=slug)
         except Product.DoesNotExist:
             pass
 
-        self.product = product
-
         return (
-            redirect('products:home') if not product else
+            redirect('products:home') if not self.product else
             super(ProductView, self).dispatch(request, *args, **kwargs)
         )
 
 
     def get_form(self):
-        return ProductOrderForm(self.product, **self.get_form_kwargs())
+        return (
+            ProductOrderForm(self.product, **self.get_form_kwargs())
+            if self.product else super(ProductView, self).get_form()
+        )
 
 
     def form_valid(self, form):

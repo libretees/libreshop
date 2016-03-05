@@ -14,20 +14,6 @@ from .component import Component
 logger = logging.getLogger(__name__)
 
 # Create your models here.
-class VariantManager(models.Manager):
-
-    def create(self, *args, **kwargs):
-        variant = None
-        with transaction.atomic():
-            variant = super(VariantManager, self).create(*args, **kwargs)
-
-            components = Component.objects.filter(variant=variant)
-            if not components:
-                component = Component.objects.create(variant=variant)
-
-        return variant
-
-
 class Variant(TimeStampedModel):
 
     class Meta:
@@ -66,7 +52,6 @@ class Variant(TimeStampedModel):
     )
     enabled = models.BooleanField(default=True)
 
-    objects = VariantManager()
 
     def __init__(self, *args, **kwargs):
         super(Variant, self).__init__(*args, **kwargs)
@@ -77,13 +62,6 @@ class Variant(TimeStampedModel):
     @property
     def sku(self):
         return self.product.sku + self.sub_sku if self.sub_sku else ''
-
-
-    @property
-    def salable(self):
-        components = self.component_set.all()
-        return (False if not components else
-            all(component.inventory for component in components))
 
 
     @property
@@ -183,17 +161,13 @@ class Variant(TimeStampedModel):
         with transaction.atomic():
             variant = super(Variant, self).save(*args, **kwargs)
 
-            if (self.product.name != self.name and self.product.variant_set.
-                count() == 1):
+            if (self.product.name != self.name and
+                self.product.variant_set.count() == 1):
                 self.name = self.product.name
                 variant = self.save()
 
-            components = Component.objects.filter(variant=self)
-
-            if not components:
-                component = Component.objects.create(variant=self)
-
         return variant
+
 
     def delete(self, *args, **kwargs):
         from .product import Product
@@ -210,6 +184,8 @@ class Variant(TimeStampedModel):
             variant.name = self.product.name
             variant.save(*args, **kwargs)
 
+
     def __str__(self):
-        return self.name or 'Variant(%s) of Product: %s' % (self.id,
-            self.product.sku)
+        return self.name or 'Variant(%s) of Product: %s' % (
+            self.id, self.product.sku
+        )

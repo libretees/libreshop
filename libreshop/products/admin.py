@@ -25,21 +25,10 @@ class VariantInline(admin.TabularInline):
 
 class ProductAdmin(admin.ModelAdmin):
 
-    list_display = ('name', 'sku', '_salable', '_salable_variants')
+    list_display = ('name', 'sku')
 
     form = ProductChangeForm
     add_form = ProductCreationForm
-
-    def _salable(self, instance):
-        return 'Yes' if instance.salable else 'No'
-    _salable.short_description = 'Product Salable?'
-
-
-    def _salable_variants(self, instance):
-        variants = instance.variant_set.all()
-        salable_variants = [variant for variant in variants if variant.salable]
-        return '%s of %s' % (len(salable_variants), variants.count())
-    _salable_variants.short_description = 'Salable Variants'
 
 
     def get_inline_instances(self, request, obj=None):

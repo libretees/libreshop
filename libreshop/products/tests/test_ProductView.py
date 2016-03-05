@@ -2,7 +2,7 @@ from importlib import import_module
 from django.http import HttpRequest
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
-from django.core.urlresolvers import resolve
+from django.core.urlresolvers import resolve, reverse
 from django.test import TestCase, RequestFactory
 from carts import SessionList
 from products.forms import ProductOrderForm
@@ -16,8 +16,12 @@ class ProductViewTest(TestCase):
         '''
         Test that the FormView displays the correct title.
         '''
+        product = Product.objects.create(name='foo', sku='1000')
+
         factory = RequestFactory()
-        request = factory.get('/')
+        request = factory.get(
+            reverse('products:product', kwargs={'slug': 'foo'})
+        )
 
         # Set `session` manually, since middleware is not supported.
         engine = import_module(settings.SESSION_ENGINE)
@@ -28,7 +32,7 @@ class ProductViewTest(TestCase):
         request.user = AnonymousUser()
 
         view = ProductView.as_view()
-        response = view(request)
+        response = view(request, slug='foo')
         response = response.render()
 
         self.assertIn(b'<title>LibreShop</title>', response.content)
@@ -39,7 +43,9 @@ class ProductViewTest(TestCase):
         Test that the FormView uses the products/featured.html template.
         '''
         product = Product.objects.create(name='foo', sku='1000')
-        response = self.client.get('')
+        response = self.client.get(
+            reverse('products:product', kwargs={'slug': 'foo'})
+        )
         self.assertTemplateUsed(response, 'products/featured.html')
 
 
@@ -61,9 +67,15 @@ class ProductViewTest(TestCase):
         product = Product.objects.create(name='foo', sku='1000')
 
         request = HttpRequest()
-        homepage_view = ProductView()
-        homepage_view.request = request
-        form = homepage_view.get_form()
+        request.method = 'POST'
+        engine = import_module(settings.SESSION_ENGINE)
+        session_key = None
+        request.session = engine.SessionStore(session_key)
+
+        product_view = ProductView()
+        product_view.request = request
+        product_view.dispatch(request, slug='foo')
+        form = product_view.get_form()
         self.assertIsInstance(form, ProductOrderForm)
 
 
@@ -80,11 +92,12 @@ class ProductViewTest(TestCase):
         session_key = None
         request.session = engine.SessionStore(session_key)
 
-        homepage_view = ProductView()
-        homepage_view.request = request
-        form = homepage_view.get_form()
+        product_view = ProductView()
+        product_view.request = request
+        product_view.dispatch(request, slug='foo')
+        form = product_view.get_form()
         form.full_clean()
-        form = homepage_view.form_valid(form)
+        form = product_view.form_valid(form)
 
         cart = SessionList(request.session)
         variant_id = product.variant_set.first().id
