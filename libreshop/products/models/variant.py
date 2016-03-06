@@ -45,7 +45,7 @@ class Variant(TimeStampedModel):
             MinValueValidator(Decimal('0.00'))
         ]
     )
-    drop_shipment_settings = models.ManyToManyField(
+    fulfillment_settings = models.ManyToManyField(
         'fulfillment.FulfillmentSetting',
         through='fulfillment.FulfillmentSettingValue',
         through_fields=('variant', 'setting'), blank=True
