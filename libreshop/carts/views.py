@@ -1,8 +1,12 @@
+import logging
 from django.core.urlresolvers import reverse
 from django.views.generic import View
 from django.shortcuts import redirect
 from products.models import Variant
 from .utils import SessionList
+
+# Initialize logger.
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 class AddItemView(View):
@@ -26,6 +30,8 @@ class AddItemView(View):
             if variant:
                 cart = SessionList(request.session)
                 cart.append(variant.pk)
+        else:
+            logger.error('SKU not found!')
 
         next_url = request.POST.get('next', reverse('home'))
 
