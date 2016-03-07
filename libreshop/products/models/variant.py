@@ -129,32 +129,30 @@ class Variant(TimeStampedModel):
         """
         regex = re.compile(numeric_pattern, re.VERBOSE)
 
-        attributes = OrderedDict()
-        components = self.component_set.all().order_by('-created')
+        dict_ = OrderedDict()
+        attributes = self.attribute_value_set.all().order_by('-created')
 
-        for component in components:
-            for key in component.attributes:
-                attribute = component.attributes[key]
-                if key not in attributes:
-                    attributes[key] = {attribute}
-                else:
-                    if re.match(regex, attribute):
-                        for value in attributes[key]:
-                            if re.match(regex, value):
-                                try:
-                                    augend = int(value)
-                                except:
-                                    augend = float(value)
-                                try:
-                                    addend = int(attribute)
-                                except:
-                                    addend = float(attribute)
-                                attribute = str(augend + addend)
-                                attributes[key].discard(value)
-                                break
-                    attributes[key].add(attribute)
+        for attribute in attributes:
+            if key not in dict_:
+                dict_[key] = {attribute}
+            else:
+                if re.match(regex, attribute):
+                    for value in dict_[key]:
+                        if re.match(regex, value):
+                            try:
+                                augend = int(value)
+                            except:
+                                augend = float(value)
+                            try:
+                                addend = int(attribute)
+                            except:
+                                addend = float(attribute)
+                            attribute = str(augend + addend)
+                            dict_[key].discard(value)
+                            break
+                dict_[key].add(attribute)
 
-        return attributes
+        return dict_
 
 
     @property
