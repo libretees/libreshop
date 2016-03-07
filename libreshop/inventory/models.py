@@ -41,59 +41,6 @@ class Warehouse(TimeStampedModel):
         super(Warehouse, self).save(*args, **kwargs)
 
 
-class Attribute(TimeStampedModel):
-
-    name = models.CharField(max_length=64, unique=True, null=False, blank=False)
-
-
-    def __str__(self):
-        return self.name
-
-
-    def validate_unique(self, *args, **kwargs):
-        super(Attribute, self).validate_unique(*args, **kwargs)
-
-        queryset = self.__class__._default_manager.filter(
-            name__iexact=self.name
-        )
-
-        if not self._state.adding and self.pk:
-            queryset = queryset.exclude(pk=self.pk)
-
-        if queryset.exists():
-            raise ValidationError({
-                'name': ['Attribute with this Name already exists',],
-            })
-
-
-    def save(self, *args, **kwargs):
-        exclude = kwargs.pop('exclude', None)
-        self.validate_unique(exclude)
-        super(Attribute, self).save(*args, **kwargs)
-
-
-class Attribute_Value(TimeStampedModel):
-
-    class Meta:
-        verbose_name = 'attribute'
-        verbose_name_plural = 'attributes'
-        unique_together = ('inventory', 'attribute')
-
-
-    attribute = models.ForeignKey('Attribute', null=False, blank=False)
-    inventory = models.ForeignKey('Inventory', null=False, blank=False)
-    value = models.CharField(max_length=64, null=False, blank=False)
-
-
-    @property
-    def name(self):
-        return self.attribute.name
-
-
-    def __str__(self):
-        return self.attribute.name
-
-
 class Location(TimeStampedModel):
 
     class Meta:
@@ -121,16 +68,11 @@ class Inventory(TimeStampedModel):
 
 
     name = models.CharField(max_length=64, null=False, blank=False)
-
     warehouses = models.ManyToManyField(
         'Warehouse', through='Location',
         through_fields=('inventory', 'warehouse'), blank=True
     )
-
-    attributes = models.ManyToManyField('Attribute', through='Attribute_Value',
-        through_fields=('inventory', 'attribute'))
     alternatives = models.ManyToManyField('self', blank=True)
-
     cost = models.DecimalField(
         max_digits=8, decimal_places=2, default=Decimal(0.00),
         validators=[

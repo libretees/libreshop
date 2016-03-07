@@ -17,19 +17,12 @@ class LocationAdmin(admin.TabularInline):
     extra = 0
 
 
-class AttributeAdmin(admin.TabularInline):
-
-    model = models.Attribute_Value
-    extra = 0
-
-
 class InventoryAdmin(admin.ModelAdmin):
 
     form = forms.InventoryCreationForm
-    inlines = [AttributeAdmin, LocationAdmin]
+    inlines = [LocationAdmin]
 
 
 admin.site.register(models.Inventory, InventoryAdmin)
 admin.site.register(models.Location)
-admin.site.register(models.Attribute)
 admin.site.register(models.Warehouse)

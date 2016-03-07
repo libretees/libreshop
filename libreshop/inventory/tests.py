@@ -8,7 +8,7 @@ from django.db.utils import IntegrityError
 from django.test import TestCase
 from products.models import Product, Variant, Component
 from addresses.models import Address
-from .models import Warehouse, Attribute, Inventory, Attribute_Value, Location
+from .models import Inventory, Location, Warehouse
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -122,163 +122,6 @@ class WarehouseModelTest(TestCase):
                 address=Address.objects.create())
 
 
-class AttributeModelTest(TestCase):
-
-    def test_model_has_name_field(self):
-        '''
-        Test that Attribute.name is present.
-        '''
-        attribute = Attribute.objects.create(name='foo')
-        name = getattr(attribute, 'name', None)
-        self.assertIsNotNone(name)
-
-
-    def test_saving_to_and_retrieving_attributes_from_the_database(self):
-        '''
-        Test that an Attribute can be successfuly saved to the database.
-        '''
-        attribute = Attribute(name='foo')
-        attribute.save()
-        num_attributes = Attribute.objects.all().count()
-        self.assertEqual(num_attributes, 1)
-
-
-    def test_name_field_is_required(self):
-        '''
-        Test that Attribute.name is required.
-        '''
-        func = Attribute.objects.create
-        self.assertRaises(IntegrityError, func, name=None)
-
-
-    def test_name_field_must_be_unique(self):
-        '''
-        Test that Attribute.name must be unique.
-        '''
-        attribute = Attribute.objects.create(name='foo')
-        func = Attribute.objects.create
-        self.assertRaises(ValidationError, func, name='foo')
-
-
-    def test_name_field_must_be_unique_regardless_of_character_case(self):
-        '''
-        Test that Attribute.name must be unique regardless of character case.
-        '''
-        attribute = Attribute.objects.create(name='foo')
-        func = Attribute.objects.create
-        self.assertRaises(ValidationError, func, name='Foo')
-
-
-    def test_name_field_is_correct_length(self):
-        '''
-        Test that Attribute.name must be less than or equal to 64 characters in
-        length.
-
-        Note that sqlite does not enforce VARCHAR field length constraints.
-        '''
-        max_length = 64
-        database_engine = settings.DATABASES['default']['ENGINE']
-        random_string = (''.join(random.choice(string.ascii_letters +
-            string.digits) for _ in range(max_length+1)))
-        if database_engine != 'django.db.backends.sqlite3':
-            func = Attribute.objects.create
-            self.assertRaises(IntegrityError, func, name=random_string)
-
-
-class AttributeValueModelTest(TestCase):
-
-    def test_model_has_inventory_field(self):
-        '''
-        Test that Attribute_Value.inventory is present.
-        '''
-        inventory = Inventory.objects.create(name='foo')
-        attribute = Attribute.objects.create(name='bar')
-        attribute_value = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory, value='baz')
-        inventory = getattr(attribute_value, 'inventory', None)
-        self.assertIsNotNone(inventory)
-
-
-    def test_model_has_attribute_field(self):
-        '''
-        Test that Attribute_Value.attribute is present.
-        '''
-        inventory = Inventory.objects.create(name='foo')
-        attribute = Attribute.objects.create(name='bar')
-        attribute_value = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory, value='baz')
-        attribute = getattr(attribute_value, 'attribute', None)
-        self.assertIsNotNone(attribute)
-
-
-    def test_model_has_value_field(self):
-        '''
-        Test that Attribute_Value.value is present.
-        '''
-        inventory = Inventory.objects.create(name='foo')
-        attribute = Attribute.objects.create(name='bar')
-        attribute_value = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory, value='baz')
-        value = getattr(attribute_value, 'value', None)
-        self.assertIsNotNone(value)
-
-
-    def test_model_has_name_property(self):
-        '''
-        Test that Attribute_Value.name is present.
-        '''
-        inventory = Inventory.objects.create(name='foo')
-        attribute = Attribute.objects.create(name='bar')
-        attribute_value = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory, value='baz')
-        name = getattr(attribute_value, 'name', None)
-        self.assertIsNotNone(name)
-
-
-    def test_saving_to_and_retrieving_attribute_values_from_the_database(self):
-        '''
-        Test that an Attribute Value can be successfuly saved to the database.
-        '''
-        inventory = Inventory.objects.create(name='foo')
-        attribute = Attribute.objects.create(name='bar')
-        attribute_value = Attribute_Value(attribute=attribute,
-            inventory=inventory, value='baz')
-        attribute_value.save()
-        num_attribute_values = Attribute_Value.objects.all().count()
-        self.assertEqual(num_attribute_values, 1)
-
-
-    def test_inventory_can_have_multiple_unique_attributes(self):
-        '''
-        Test that multiple distinct Attributes can be associated to an Inventory
-        object.
-        '''
-        inventory = Inventory.objects.create(name='foo')
-        attribute1 = Attribute.objects.create(name='bar')
-        attribute2 = Attribute.objects.create(name='baz')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute1,
-            inventory=inventory, value='qux')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute2,
-            inventory=inventory, value='quux')
-        num_associated_attributes = (Attribute_Value.objects.
-            filter(inventory=inventory).count())
-        self.assertEqual(num_associated_attributes, 2)
-
-
-    def test_inventory_cannot_have_multiple_similar_attributes(self):
-        '''
-        Test that multiple similar Attributes cannot be associated to an
-        Inventory object.
-        '''
-        inventory = Inventory.objects.create(name='foo')
-        attribute = Attribute.objects.create(name='bar')
-        attribute_value = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory, value='baz')
-        func = Attribute_Value.objects.create
-        self.assertRaises(IntegrityError, func, attribute=attribute,
-            inventory=inventory, value='qux')
-
-
 class LocationModelTest(TestCase):
 
     def test_model_has_inventory_field(self):
@@ -388,15 +231,6 @@ class InventoryModelTest(TestCase):
         self.assertIsNotNone(warehouses)
 
 
-    def test_model_has_attributes_field(self):
-        '''
-        Test that Inventory.attributes is present.
-        '''
-        inventory = Inventory.objects.create(name='foo')
-        attributes = getattr(inventory, 'attributes', None)
-        self.assertIsNotNone(attributes)
-
-
     def test_model_has_alternatives_field(self):
         '''
         Test that Inventory.alternatives is present.
@@ -432,8 +266,8 @@ class InventoryModelTest(TestCase):
         '''
         product = Product.objects.create(sku='foo', name='foo')
         variant = Variant.objects.create(product=product, name='bar')
-        inventory = Inventory.objects.create(name='baz')
-        component = Component.objects.filter(variant=variant)[0]
+        component = Component.objects.create(variant=variant)
+        inventory = Inventory.objects.create(name='qux')
         component.inventory = inventory
         component.save()
         inventory.delete()

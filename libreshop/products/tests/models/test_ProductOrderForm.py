@@ -1,9 +1,9 @@
 import logging
 from django.http import HttpRequest
 from django.test import TestCase
-from inventory.models import Inventory, Attribute, Attribute_Value
+from inventory.models import Inventory
 from ...forms import ProductOrderForm
-from ...models import Product, Variant, Component
+from ...models import Attribute, Attribute_Value, Product, Variant, Component
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -24,11 +24,6 @@ class ProductOrderFormTest(TestCase):
         attributes.
         '''
         product = Product.objects.create(sku='foo', name='foo')
-        inventory = Inventory.objects.create(name='bar')
-        variant = Variant.objects.get(product=product)
-        component = Component.objects.get(variant=variant)
-        component.inventory = inventory
-        component.save()
         form = ProductOrderForm(product)
         self.assertEqual(str(form), '')
 
@@ -39,14 +34,6 @@ class ProductOrderFormTest(TestCase):
         attributes that do not have multiple values.
         '''
         product = Product.objects.create(sku='foo', name='foo')
-        inventory = Inventory.objects.create(name='bar')
-        attribute = Attribute.objects.create(name='foo')
-        attribute_value = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory, value='bar')
-        variant = Variant.objects.get(product=product)
-        component = Component.objects.get(variant=variant)
-        component.inventory = inventory
-        component.save()
         form = ProductOrderForm(product)
         self.assertEqual(str(form), '')
 
@@ -57,21 +44,6 @@ class ProductOrderFormTest(TestCase):
         linked multivariate attributes.
         '''
         product = Product.objects.create(sku='foo', name='foo')
-        inventory1 = Inventory.objects.create(name='bar')
-        inventory2 = Inventory.objects.create(name='baz')
-        attribute = Attribute.objects.create(name='foo')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory1, value='bar')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory2, value='baz')
-        variant = Variant.objects.get(product=product)
-        component = Component.objects.get(variant=variant)
-        component.inventory = inventory1
-        component.save()
-        variant = Variant.objects.create(name='bar', product=product)
-        component = Component.objects.get(variant=variant)
-        component.inventory = inventory2
-        component.save()
         form = ProductOrderForm(product)
 
         markup = '<select id="id_foo" name="foo">'
@@ -85,21 +57,6 @@ class ProductOrderFormTest(TestCase):
         linked multivariate attributes.
         '''
         product = Product.objects.create(sku='foo', name='foo')
-        inventory1 = Inventory.objects.create(name='bar')
-        inventory2 = Inventory.objects.create(name='baz')
-        attribute = Attribute.objects.create(name='foo')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory1, value='bar')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory2, value='baz')
-        variant = Variant.objects.get(product=product)
-        component = Component.objects.get(variant=variant)
-        component.inventory = inventory1
-        component.save()
-        variant = Variant.objects.create(name='bar', product=product)
-        component = Component.objects.get(variant=variant)
-        component.inventory = inventory2
-        component.save()
         form = ProductOrderForm(product)
 
         markup = (
@@ -116,21 +73,6 @@ class ProductOrderFormTest(TestCase):
         case throughout.
         '''
         product = Product.objects.create(sku='foo', name='foo')
-        inventory1 = Inventory.objects.create(name='bar')
-        inventory2 = Inventory.objects.create(name='baz')
-        attribute = Attribute.objects.create(name='foo')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory1, value='BaR')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory2, value='BaZ')
-        variant = Variant.objects.get(product=product)
-        component = Component.objects.get(variant=variant)
-        component.inventory = inventory1
-        component.save()
-        variant = Variant.objects.create(name='bar', product=product)
-        component = Component.objects.get(variant=variant)
-        component.inventory = inventory2
-        component.save()
         form = ProductOrderForm(product)
 
         markup = (
@@ -147,21 +89,6 @@ class ProductOrderFormTest(TestCase):
         instantiated with a salable Product with linked multivariate attributes.
         '''
         product = Product.objects.create(sku='foo', name='foo')
-        inventory1 = Inventory.objects.create(name='bar')
-        inventory2 = Inventory.objects.create(name='baz')
-        attribute = Attribute.objects.create(name='foo')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory1, value='bar')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory2, value='baz')
-        variant = Variant.objects.get(product=product)
-        component = Component.objects.get(variant=variant)
-        component.inventory = inventory1
-        component.save()
-        variant = Variant.objects.create(name='bar', product=product)
-        component = Component.objects.get(variant=variant)
-        component.inventory = inventory2
-        component.save()
         form = ProductOrderForm(product)
 
         markup = '<option value="" selected="selected">Choose a foo</option>'
@@ -174,21 +101,6 @@ class ProductOrderFormTest(TestCase):
         Test that markup for each form control is surrounded by a <div> tag.
         '''
         product = Product.objects.create(sku='foo', name='foo')
-        inventory1 = Inventory.objects.create(name='bar')
-        inventory2 = Inventory.objects.create(name='baz')
-        attribute = Attribute.objects.create(name='foo')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory1, value='bar')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory2, value='baz')
-        variant = Variant.objects.get(product=product)
-        component = Component.objects.get(variant=variant)
-        component.inventory = inventory1
-        component.save()
-        variant = Variant.objects.create(name='bar', product=product)
-        component = Component.objects.get(variant=variant)
-        component.inventory = inventory2
-        component.save()
         form = ProductOrderForm(product)
 
         markup = form.as_div().replace('\n', '')
@@ -201,21 +113,6 @@ class ProductOrderFormTest(TestCase):
         Test that markup for each form control is surrounded by a <div> tag.
         '''
         product = Product.objects.create(sku='foo', name='foo')
-        inventory1 = Inventory.objects.create(name='bar')
-        inventory2 = Inventory.objects.create(name='baz')
-        attribute = Attribute.objects.create(name='foo')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory1, value='bar')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory2, value='baz')
-        variant = Variant.objects.get(product=product)
-        component = Component.objects.get(variant=variant)
-        component.inventory = inventory1
-        component.save()
-        variant = Variant.objects.create(name='bar', product=product)
-        component = Component.objects.get(variant=variant)
-        component.inventory = inventory2
-        component.save()
         form = ProductOrderForm(product)
 
         markup = str(form).replace('\n', '')
@@ -228,21 +125,6 @@ class ProductOrderFormTest(TestCase):
         Test that the cleaned_data property of the form returns a dict of sets.
         '''
         product = Product.objects.create(sku='foo', name='foo')
-        inventory1 = Inventory.objects.create(name='bar')
-        inventory2 = Inventory.objects.create(name='baz')
-        attribute = Attribute.objects.create(name='foo')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory1, value='bar')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
-            inventory=inventory2, value='baz')
-        variant = Variant.objects.get(product=product)
-        component = Component.objects.get(variant=variant)
-        component.inventory = inventory1
-        component.save()
-        variant = Variant.objects.create(name='bar', product=product)
-        component = Component.objects.get(variant=variant)
-        component.inventory = inventory2
-        component.save()
 
         request = HttpRequest()
         request.method = 'POST'

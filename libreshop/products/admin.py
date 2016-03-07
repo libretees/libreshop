@@ -92,6 +92,12 @@ class ProductAdmin(admin.ModelAdmin):
         )
 
 
+class AttributeAdmin(admin.TabularInline):
+
+    model = models.Attribute_Value
+    extra = 0
+
+
 class ComponentInline(admin.TabularInline):
 
     model = models.Component
@@ -101,7 +107,7 @@ class ComponentInline(admin.TabularInline):
 class VariantAdmin(UnindexedAdmin, admin.ModelAdmin):
 
     add_form = VariantCreationForm
-    inlines = [ComponentInline, FulfillmentSettingValueInline]
+    inlines = [AttributeAdmin, ComponentInline, FulfillmentSettingValueInline]
 
     def __init__(self, *args, **kwargs):
         super(VariantAdmin, self).__init__(*args, **kwargs)
@@ -118,6 +124,7 @@ class VariantAdmin(UnindexedAdmin, admin.ModelAdmin):
 
 
 # Register your models here.
+admin.site.register(models.Attribute, UnindexedAdmin)
 admin.site.register(models.Category)
 admin.site.register(models.Component, UnindexedAdmin)
 admin.site.register(models.Product, ProductAdmin)
