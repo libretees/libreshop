@@ -100,8 +100,12 @@ class Product(TimeStampedModel):
 
     def save(self, *args, **kwargs):
 
-        # Generate a slug, if one was not specified.
-        if not self.slug:
+        # Fetch original data from the database.
+        if self.pk:
+            original_product = Product.objects.get(pk=self.pk)
+
+        # Generate a slug, if one was not specified or if the name has changed.
+        if not self.slug or self.name != original_product.name:
             # Generate slug.
             slug = slugify(self.name)
             available_slug = slug
@@ -109,9 +113,9 @@ class Product(TimeStampedModel):
             # Check whether the slug is available and regenerate if necessary.
             slug_used, iterations = (bool(Product.objects.filter(slug=slug)), 1)
             while slug_used:
+                iterations += 1
                 available_slug = slug + str(iterations)
                 slug_used = bool(Product.objects.filter(slug=available_slug))
-                iterations += 1
 
             self.slug = available_slug
 
@@ -124,11 +128,10 @@ class Product(TimeStampedModel):
             logger.info('Creating product...')
             product = super(Product, self).save(*args, **kwargs)
             logger.info('Created product.')
-            variants = Variant.objects.filter(product=self)
 
+            variants = Variant.objects.filter(product=self)
             if not variants:
-                variant = Variant.objects.create(product=self,
-                    name=self.name)
+                variant = Variant.objects.create(product=self, name=self.name)
 
             if variants.count() == 1 and self.name != variants[0].name:
                 variant = variants[0]
