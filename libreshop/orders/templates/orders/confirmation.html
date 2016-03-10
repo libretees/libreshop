@@ -9,6 +9,27 @@
 
 <h2>Order <strong>{{ order_token }}</strong> has been received!</h2>
 
+<div class='row'>
+  <div class='col-md-4'>
+    <form method='POST'>
+      <div class='input-group'>
+        <label for='email-address' class="sr-only">email:&nbsp;</label>
+        <span id='basic-addon1' class='input-group-addon'>
+          <i class='fa fa-envelope'></i>
+        </span>
+        <input name='email-address' type='email' class='form-control' placeholder='you@example.com'>
+        <span class='input-group-btn'>
+          <button class='btn btn-primary' type='button'>
+            <i class='fa fa-share'></i>&nbsp;get a receipt
+          </button>
+        </span>
+      </div><!-- /input-group -->
+    </form>
+  </div><!-- /.col-md-4 -->
+</div><!-- /.row -->
+
+<br />
+
 <p><strong>It will be shipped to:</strong></p>
 <p>{{ order.shipping_address }}</p>
 
