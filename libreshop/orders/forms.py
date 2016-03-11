@@ -2,6 +2,8 @@ import logging
 import braintree
 from datetime import date
 from django import forms
+from django.conf import settings
+from django.core.mail import EmailMessage
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -145,3 +147,39 @@ class PaymentForm(forms.Form):
             logger.info('Sales transaction succeeded!')
 
         return result
+
+
+class OrderReceiptForm(forms.Form):
+
+    email_address = forms.EmailField(label='email address', required=True)
+    next = forms.CharField(label='next URL', required=False)
+    order_token = forms.CharField(label='order token', required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(OrderReceiptForm, self).__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            if field.required:
+                field.error_messages.update({
+                    'required': 'Your %s is required.' % field.label,
+                })
+
+
+    def send_email(self, email_address, order_token):
+
+        subject = 'Your Receipt for LibreShop Order %s!' % order_token
+
+        email = EmailMessage(subject=subject,
+                             body='Test',
+                             from_email=settings.DEFAULT_FROM_EMAIL,
+                             to=[email_address],
+                             bcc=[],
+                             connection=None,
+                             attachments=None,
+                             headers=None,
+                             cc=None,
+                             reply_to=None)
+
+        messages_sent = email.send()
+
+        return bool(messages_sent)

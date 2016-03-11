@@ -10,16 +10,41 @@
 <h2>Order <strong>{{ order_token }}</strong> has been received!</h2>
 
 <div class='row'>
-  <div class='col-md-4'>
-    <form method='POST'>
+  <div class='col-md-6'>
+    <form action='{% url 'checkout:confirmation' %}' method='POST'>
+      {% csrf_token %}
+      <div class='form-group'>
+      {% if email_address %}
+        <div class='alert alert-success alert-dismissible' role='alert'>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <span class='glyphicon glyphicon glyphicon-ok-sign' aria-hidden='true'></span>
+          <span class='sr-only'>Success:</span>
+          A receipt has been sent to {{ email_address }}!
+        </div>
+      {% endif %}
+      {% if not form.is_valid %}
+        {% for field in form %}
+          {% for error in field.errors %}
+            <div class='alert alert-danger alert-dismissible' role='alert'>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>
+              <span class='sr-only'>Error:</span>
+              {{ error }}
+            </div>
+          {% endfor %}
+        {% endfor %}
+      {% endif %}
+      </div><!-- /form-group -->
       <div class='input-group'>
         <label for='email-address' class="sr-only">email:&nbsp;</label>
         <span id='basic-addon1' class='input-group-addon'>
           <i class='fa fa-envelope'></i>
         </span>
-        <input name='email-address' type='email' class='form-control' placeholder='you@example.com'>
+        <input name='next' type='hidden' value='{{ request.path }}'>
+        <input name='order_token' type='hidden' value='{{ order_token }}'>
+        <input name='email_address' type='email' class='form-control' placeholder='you@example.com'>
         <span class='input-group-btn'>
-          <button class='btn btn-primary' type='button'>
+          <button class='btn btn-primary' type='submit'>
             <i class='fa fa-share'></i>&nbsp;get a receipt
           </button>
         </span>

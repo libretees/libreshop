@@ -13,7 +13,7 @@ from addresses.forms import AddressForm
 from addresses.models import Address
 from carts.utils import SessionList, UUID as CART_UUID
 from products.models import Variant
-from .forms import PaymentForm
+from .forms import OrderReceiptForm, PaymentForm
 from .models import Order, Purchase, TaxRate
 
 # Set a universally unique identifier (UUID).
@@ -47,20 +47,56 @@ def calculate_shipping_cost(*args, **kwargs):
     return Decimal(results[0]).quantize(Decimal('1.00'), rounding=ROUND_CEILING) if results else Decimal(0.00)
 
 # Create views here.
-class ConfirmationView(TemplateView):
+class ConfirmationView(FormView):
 
+    form_class = OrderReceiptForm
     template_name = 'orders/confirmation.html'
+
+    def post(self, request, *args, **kwargs):
+        session_data = self.request.session.get(UUID)
+        if session_data and 'email_address' in session_data:
+            del session_data['email_address']
+            request.session.modified = True
+        return super(ConfirmationView, self).post(
+            self, request, *args, **kwargs
+        )
+
+
+    def get_success_url(self):
+        next_url = self.request.POST.get(
+            'next', reverse('checkout:confirmation')
+        )
+        return next_url
+
+
+    def form_valid(self, form):
+
+        email_address = form.cleaned_data.get('email_address')
+        order_token = form.cleaned_data.get('order_token')
+
+        email_sent = form.send_email(email_address, order_token)
+
+        if email_sent:
+            self.request.session[UUID].update({
+                'email_address': email_address,
+            })
+            self.request.session.modified = True
+
+        return super(ConfirmationView, self).form_valid(form)
+
 
     def get_context_data(self, **kwargs):
         context = super(ConfirmationView, self).get_context_data(**kwargs)
 
         session_data = self.request.session.get(UUID)
         if session_data:
+            email_address = session_data.get('email_address')
             order_token = session_data.get('order_token')
             if order_token:
                 order = Order.objects.get(token=order_token)
                 purchases = Purchase.objects.filter(order=order)
                 context.update({
+                    'email_address': email_address,
                     'order_token': order_token,
                     'order': order,
                     'purchases': purchases,
