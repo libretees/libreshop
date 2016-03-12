@@ -4,6 +4,7 @@ from datetime import date
 from django import forms
 from django.conf import settings
 from django.core.mail import EmailMessage
+from django.template import Context, Engine
 from .models import Order
 
 # Initialize logger.
@@ -152,6 +153,8 @@ class PaymentForm(forms.Form):
 
 class OrderReceiptForm(forms.Form):
 
+    template_name = 'orders/email_receipt.html'
+
     email_address = forms.EmailField(label='email address', required=True)
     next = forms.CharField(label='next URL', required=False)
     order_token = forms.CharField(label='order token', required=True)
@@ -170,19 +173,22 @@ class OrderReceiptForm(forms.Form):
 
         subject = 'Your Receipt for LibreShop Order %s!' % order_token
 
-        body = ''
+        body = None
         try:
             order = Order.objects.get(token=order_token)
         except Order.DoesNotExist as e:
             pass
         else:
-            purchases = order.purchase_set.all()
-            line_items = [purchase.variant for purchase in purchases]
-            body += '\n'.join([
-                '%s: %s' % (line_item.name, line_item.price)
-                for line_item in line_items
-            ])
-            body += 'Total: %s' % order.total
+            TemplateEngine = Engine.get_default()
+            template = TemplateEngine.get_template(self.template_name)
+            context = Context({
+                'products': '\n'.join([
+                    '%s: %s' % (purchase.variant.name, purchase.variant.price)
+                    for purchase in order.purchase_set.all()
+                ]),
+                'total': order.total
+            })
+            body = template.render(context)
 
         email = EmailMessage(subject=subject,
                              body=body,
@@ -195,6 +201,6 @@ class OrderReceiptForm(forms.Form):
                              cc=None,
                              reply_to=None)
 
-        messages_sent = email.send()
+        messages_sent = email.send() if body else 0
 
         return bool(messages_sent)
