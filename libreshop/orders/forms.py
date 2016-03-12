@@ -4,6 +4,7 @@ from datetime import date
 from django import forms
 from django.conf import settings
 from django.core.mail import EmailMessage
+from .models import Order
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -169,8 +170,22 @@ class OrderReceiptForm(forms.Form):
 
         subject = 'Your Receipt for LibreShop Order %s!' % order_token
 
+        body = ''
+        try:
+            order = Order.objects.get(token=order_token)
+        except Order.DoesNotExist as e:
+            pass
+        else:
+            purchases = order.purchase_set.all()
+            line_items = [purchase.variant for purchase in purchases]
+            body += '\n'.join([
+                '%s: %s' % (line_item.name, line_item.price)
+                for line_item in line_items
+            ])
+            body += 'Total: %s' % order.total
+
         email = EmailMessage(subject=subject,
-                             body='Test',
+                             body=body,
                              from_email=settings.DEFAULT_FROM_EMAIL,
                              to=[email_address],
                              bcc=[],
