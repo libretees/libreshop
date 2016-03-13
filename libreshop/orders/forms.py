@@ -169,38 +169,45 @@ class OrderReceiptForm(forms.Form):
                 })
 
 
-    def send_email(self, email_address, order_token):
+    def send_email(self):
 
-        subject = 'Your Receipt for LibreShop Order %s!' % order_token
+        message, body = None, None
+        if self.is_valid():
 
-        body = None
-        try:
-            order = Order.objects.get(token=order_token)
-        except Order.DoesNotExist as e:
-            pass
-        else:
-            TemplateEngine = Engine.get_default()
-            template = TemplateEngine.get_template(self.template_name)
-            context = Context({
-                'products': '\n'.join([
-                    '%s: %s' % (purchase.variant.name, purchase.variant.price)
-                    for purchase in order.purchase_set.all()
-                ]),
-                'total': order.total
-            })
-            body = template.render(context)
+            email_address = self.cleaned_data['email_address']
+            order_token = self.cleaned_data['order_token']
 
-        email = EmailMessage(subject=subject,
-                             body=body,
-                             from_email=settings.DEFAULT_FROM_EMAIL,
-                             to=[email_address],
-                             bcc=[],
-                             connection=None,
-                             attachments=None,
-                             headers=None,
-                             cc=None,
-                             reply_to=None)
+            subject = 'Your Receipt for LibreShop Order %s!' % order_token
 
-        messages_sent = email.send() if body else 0
+            try:
+                order = Order.objects.get(token=order_token)
+            except Order.DoesNotExist as e:
+                pass
+            else:
+                TemplateEngine = Engine.get_default()
+                template = TemplateEngine.get_template(self.template_name)
+                context = Context({
+                    'products': '\n'.join([
+                        '%s: %s' % (purchase.variant.name, purchase.variant.price)
+                        for purchase in order.purchase_set.all()
+                    ]),
+                    'total': order.total
+                })
+                body = template.render(context)
+
+            message = EmailMessage(
+                subject=subject,
+                body=body,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[email_address],
+                bcc=[],
+                connection=None,
+                attachments=None,
+                headers=None,
+                cc=None,
+                reply_to=None
+            )
+
+        messages_sent = message.send() if message and body else 0
 
         return bool(messages_sent)

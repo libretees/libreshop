@@ -71,14 +71,11 @@ class ConfirmationView(FormView):
 
     def form_valid(self, form):
 
-        email_address = form.cleaned_data.get('email_address')
-        order_token = form.cleaned_data.get('order_token')
-
-        email_sent = form.send_email(email_address, order_token)
+        email_sent = form.send_email()
 
         if email_sent:
             self.request.session[UUID].update({
-                'email_address': email_address,
+                'email_address': form.cleaned_data.get('email_address'),
             })
             self.request.session.modified = True
 
