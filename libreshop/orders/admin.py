@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db.models.aggregates import Count, Sum, IntegerField
 from django.db.models.expressions import Case, F, When
 from common.admin import UnindexedAdmin
-from .models import Order, Purchase, TaxRate
+from .models import Order, Purchase, TaxRate, Transaction
 
 
 class PurchaseInline(admin.TabularInline):
@@ -12,11 +12,26 @@ class PurchaseInline(admin.TabularInline):
     extra = 0
 
 
+class TransactionInline(admin.TabularInline):
+
+    model = Transaction
+    fields = (
+        'transaction_id', 'cardholder_name', 'amount', 'payment_card_type',
+        'payment_card_last_4', 'created_at', 'authorized',
+    )
+    readonly_fields = fields
+    can_delete = False
+    extra = 0
+
+    def get_max_num(self, request, obj=None, **kwargs):
+        return Transaction.objects.filter(order=obj).count() if obj else 0
+
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
 
     date_hierarchy = 'created'
-    inlines = (PurchaseInline,)
+    inlines = (PurchaseInline, TransactionInline)
     list_display = (
         'token', '_recipient', '_purchases', '_fulfilled_purchases', 'subtotal',
         'sales_tax', 'shipping_cost', 'total', 'created', '_fulfilled'
