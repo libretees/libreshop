@@ -14,7 +14,7 @@ from addresses.models import Address
 from carts.utils import SessionList, UUID as CART_UUID
 from products.models import Variant
 from .forms import OrderReceiptForm, PaymentForm
-from .models import Order, Purchase, TaxRate
+from .models import Order, Purchase, TaxRate, Transaction
 
 # Set a universally unique identifier (UUID).
 UUID = '9bf75036-ec58-4188-be12-4f983cac7e55'
@@ -344,15 +344,36 @@ class CheckoutFormView(FormView):
         })
         self.request.session.modified = True
 
+        # Create an order if there are no more steps to complete.
         if not self.get_current_step():
             shipping_address = Address.objects.create(**self.shipping_address)
-            order = Order.objects.create(shipping_address=shipping_address,
-                subtotal=self.subtotal, sales_tax=self.sales_tax,
-                shipping_cost=self.shipping_cost, total=self.total)
+            order = Order.objects.create(
+                shipping_address=shipping_address,
+                subtotal=self.subtotal,
+                sales_tax=self.sales_tax,
+                shipping_cost=self.shipping_cost,
+                total=self.total
+            )
+
+            Transaction.objects.create(
+                order=order,
+                transaction_id=form.cleaned_data['transaction_id'],
+                amount=form.cleaned_data['amount'],
+                cardholder_name=form.cleaned_data['cardholder_name'],
+                payment_card_type=form.cleaned_data['payment_card_type'],
+                payment_card_last_4=form.cleaned_data['payment_card_last_4'],
+                created_at = form.cleaned_data['created_at'],
+                origin_ip_address = get_real_ip(self.request),
+                authorized = form.cleaned_data['authorized']
+            )
+
             self.order_token = order.token
+
             for variant in self.cart:
                 purchase = Purchase.objects.create(
-                    order=order, variant=variant, price=variant.price
+                    order=order,
+                    variant=variant,
+                    price=variant.price
                 )
 
         return super(CheckoutFormView, self).form_valid(form)

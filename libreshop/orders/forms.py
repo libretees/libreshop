@@ -86,9 +86,23 @@ class PaymentForm(forms.Form):
             }
 
     def clean(self):
-        self.cleaned_data = super(PaymentForm, self).clean()
+        cleaned_data = super(PaymentForm, self).clean()
         if self.amount:
-            self.create_transaction(self.amount)
+            result = self.create_transaction(self.amount)
+            if result:
+                transaction = result.transaction
+                payment_card = transaction.credit_card
+                cleaned_data.update({
+                    'transaction_id': transaction.id,
+                    'amount': transaction.amount,
+                    'cardholder_name': payment_card['cardholder_name'],
+                    'payment_card_type': payment_card['card_type'],
+                    'payment_card_last_4': payment_card['last_4'],
+                    'created_at': transaction.created_at,
+                    'authorized': result.is_success
+                })
+        self.cleaned_data = cleaned_data
+
         return self.cleaned_data
 
 
@@ -105,6 +119,7 @@ class PaymentForm(forms.Form):
         })
 
         if not result.is_success:
+
             logger.error('Error response received from Braintree API')
 
             self.add_error(

@@ -1,7 +1,10 @@
+from datetime import datetime
 from decimal import Decimal
 from random import randrange
+from django.core.validators import MinValueValidator
 from django.db import models
 from model_utils.models import TimeStampedModel
+
 
 def get_token(token=None):
     generate = lambda: '{:08x}'.format(randrange(2**32))
@@ -40,6 +43,25 @@ class Order(TimeStampedModel):
         blank=False, default=Decimal('0.00'))
 
     objects = OrderManager()
+
+
+class Transaction(TimeStampedModel):
+    order = models.ForeignKey('Order', null=True, blank=True)
+    transaction_id = models.CharField(
+        max_length=8, null=False, blank=False, unique=True, verbose_name='ID'
+    )
+    amount = models.DecimalField(
+        max_digits=8, decimal_places=2, null=False, blank=False,
+        default=Decimal('0.00')
+    )
+    cardholder_name = models.CharField(max_length=64, null=True, blank=True)
+    payment_card_type = models.CharField(max_length=8, null=True, blank=True)
+    payment_card_last_4 = models.CharField(
+        max_length=8, null=True, blank=True, verbose_name='Last 4'
+    )
+    created_at = models.DateTimeField(default=datetime.now)
+    origin_ip_address = models.GenericIPAddressField(null=False, blank=False)
+    authorized = models.BooleanField(default=False)
 
 
 class Purchase(TimeStampedModel):
