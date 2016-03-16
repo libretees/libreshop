@@ -101,9 +101,8 @@ class PaymentForm(forms.Form):
                     'created_at': transaction.created_at,
                     'authorized': result.is_success
                 })
-        self.cleaned_data = cleaned_data
 
-        return self.cleaned_data
+        return cleaned_data
 
 
     def create_transaction(self, amount):
@@ -175,6 +174,9 @@ class OrderReceiptForm(forms.Form):
     order_token = forms.CharField(label='order token', required=True)
 
     def __init__(self, *args, **kwargs):
+
+        self.request = kwargs.pop('request', None)
+
         super(OrderReceiptForm, self).__init__(*args, **kwargs)
 
         for field in self.fields.values():
@@ -182,6 +184,22 @@ class OrderReceiptForm(forms.Form):
                 field.error_messages.update({
                     'required': 'Your %s is required.' % field.label,
                 })
+
+
+    def clean(self):
+        from .views import ORDER_TOKEN_UUID
+
+        cleaned_data = super(OrderReceiptForm, self).clean()
+
+        if self.request:
+            order_token = self.request.session[ORDER_TOKEN_UUID]
+            if order_token != cleaned_data['order_token']:
+                self.add_error(
+                    'order_token',
+                    'You can only request a receipt for Order %s.' % order_token
+                )
+
+        return cleaned_data
 
 
     def send_email(self):

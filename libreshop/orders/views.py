@@ -16,7 +16,8 @@ from products.models import Variant
 from .forms import OrderReceiptForm, PaymentForm
 from .models import Order, Purchase, TaxRate, Transaction
 
-# Set a universally unique identifier (UUID).
+# Set universally unique identifiers (UUID).
+ORDER_TOKEN_UUID = 'afe005ae-e4fa-4ec5-919a-93c32fd8268f'
 UUID = '9bf75036-ec58-4188-be12-4f983cac7e55'
 
 # Initialize logger.
@@ -60,6 +61,15 @@ class ConfirmationView(FormView):
         return super(ConfirmationView, self).post(
             self, request, *args, **kwargs
         )
+
+
+    def get_form_kwargs(self):
+        kwargs = super(ConfirmationView, self).get_form_kwargs()
+        if self.request.method in ('POST', 'PUT'):
+            kwargs.update({
+                'request': self.request
+            })
+        return kwargs
 
 
     def get_success_url(self):
@@ -354,6 +364,9 @@ class CheckoutFormView(FormView):
                 shipping_cost=self.shipping_cost,
                 total=self.total
             )
+
+            # Add Order token to a session variable.
+            self.request.session[ORDER_TOKEN_UUID] = order.token
 
             Transaction.objects.create(
                 order=order,
