@@ -171,7 +171,6 @@ class OrderReceiptForm(forms.Form):
 
     email_address = forms.EmailField(label='email address', required=True)
     next = forms.CharField(label='next URL', required=False)
-    order_token = forms.CharField(label='order token', required=True)
 
     def __init__(self, *args, **kwargs):
 
@@ -187,28 +186,36 @@ class OrderReceiptForm(forms.Form):
 
 
     def clean(self):
-        from .views import ORDER_TOKEN_UUID
+        from .views import UUID
 
         cleaned_data = super(OrderReceiptForm, self).clean()
 
-        if self.request:
-            order_token = self.request.session[ORDER_TOKEN_UUID]
-            if order_token != cleaned_data['order_token']:
-                self.add_error(
-                    'order_token',
-                    'You can only request a receipt for Order %s.' % order_token
-                )
+        if self.is_bound and not self.errors:
+            success = self.send_email()
+            if not success:
+                self.add_error(None, 'There was a problem sending the receipt.')
+            else:
+                self.request.session[UUID].update({
+                    'email_address': cleaned_data.get('email_address'),
+                })
+                self.request.session.modified = True
 
         return cleaned_data
 
 
     def send_email(self):
+        from .views import UUID
+
+        session_data = (
+            self.request.session.get(UUID)
+            if self.request else None
+        )
+        order_token = session_data.get('order_token') if session_data else None
 
         message, body = None, None
-        if self.is_valid():
+        if order_token and self.is_valid():
 
             email_address = self.cleaned_data['email_address']
-            order_token = self.cleaned_data['order_token']
 
             subject = 'Your Receipt for LibreShop Order %s!' % order_token
 
