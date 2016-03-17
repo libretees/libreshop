@@ -52,15 +52,6 @@ class ConfirmationView(FormView):
     form_class = OrderReceiptForm
     template_name = 'orders/confirmation.html'
 
-    def post(self, request, *args, **kwargs):
-        session_data = self.request.session.get(UUID)
-        if session_data and 'email_address' in session_data:
-            del session_data['email_address']
-            request.session.modified = True
-        return super(ConfirmationView, self).post(
-            self, request, *args, **kwargs
-        )
-
 
     def get_form_kwargs(self):
         kwargs = super(ConfirmationView, self).get_form_kwargs()
@@ -91,6 +82,7 @@ class ConfirmationView(FormView):
                 context.update({
                     'email_address': email_address,
                     'order': order,
+                    'order_token': order_token,
                     'purchases': purchases,
                 })
 

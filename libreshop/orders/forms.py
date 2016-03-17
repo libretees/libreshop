@@ -173,10 +173,17 @@ class OrderReceiptForm(forms.Form):
     next = forms.CharField(label='next URL', required=False)
 
     def __init__(self, *args, **kwargs):
+        from .views import UUID
 
         self.request = kwargs.pop('request', None)
 
         super(OrderReceiptForm, self).__init__(*args, **kwargs)
+
+        if self.is_bound:
+            session_data = self.request.session.get(UUID)
+            if session_data and 'email_address' in session_data:
+                del session_data['email_address']
+                self.request.session.modified = True
 
         for field in self.fields.values():
             if field.required:
