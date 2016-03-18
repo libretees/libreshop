@@ -45,7 +45,7 @@ class Attribute(TimeStampedModel):
         super(Attribute, self).save(*args, **kwargs)
 
 
-class Attribute_Value(TimeStampedModel):
+class AttributeValue(TimeStampedModel):
 
     class Meta:
         verbose_name = 'attribute'
@@ -99,7 +99,7 @@ class Variant(TimeStampedModel):
         ]
     )
     attributes = models.ManyToManyField(
-        'Attribute', through='Attribute_Value',
+        'Attribute', through='AttributeValue',
         through_fields=('inventory', 'attribute')
     )
     fulfillment_settings = models.ManyToManyField(
@@ -130,7 +130,7 @@ class Variant(TimeStampedModel):
         regex = re.compile(numeric_pattern, re.VERBOSE)
 
         dict_ = OrderedDict()
-        attributes = self.attribute_value_set.all().order_by('-created')
+        attributes = self.attributevalue_set.all().order_by('-created')
 
         for attribute in attributes:
             if key not in dict_:

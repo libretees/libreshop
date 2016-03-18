@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from django.test import TestCase
 from inventory.models import Inventory
 from ...forms import ProductOrderForm
-from ...models import Attribute, Attribute_Value, Product, Variant, Component
+from ...models import Attribute, Product, Variant, Component
 
 # Initialize logger.
 logger = logging.getLogger(__name__)

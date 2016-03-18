@@ -1,7 +1,7 @@
 import logging
 from django.test import TestCase
 from inventory.models import Inventory
-from ...models import Attribute, Attribute_Value
+from ...models import Attribute, AttributeValue
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -11,11 +11,11 @@ class AttributeValueModelTest(TestCase):
 
     def test_model_has_inventory_field(self):
         '''
-        Test that Attribute_Value.inventory is present.
+        Test that AttributeValue.inventory is present.
         '''
         inventory = Inventory.objects.create(name='foo')
         attribute = Attribute.objects.create(name='bar')
-        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory, value='baz')
         inventory = getattr(attribute_value, 'inventory', None)
         self.assertIsNotNone(inventory)
@@ -23,11 +23,11 @@ class AttributeValueModelTest(TestCase):
 
     def test_model_has_attribute_field(self):
         '''
-        Test that Attribute_Value.attribute is present.
+        Test that AttributeValue.attribute is present.
         '''
         inventory = Inventory.objects.create(name='foo')
         attribute = Attribute.objects.create(name='bar')
-        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory, value='baz')
         attribute = getattr(attribute_value, 'attribute', None)
         self.assertIsNotNone(attribute)
@@ -35,11 +35,11 @@ class AttributeValueModelTest(TestCase):
 
     def test_model_has_value_field(self):
         '''
-        Test that Attribute_Value.value is present.
+        Test that AttributeValue.value is present.
         '''
         inventory = Inventory.objects.create(name='foo')
         attribute = Attribute.objects.create(name='bar')
-        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory, value='baz')
         value = getattr(attribute_value, 'value', None)
         self.assertIsNotNone(value)
@@ -47,11 +47,11 @@ class AttributeValueModelTest(TestCase):
 
     def test_model_has_name_property(self):
         '''
-        Test that Attribute_Value.name is present.
+        Test that AttributeValue.name is present.
         '''
         inventory = Inventory.objects.create(name='foo')
         attribute = Attribute.objects.create(name='bar')
-        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory, value='baz')
         name = getattr(attribute_value, 'name', None)
         self.assertIsNotNone(name)
@@ -63,10 +63,10 @@ class AttributeValueModelTest(TestCase):
         '''
         inventory = Inventory.objects.create(name='foo')
         attribute = Attribute.objects.create(name='bar')
-        attribute_value = Attribute_Value(attribute=attribute,
+        attribute_value = AttributeValue(attribute=attribute,
             inventory=inventory, value='baz')
         attribute_value.save()
-        num_attribute_values = Attribute_Value.objects.all().count()
+        num_attribute_values = AttributeValue.objects.all().count()
         self.assertEqual(num_attribute_values, 1)
 
 
@@ -78,11 +78,11 @@ class AttributeValueModelTest(TestCase):
         inventory = Inventory.objects.create(name='foo')
         attribute1 = Attribute.objects.create(name='bar')
         attribute2 = Attribute.objects.create(name='baz')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute1,
+        attribute_value1 = AttributeValue.objects.create(attribute=attribute1,
             inventory=inventory, value='qux')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute2,
+        attribute_value2 = AttributeValue.objects.create(attribute=attribute2,
             inventory=inventory, value='quux')
-        num_associated_attributes = (Attribute_Value.objects.
+        num_associated_attributes = (AttributeValue.objects.
             filter(inventory=inventory).count())
         self.assertEqual(num_associated_attributes, 2)
 
@@ -94,8 +94,8 @@ class AttributeValueModelTest(TestCase):
         '''
         inventory = Inventory.objects.create(name='foo')
         attribute = Attribute.objects.create(name='bar')
-        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory, value='baz')
-        func = Attribute_Value.objects.create
+        func = AttributeValue.objects.create
         self.assertRaises(IntegrityError, func, attribute=attribute,
             inventory=inventory, value='qux')

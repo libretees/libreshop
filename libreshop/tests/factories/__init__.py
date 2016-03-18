@@ -1,7 +1,7 @@
 import factory
 from itertools import product
 from django.contrib.auth.models import User
-from inventory.models import Inventory, Attribute, Attribute_Value
+from inventory.models import Inventory, Attribute, AttributeValue
 from products.models import Product, Variant
 
 
@@ -46,7 +46,7 @@ class UserFactory(factory.DjangoModelFactory):
 
 class AttributeValueFactory(factory.DjangoModelFactory):
     class Meta:
-        model = Attribute_Value
+        model = AttributeValue
 
     value = 'bar'
 

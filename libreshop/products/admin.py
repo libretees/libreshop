@@ -94,7 +94,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 class AttributeAdmin(admin.TabularInline):
 
-    model = models.Attribute_Value
+    model = models.AttributeValue
     extra = 0
 
 

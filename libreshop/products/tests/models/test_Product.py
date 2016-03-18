@@ -3,7 +3,7 @@ from decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from inventory.models import Inventory
-from ...models import Attribute, Attribute_Value, Product, Variant, Component
+from ...models import Attribute, AttributeValue, Product, Variant, Component
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -213,7 +213,7 @@ class ProductModelTest(TestCase):
         variant = Variant.objects.create(product=product, name='bar')
         inventory = Inventory.objects.create(name='baz')
         attribute = Attribute.objects.create(name='foo')
-        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory, value='bar')
         component = Component.objects.create(variant=variant,
             inventory=inventory, quantity=Decimal(1.00))
@@ -231,7 +231,7 @@ class ProductModelTest(TestCase):
         variant2 = Variant.objects.create(product=product, name='baz')
         attribute = Attribute.objects.create(name='foo')
         inventory = Inventory.objects.create(name='baz')
-        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory, value='bar')
         component1 = Component.objects.create(variant=variant1,
             inventory=inventory, quantity=Decimal(1.00))

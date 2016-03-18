@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from decimal import Decimal
 from django.test import TestCase
 from inventory.models import Inventory
-from ...models import Attribute, Attribute_Value, Product, Variant, Component
+from ...models import Attribute, AttributeValue, Product, Variant, Component
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -528,7 +528,7 @@ class VariantModelTest(TestCase):
         variant = Variant.objects.create(product=product, name='bar')
         inventory = Inventory.objects.create(name='baz')
         attribute = Attribute.objects.create(name='foo')
-        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory, value='bar')
         component = Component.objects.create(variant=variant,
             inventory=inventory, quantity=Decimal(1.00))
@@ -546,9 +546,9 @@ class VariantModelTest(TestCase):
         variant = Variant.objects.create(product=product, name='bar')
         inventory1 = Inventory.objects.create(name='qux')
         inventory2 = Inventory.objects.create(name='quux')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value1 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory1, value='bar')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value2 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory2, value='bar')
         component1 = Component.objects.create(variant=variant,
             inventory=inventory1, quantity=Decimal(1.00))
@@ -569,9 +569,9 @@ class VariantModelTest(TestCase):
         variant = Variant.objects.create(product=product, name='bar')
         inventory1 = Inventory.objects.create(name='qux')
         inventory2 = Inventory.objects.create(name='quux')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value1 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory1, value='bar')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value2 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory2, value='baz')
         component1 = Component.objects.create(variant=variant,
             inventory=inventory1, quantity=Decimal(1.00))
@@ -591,9 +591,9 @@ class VariantModelTest(TestCase):
         variant = Variant.objects.create(product=product, name='bar')
         inventory1 = Inventory.objects.create(name='qux')
         inventory2 = Inventory.objects.create(name='quux')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value1 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory1, value='1')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value2 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory2, value='2')
         component1 = Component.objects.create(variant=variant,
             inventory=inventory1, quantity=Decimal(1.00))
@@ -613,9 +613,9 @@ class VariantModelTest(TestCase):
         variant = Variant.objects.create(product=product, name='bar')
         inventory1 = Inventory.objects.create(name='qux')
         inventory2 = Inventory.objects.create(name='quux')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value1 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory1, value='1.0')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value2 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory2, value='2.0')
         component1 = Component.objects.create(variant=variant,
             inventory=inventory1, quantity=Decimal(1.00))
@@ -635,9 +635,9 @@ class VariantModelTest(TestCase):
         variant = Variant.objects.create(product=product, name='bar')
         inventory1 = Inventory.objects.create(name='qux')
         inventory2 = Inventory.objects.create(name='quux')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value1 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory1, value='-1')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value2 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory2, value='-2')
         component1 = Component.objects.create(variant=variant,
             inventory=inventory1, quantity=Decimal(1.00))
@@ -657,9 +657,9 @@ class VariantModelTest(TestCase):
         variant = Variant.objects.create(product=product, name='bar')
         inventory1 = Inventory.objects.create(name='qux')
         inventory2 = Inventory.objects.create(name='quux')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value1 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory1, value='-1.0')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value2 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory2, value='-2.0')
         component1 = Component.objects.create(variant=variant,
             inventory=inventory1, quantity=Decimal(1.00))
@@ -680,9 +680,9 @@ class VariantModelTest(TestCase):
         variant = Variant.objects.create(product=product, name='bar')
         inventory1 = Inventory.objects.create(name='qux')
         inventory2 = Inventory.objects.create(name='quux')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value1 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory1, value='-1')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value2 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory2, value='2')
         component1 = Component.objects.create(variant=variant,
             inventory=inventory1, quantity=Decimal(1.00))
@@ -703,9 +703,9 @@ class VariantModelTest(TestCase):
         variant = Variant.objects.create(product=product, name='bar')
         inventory1 = Inventory.objects.create(name='qux')
         inventory2 = Inventory.objects.create(name='quux')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value1 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory1, value='-1.0')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value2 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory2, value='2.0')
         component1 = Component.objects.create(variant=variant,
             inventory=inventory1, quantity=Decimal(1.00))
@@ -726,9 +726,9 @@ class VariantModelTest(TestCase):
         variant = Variant.objects.create(product=product, name='bar')
         inventory1 = Inventory.objects.create(name='qux')
         inventory2 = Inventory.objects.create(name='quux')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value1 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory1, value='1e2')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value2 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory2, value='-1E-1')
         component1 = Component.objects.create(variant=variant,
             inventory=inventory1, quantity=Decimal(1.00))
@@ -748,9 +748,9 @@ class VariantModelTest(TestCase):
         variant = Variant.objects.create(product=product, name='bar')
         inventory1 = Inventory.objects.create(name='qux')
         inventory2 = Inventory.objects.create(name='quux')
-        attribute_value1 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value1 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory1, value='1')
-        attribute_value2 = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value2 = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory2, value='baz')
         component1 = Component.objects.create(variant=variant,
             inventory=inventory1, quantity=Decimal(1.00))

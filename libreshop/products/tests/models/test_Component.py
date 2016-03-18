@@ -2,7 +2,7 @@ import logging
 from decimal import Decimal
 from django.test import TestCase
 from inventory.models import Inventory
-from ...models import Attribute, Attribute_Value, Product, Variant, Component
+from ...models import Attribute, AttributeValue, Product, Variant, Component
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -279,7 +279,7 @@ class ComponentModelTest(TestCase):
         variant = Variant.objects.create(product=product, name='bar')
         inventory = Inventory.objects.create(name='baz')
         attribute = Attribute.objects.create(name='qux')
-        attribute_value = Attribute_Value.objects.create(attribute=attribute,
+        attribute_value = AttributeValue.objects.create(attribute=attribute,
             inventory=inventory, value='quux')
         component = Component.objects.create(variant=variant,
             inventory=inventory, quantity=Decimal(1.00))
