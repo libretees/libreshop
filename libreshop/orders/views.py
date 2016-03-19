@@ -349,6 +349,9 @@ class CheckoutFormView(FormView):
                 cardholder_name=form.cleaned_data['cardholder_name'],
                 payment_card_type=form.cleaned_data['payment_card_type'],
                 payment_card_last_4=form.cleaned_data['payment_card_last_4'],
+                payment_card_expiration_date=form.cleaned_data[
+                    'payment_card_expiration_date'
+                ],
                 created_at = form.cleaned_data['created_at'],
                 origin_ip_address = get_real_ip(self.request),
                 authorized = form.cleaned_data['authorized']

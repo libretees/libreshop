@@ -1,7 +1,7 @@
 from datetime import datetime
 from decimal import Decimal
 from random import randrange
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from model_utils.models import TimeStampedModel
 
@@ -55,9 +55,19 @@ class Transaction(TimeStampedModel):
         default=Decimal('0.00')
     )
     cardholder_name = models.CharField(max_length=64, null=True, blank=True)
-    payment_card_type = models.CharField(max_length=8, null=True, blank=True)
+    payment_card_type = models.CharField(
+        max_length=8, null=True, blank=True, verbose_name='Card Type'
+    )
     payment_card_last_4 = models.CharField(
         max_length=8, null=True, blank=True, verbose_name='Last 4'
+    )
+    payment_card_expiration_date = models.CharField(
+        max_length=8, null=False, blank=False, verbose_name='Expiration Date',
+        validators=[RegexValidator(
+            r'^(0[1-9]|1[0-2])[/-]\d{2}$',
+            message='Expiration date must be in MM/YY or MM-YY format',
+            code='Invalid expiration date'
+        )]
     )
     created_at = models.DateTimeField(default=datetime.now)
     origin_ip_address = models.GenericIPAddressField(null=False, blank=False)

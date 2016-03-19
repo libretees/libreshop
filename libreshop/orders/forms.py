@@ -98,6 +98,12 @@ class PaymentForm(forms.Form):
                     'cardholder_name': payment_card['cardholder_name'],
                     'payment_card_type': payment_card['card_type'],
                     'payment_card_last_4': payment_card['last_4'],
+                    'payment_card_expiration_date': (
+                        '%s/%s' % (
+                            payment_card['expiration_month'],
+                            payment_card['expiration_year'][-2:]
+                        )
+                    ),
                     'created_at': transaction.created_at,
                     'authorized': result.is_success
                 })

@@ -17,7 +17,8 @@ class TransactionInline(admin.TabularInline):
     model = Transaction
     fields = (
         'transaction_id', 'cardholder_name', 'amount', 'payment_card_type',
-        'payment_card_last_4', 'created_at', 'authorized',
+        'payment_card_last_4', 'payment_card_expiration_date', 'created_at',
+        'authorized',
     )
     readonly_fields = fields
     can_delete = False
