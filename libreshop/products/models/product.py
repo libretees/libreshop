@@ -70,8 +70,16 @@ class Product(TimeStampedModel):
 
 
     @property
+    def salable(self):
+        return bool(self.variants)
+
+
+    @property
     def variants(self):
-        return [variant for variant in self.variant_set.all()]
+        return [
+            variant for variant in self.variant_set.all()
+            if variant.enabled and variant.salable
+        ]
 
 
     def validate_unique(self, *args, **kwargs):

@@ -25,7 +25,7 @@ class HomePageView(TemplateView):
 
         context.update({
             'products': [
-                product for product in Product.objects.all()
+                product for product in Product.objects.all() if product.salable
             ],
             'cart': cart,
             'total': total,

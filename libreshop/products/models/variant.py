@@ -117,6 +117,11 @@ class Variant(TimeStampedModel):
 
 
     @property
+    def salable(self):
+        return bool(self.sku.strip())
+
+
+    @property
     def sku(self):
         return self.product.sku + self.sub_sku if self.sub_sku else ''
 
