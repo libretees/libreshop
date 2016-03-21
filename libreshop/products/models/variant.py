@@ -135,9 +135,12 @@ class Variant(TimeStampedModel):
         regex = re.compile(numeric_pattern, re.VERBOSE)
 
         dict_ = OrderedDict()
-        attributes = self.attributevalue_set.all().order_by('-created')
+        attributes = {
+            attribute.name: attribute.value for attribute
+            in self.attributevalue_set.all().order_by('-created')
+        }
 
-        for attribute in attributes:
+        for key, attribute in attributes.items():
             if key not in dict_:
                 dict_[key] = {attribute}
             else:

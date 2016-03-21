@@ -1,7 +1,7 @@
 import logging
+from django.db.utils import IntegrityError
 from django.test import TestCase
-from inventory.models import Inventory
-from ...models import Attribute, AttributeValue
+from ...models import Attribute, AttributeValue, Product, Variant
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -11,13 +11,16 @@ class AttributeValueModelTest(TestCase):
 
     def test_model_has_inventory_field(self):
         '''
-        Test that AttributeValue.inventory is present.
+        Test that AttributeValue.variant is present.
         '''
-        inventory = Inventory.objects.create(name='foo')
-        attribute = Attribute.objects.create(name='bar')
-        attribute_value = AttributeValue.objects.create(attribute=attribute,
-            inventory=inventory, value='baz')
-        inventory = getattr(attribute_value, 'inventory', None)
+        product = Product.objects.create(name='foo', sku='123')
+        variant = Variant.objects.create(product=product, name='bar')
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value = AttributeValue.objects.create(
+            variant=variant, attribute=attribute, value='bar'
+        )
+
+        inventory = getattr(attribute_value, 'variant', None)
         self.assertIsNotNone(inventory)
 
 
@@ -25,10 +28,13 @@ class AttributeValueModelTest(TestCase):
         '''
         Test that AttributeValue.attribute is present.
         '''
-        inventory = Inventory.objects.create(name='foo')
-        attribute = Attribute.objects.create(name='bar')
-        attribute_value = AttributeValue.objects.create(attribute=attribute,
-            inventory=inventory, value='baz')
+        product = Product.objects.create(name='foo', sku='123')
+        variant = Variant.objects.create(product=product, name='bar')
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value = AttributeValue.objects.create(
+            variant=variant, attribute=attribute, value='bar'
+        )
+
         attribute = getattr(attribute_value, 'attribute', None)
         self.assertIsNotNone(attribute)
 
@@ -37,10 +43,13 @@ class AttributeValueModelTest(TestCase):
         '''
         Test that AttributeValue.value is present.
         '''
-        inventory = Inventory.objects.create(name='foo')
-        attribute = Attribute.objects.create(name='bar')
-        attribute_value = AttributeValue.objects.create(attribute=attribute,
-            inventory=inventory, value='baz')
+        product = Product.objects.create(name='foo', sku='123')
+        variant = Variant.objects.create(product=product, name='bar')
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value = AttributeValue.objects.create(
+            variant=variant, attribute=attribute, value='bar'
+        )
+
         value = getattr(attribute_value, 'value', None)
         self.assertIsNotNone(value)
 
@@ -49,10 +58,13 @@ class AttributeValueModelTest(TestCase):
         '''
         Test that AttributeValue.name is present.
         '''
-        inventory = Inventory.objects.create(name='foo')
-        attribute = Attribute.objects.create(name='bar')
-        attribute_value = AttributeValue.objects.create(attribute=attribute,
-            inventory=inventory, value='baz')
+        product = Product.objects.create(name='foo', sku='123')
+        variant = Variant.objects.create(product=product, name='bar')
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value = AttributeValue.objects.create(
+            variant=variant, attribute=attribute, value='bar'
+        )
+
         name = getattr(attribute_value, 'name', None)
         self.assertIsNotNone(name)
 
@@ -61,41 +73,54 @@ class AttributeValueModelTest(TestCase):
         '''
         Test that an Attribute Value can be successfuly saved to the database.
         '''
-        inventory = Inventory.objects.create(name='foo')
-        attribute = Attribute.objects.create(name='bar')
-        attribute_value = AttributeValue(attribute=attribute,
-            inventory=inventory, value='baz')
+        product = Product.objects.create(name='foo', sku='123')
+        variant = Variant.objects.create(product=product, name='bar')
+        attribute = Attribute.objects.create(name='foo')
+
+        attribute_value = AttributeValue(
+            variant=variant, attribute=attribute, value='bar'
+        )
         attribute_value.save()
+
         num_attribute_values = AttributeValue.objects.all().count()
         self.assertEqual(num_attribute_values, 1)
 
 
-    def test_inventory_can_have_multiple_unique_attributes(self):
+    def test_variant_can_have_multiple_unique_attributes(self):
         '''
-        Test that multiple distinct Attributes can be associated to an Inventory
+        Test that multiple distinct Attributes can be associated to a Variant
         object.
         '''
-        inventory = Inventory.objects.create(name='foo')
+        product = Product.objects.create(name='foo', sku='123')
+        variant = Variant.objects.create(product=product, name='bar')
         attribute1 = Attribute.objects.create(name='bar')
         attribute2 = Attribute.objects.create(name='baz')
-        attribute_value1 = AttributeValue.objects.create(attribute=attribute1,
-            inventory=inventory, value='qux')
-        attribute_value2 = AttributeValue.objects.create(attribute=attribute2,
-            inventory=inventory, value='quux')
-        num_associated_attributes = (AttributeValue.objects.
-            filter(inventory=inventory).count())
+        attribute_value1 = AttributeValue.objects.create(
+            variant=variant, attribute=attribute1, value='qux'
+        )
+        attribute_value2 = AttributeValue.objects.create(
+            variant=variant, attribute=attribute2, value='quux'
+        )
+        num_associated_attributes = (
+            AttributeValue.objects.filter(variant=variant).count()
+        )
         self.assertEqual(num_associated_attributes, 2)
 
 
-    def test_inventory_cannot_have_multiple_similar_attributes(self):
+    def test_variant_cannot_have_multiple_similar_attributes(self):
         '''
-        Test that multiple similar Attributes cannot be associated to an
-        Inventory object.
+        Test that multiple similar Attributes cannot be associated to an Variant
+        object.
         '''
-        inventory = Inventory.objects.create(name='foo')
-        attribute = Attribute.objects.create(name='bar')
-        attribute_value = AttributeValue.objects.create(attribute=attribute,
-            inventory=inventory, value='baz')
+        product = Product.objects.create(name='foo', sku='123')
+        variant = Variant.objects.create(product=product, name='bar')
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value = AttributeValue.objects.create(
+            variant=variant, attribute=attribute, value='bar'
+        )
+
         func = AttributeValue.objects.create
-        self.assertRaises(IntegrityError, func, attribute=attribute,
-            inventory=inventory, value='qux')
+        self.assertRaises(
+            IntegrityError, func, variant=variant, attribute=attribute,
+            value='qux'
+        )

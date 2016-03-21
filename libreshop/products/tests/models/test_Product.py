@@ -209,14 +209,13 @@ class ProductModelTest(TestCase):
         Test that Product.attributes contains attributes from its child Variant
         object(s).
         '''
-        product = Product.objects.create(sku='foo', name='foo')
+        product = Product.objects.create(name='foo', sku='123')
         variant = Variant.objects.create(product=product, name='bar')
-        inventory = Inventory.objects.create(name='baz')
         attribute = Attribute.objects.create(name='foo')
-        attribute_value = AttributeValue.objects.create(attribute=attribute,
-            inventory=inventory, value='bar')
-        component = Component.objects.create(variant=variant,
-            inventory=inventory, quantity=Decimal(1.00))
+        attribute_value = AttributeValue.objects.create(
+            variant=variant, attribute=attribute, value='bar'
+        )
+
         attributes = getattr(product, 'attributes', None)
         self.assertIn('foo', attributes)
 
@@ -226,17 +225,17 @@ class ProductModelTest(TestCase):
         Test that Product.attributes contains a list of attribute values, when
         child Variants contain matching attributes.
         '''
-        product = Product.objects.create(sku='foo', name='foo')
+        product = Product.objects.create(name='foo', sku='123')
         variant1 = Variant.objects.create(product=product, name='bar')
         variant2 = Variant.objects.create(product=product, name='baz')
         attribute = Attribute.objects.create(name='foo')
-        inventory = Inventory.objects.create(name='baz')
-        attribute_value = AttributeValue.objects.create(attribute=attribute,
-            inventory=inventory, value='bar')
-        component1 = Component.objects.create(variant=variant1,
-            inventory=inventory, quantity=Decimal(1.00))
-        componen2 = Component.objects.create(variant=variant2,
-            inventory=inventory, quantity=Decimal(1.00))
+        attribute_value = AttributeValue.objects.create(
+            variant=variant1, attribute=attribute, value='bar'
+        )
+        attribute_value = AttributeValue.objects.create(
+            variant=variant2, attribute=attribute, value='bar'
+        )
+
         attributes = getattr(product, 'attributes', None)
         self.assertEqual({'foo': ['bar']}, attributes)
 
