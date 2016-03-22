@@ -185,6 +185,7 @@ class ProductOrderForm(forms.Form):
         super(ProductOrderForm, self).__init__(**kwargs)
 
         attributes = getattr(product, 'attributes', {})
+
         for key, values in attributes.items():
             choices = [(value, value) for value in values]
             if len(choices) > 1:

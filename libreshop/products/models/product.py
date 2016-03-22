@@ -50,6 +50,7 @@ class Product(TimeStampedModel):
 
         attributes = {}
         variants = self.variant_set.all().order_by('created')
+
         for variant in variants:
             for key in variant.attributes:
                 variant_attributes = variant.attributes[key]

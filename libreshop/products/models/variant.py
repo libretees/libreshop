@@ -129,38 +129,12 @@ class Variant(TimeStampedModel):
     @property
     def attributes(self):
 
-        numeric_pattern = r"""
-            ^[-+]?(?:(?:\d*\.\d+)|(?:\d+\.?))(?:[Ee][+-]?\d+)?$
-        """
-        regex = re.compile(numeric_pattern, re.VERBOSE)
-
-        dict_ = OrderedDict()
         attributes = {
-            attribute.name: attribute.value for attribute
+            attribute.name:{attribute.value} for attribute
             in self.attributevalue_set.all().order_by('-created')
         }
 
-        for key, attribute in attributes.items():
-            if key not in dict_:
-                dict_[key] = {attribute}
-            else:
-                if re.match(regex, attribute):
-                    for value in dict_[key]:
-                        if re.match(regex, value):
-                            try:
-                                augend = int(value)
-                            except:
-                                augend = float(value)
-                            try:
-                                addend = int(attribute)
-                            except:
-                                addend = float(attribute)
-                            attribute = str(augend + addend)
-                            dict_[key].discard(value)
-                            break
-                dict_[key].add(attribute)
-
-        return dict_
+        return attributes
 
 
     @property

@@ -3,10 +3,11 @@ from django.http import HttpRequest
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.core.urlresolvers import resolve, reverse
+from django.template.response import TemplateResponse
 from django.test import TestCase, RequestFactory
 from carts import SessionList
-from products.forms import ProductOrderForm
-from products.models import Product, Variant
+from ..forms import ProductOrderForm
+from ..models import Product, Variant
 from ..views import ProductView
 
 
@@ -53,9 +54,30 @@ class ProductViewTest(TestCase):
         '''
         Test that the view's template includes a CSRF token.
         '''
+        csrf_token_regex = (
+            "<input type='hidden' name='csrfmiddlewaretoken' "
+            "value='[A-Za-z0-9]{32}' />"
+        )
+
         product = Product.objects.create(name='foo', sku='1000')
-        response = self.client.get('')
-        csrf_token_regex = "<input type='hidden' name='csrfmiddlewaretoken' value='[A-Za-z0-9]{32}' />"
+
+        factory = RequestFactory()
+        request = factory.get(
+            reverse('products:product', kwargs={'slug': 'foo'})
+        )
+
+        # Set `session` manually, since middleware is not supported.
+        engine = import_module(settings.SESSION_ENGINE)
+        session_key = None
+        request.session = engine.SessionStore(session_key)
+
+        view = ProductView.as_view()
+
+        response = view(request, slug='foo')
+
+        if isinstance(response, TemplateResponse):
+            response = response.render()
+
         rendered_html = response.content.decode()
         self.assertRegex(rendered_html, csrf_token_regex)
 

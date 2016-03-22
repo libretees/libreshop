@@ -237,7 +237,7 @@ class ProductModelTest(TestCase):
         )
 
         attributes = getattr(product, 'attributes', None)
-        self.assertEqual({'foo': ['bar']}, attributes)
+        self.assertEqual(attributes, {'foo': ['bar']})
 
 
     def test_saving_to_and_retrieving_products_from_the_database(self):

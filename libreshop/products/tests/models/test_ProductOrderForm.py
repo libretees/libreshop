@@ -3,13 +3,14 @@ from django.http import HttpRequest
 from django.test import TestCase
 from inventory.models import Inventory
 from ...forms import ProductOrderForm
-from ...models import Attribute, Product, Variant, Component
+from ...models import Attribute, AttributeValue, Product, Variant
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
 
 # Create your tests here.
 class ProductOrderFormTest(TestCase):
+
     def test_form_does_not_create_markup_for_non_salable_product(self):
         '''
         Test that no markup is created for a Product that is not salable.
@@ -18,12 +19,16 @@ class ProductOrderFormTest(TestCase):
         form = ProductOrderForm(product)
         self.assertEqual(str(form), '')
 
+
     def test_form_does_not_create_markup_for_salable_with_no_attributes(self):
         '''
         Test that no markup is created for a salable Product with no
         attributes.
         '''
         product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(
+            product=product, name='bar', sub_sku='bar'
+        )
         form = ProductOrderForm(product)
         self.assertEqual(str(form), '')
 
@@ -34,6 +39,14 @@ class ProductOrderFormTest(TestCase):
         attributes that do not have multiple values.
         '''
         product = Product.objects.create(sku='foo', name='foo')
+        variant = Variant.objects.create(
+            product=product, name='bar', sub_sku='bar'
+        )
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value = AttributeValue.objects.create(
+            variant=variant, attribute=attribute, value='bar'
+        )
+
         form = ProductOrderForm(product)
         self.assertEqual(str(form), '')
 
@@ -44,6 +57,20 @@ class ProductOrderFormTest(TestCase):
         linked multivariate attributes.
         '''
         product = Product.objects.create(sku='foo', name='foo')
+        variant1 = Variant.objects.create(
+            product=product, name='bar', sub_sku='bar'
+        )
+        variant2 = Variant.objects.create(
+            product=product, name='baz', sub_sku='baz'
+        )
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value1 = AttributeValue.objects.create(
+            variant=variant1, attribute=attribute, value='bar'
+        )
+        attribute_value2 = AttributeValue.objects.create(
+            variant=variant2, attribute=attribute, value='baz'
+        )
+
         form = ProductOrderForm(product)
 
         markup = '<select id="id_foo" name="foo">'
@@ -57,6 +84,20 @@ class ProductOrderFormTest(TestCase):
         linked multivariate attributes.
         '''
         product = Product.objects.create(sku='foo', name='foo')
+        variant1 = Variant.objects.create(
+            product=product, name='bar', sub_sku='bar'
+        )
+        variant2 = Variant.objects.create(
+            product=product, name='baz', sub_sku='baz'
+        )
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value1 = AttributeValue.objects.create(
+            variant=variant1, attribute=attribute, value='bar'
+        )
+        attribute_value2 = AttributeValue.objects.create(
+            variant=variant2, attribute=attribute, value='baz'
+        )
+
         form = ProductOrderForm(product)
 
         markup = (
@@ -73,6 +114,20 @@ class ProductOrderFormTest(TestCase):
         case throughout.
         '''
         product = Product.objects.create(sku='foo', name='foo')
+        variant1 = Variant.objects.create(
+            product=product, name='bar', sub_sku='bar'
+        )
+        variant2 = Variant.objects.create(
+            product=product, name='baz', sub_sku='baz'
+        )
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value1 = AttributeValue.objects.create(
+            variant=variant1, attribute=attribute, value='BaR'
+        )
+        attribute_value2 = AttributeValue.objects.create(
+            variant=variant2, attribute=attribute, value='BaZ'
+        )
+
         form = ProductOrderForm(product)
 
         markup = (
@@ -89,6 +144,20 @@ class ProductOrderFormTest(TestCase):
         instantiated with a salable Product with linked multivariate attributes.
         '''
         product = Product.objects.create(sku='foo', name='foo')
+        variant1 = Variant.objects.create(
+            product=product, name='bar', sub_sku='bar'
+        )
+        variant2 = Variant.objects.create(
+            product=product, name='baz', sub_sku='baz'
+        )
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value1 = AttributeValue.objects.create(
+            variant=variant1, attribute=attribute, value='bar'
+        )
+        attribute_value2 = AttributeValue.objects.create(
+            variant=variant2, attribute=attribute, value='baz'
+        )
+
         form = ProductOrderForm(product)
 
         markup = '<option value="" selected="selected">Choose a foo</option>'
@@ -96,23 +165,25 @@ class ProductOrderFormTest(TestCase):
         self.assertInHTML(markup, str(form))
 
 
-    def test_form_as_div_surrounds_form_controls_with_div_tags(self):
-        '''
-        Test that markup for each form control is surrounded by a <div> tag.
-        '''
-        product = Product.objects.create(sku='foo', name='foo')
-        form = ProductOrderForm(product)
-
-        markup = form.as_div().replace('\n', '')
-
-        self.assertRegex(markup, '^<div>.*</div>$')
-
-
     def test_form_markup_surrounds_form_controls_with_div_tags(self):
         '''
         Test that markup for each form control is surrounded by a <div> tag.
         '''
         product = Product.objects.create(sku='foo', name='foo')
+        variant1 = Variant.objects.create(
+            product=product, name='bar', sub_sku='bar'
+        )
+        variant2 = Variant.objects.create(
+            product=product, name='baz', sub_sku='baz'
+        )
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value1 = AttributeValue.objects.create(
+            variant=variant1, attribute=attribute, value='bar'
+        )
+        attribute_value2 = AttributeValue.objects.create(
+            variant=variant2, attribute=attribute, value='baz'
+        )
+
         form = ProductOrderForm(product)
 
         markup = str(form).replace('\n', '')
@@ -125,11 +196,25 @@ class ProductOrderFormTest(TestCase):
         Test that the cleaned_data property of the form returns a dict of sets.
         '''
         product = Product.objects.create(sku='foo', name='foo')
+        variant1 = Variant.objects.create(
+            product=product, name='bar', sub_sku='bar'
+        )
+        variant2 = Variant.objects.create(
+            product=product, name='baz', sub_sku='baz'
+        )
+        attribute = Attribute.objects.create(name='foo')
+        attribute_value1 = AttributeValue.objects.create(
+            variant=variant1, attribute=attribute, value='bar'
+        )
+        attribute_value2 = AttributeValue.objects.create(
+            variant=variant2, attribute=attribute, value='baz'
+        )
 
         request = HttpRequest()
         request.method = 'POST'
         request.POST['foo'] = 'bar'
         form = ProductOrderForm(product, data=request.POST)
+
         form.full_clean()
 
         self.assertEqual(form.cleaned_data, {'foo': {'bar'}})
