@@ -17,7 +17,7 @@
           {% if product.variants|length > 1 %}
             <div class='dropdown pull-right'>
               <button id='price-button-{{ forloop.counter }}' type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>
-                from {{ product.minimum_price }}<span class='caret'></span>
+                from {{ product.minimum_price }}&nbsp;<span class='caret'></span>
               </button>
           {% else %}
             <div class='pull-right'>
