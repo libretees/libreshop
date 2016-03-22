@@ -44,7 +44,11 @@ def calculate_shipping_cost(*args, **kwargs):
             logger.info('Called \'%s.%s\'.' % (module_name, attribute_name))
             results.append(result)
 
-    return Decimal(results[0]).quantize(Decimal('1.00'), rounding=ROUND_CEILING) if results else Decimal(0.00)
+    return (
+        Decimal(results[0]).quantize(Decimal('1.00'), rounding=ROUND_CEILING)
+        if results else Decimal(0.00)
+    )
+
 
 # Create views here.
 class ConfirmationView(FormView):
@@ -111,7 +115,7 @@ class CheckoutFormView(FormView):
             request.session.modified = True
 
         address_valid = True
-        if self.current_step['name'] == 'payment' and not self.shipping_cost:
+        if self.current_step['name'] == 'payment' and self.shipping_cost is None:
             address_valid = False
             session_data = self.request.session[UUID]
             previous_step_data = session_data.get('shipping', None)
@@ -204,6 +208,7 @@ class CheckoutFormView(FormView):
                 'size': 'lrg',
                 'quantity': len(self.cart)
             }
+
             self.shipping_cost = calculate_shipping_cost(
                 address=self.shipping_address,
                 products=products

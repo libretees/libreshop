@@ -89,7 +89,7 @@ class PaymentForm(forms.Form):
         cleaned_data = super(PaymentForm, self).clean()
         if self.amount:
             result = self.create_transaction(self.amount)
-            if result:
+            if result.is_success:
                 transaction = result.transaction
                 payment_card = transaction.credit_card
                 cleaned_data.update({
