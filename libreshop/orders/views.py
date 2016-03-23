@@ -202,16 +202,9 @@ class CheckoutFormView(FormView):
         self.total = Decimal(0.00)
 
         if self.shipping_address:
-            products = {
-                'id': 'anvil-fashion-fit-t-shirt',
-                'color': 'Green Apple',
-                'size': 'lrg',
-                'quantity': len(self.cart)
-            }
-
             self.shipping_cost = calculate_shipping_cost(
                 address=self.shipping_address,
-                products=products
+                products=self.cart
             )
 
             if self.shipping_address['country'] == 'US':
