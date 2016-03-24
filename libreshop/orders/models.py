@@ -110,4 +110,7 @@ class TaxRate(TimeStampedModel):
 
 class Communication(TimeStampedModel):
     order = models.ForeignKey('Order', null=True, blank=True)
-    content = models.TextField()
+    from_email = models.EmailField(null=False, blank=False)
+    to_email = models.EmailField(null=False, blank=False)
+    subject = models.CharField(max_length=998, null=True, blank=True)
+    body = models.TextField(null=True, blank=True)

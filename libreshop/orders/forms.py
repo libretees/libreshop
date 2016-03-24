@@ -4,8 +4,9 @@ from datetime import date
 from django import forms
 from django.conf import settings
 from django.core.mail import EmailMessage
+from django.db.models import Count
 from django.template import Context, Engine
-from .models import Order
+from .models import Communication, Order
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -204,36 +205,85 @@ class OrderReceiptForm(forms.Form):
         cleaned_data = super(OrderReceiptForm, self).clean()
 
         if self.is_bound and not self.errors:
-            success = self.send_email()
-            if not success:
-                self.add_error(None, 'There was a problem sending the receipt.')
-            else:
-                self.request.session[UUID].update({
-                    'email_address': cleaned_data.get('email_address'),
-                })
-                self.request.session.modified = True
+
+            session_data = (
+                self.request.session.get(UUID)
+                if self.request else None
+            )
+            self.order_token = (
+                session_data.get('order_token') if session_data else None
+            )
+
+            abuse = self.prevent_abuse()
+
+            if not abuse:
+
+                email_sent = self.send_email()
+
+                if not email_sent:
+                    self.add_error(
+                        None,
+                        'There was a problem sending the receipt.'
+                    )
+                else:
+                    session_data.update({
+                        'email_address': cleaned_data.get('email_address'),
+                    })
+                    self.request.session.modified = True
 
         return cleaned_data
+
+
+    def prevent_abuse(self):
+
+        abuse = False
+
+        to_email = self.cleaned_data['email_address']
+
+        email_recipients = (
+            Communication.objects.filter(
+                order__token=self.order_token
+            ).values('to_email').annotate(total_sent=Count('to_email'))
+        )
+
+        email_addresses = [
+            recipient['to_email'] for recipient in email_recipients
+        ]
+
+        if email_recipients.count() >= 3 and to_email not in email_addresses:
+            abuse = True
+            self.add_error(
+                None,
+                'You cannot send a receipt to more than 3 email addresses.'
+            )
+
+        spam_recipients = [
+            recipient['to_email'] for recipient in email_recipients
+            if recipient['to_email'] == to_email
+            and recipient['total_sent'] >= 3
+        ]
+
+        for recipient in spam_recipients:
+            abuse = True
+            self.add_error(
+                None, 'You cannot send more than 3 receipts to %s.' % recipient
+            )
+
+        return abuse
 
 
     def send_email(self):
         from .views import UUID
 
-        session_data = (
-            self.request.session.get(UUID)
-            if self.request else None
-        )
-        order_token = session_data.get('order_token') if session_data else None
-
-        message, body = None, None
-        if order_token and self.is_valid():
+        messages_sent, body = None, None
+        if self.is_valid() and self.order_token:
 
             email_address = self.cleaned_data['email_address']
 
-            subject = 'Your Receipt for LibreShop Order %s!' % order_token
+            subject = 'Your Receipt for LibreShop Order %s!' % self.order_token
 
             try:
-                order = Order.objects.get(token=order_token)
+                order = Order.objects.get(token=self.order_token)
             except Order.DoesNotExist as e:
                 pass
             else:
@@ -241,7 +291,9 @@ class OrderReceiptForm(forms.Form):
                 template = TemplateEngine.get_template(self.template_name)
                 context = Context({
                     'products': '\n'.join([
-                        '%s: %s' % (purchase.variant.name, purchase.variant.price)
+                        '%s: %s' % (
+                            purchase.variant.name, purchase.variant.price
+                        )
                         for purchase in order.purchase_set.all()
                     ]),
                     'total': order.total
@@ -261,6 +313,15 @@ class OrderReceiptForm(forms.Form):
                 reply_to=None
             )
 
-        messages_sent = message.send() if message and body else 0
+            messages_sent = message.send()
+
+            if messages_sent:
+                Communication.objects.create(
+                    order=order,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    to_email=email_address,
+                    subject=subject,
+                    body=body
+                )
 
         return bool(messages_sent)
