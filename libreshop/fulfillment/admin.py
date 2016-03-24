@@ -21,5 +21,5 @@ class SupplierAdmin(admin.ModelAdmin):
     form = SupplierCreationForm
 
 
-#admin.site.register(FulfillmentSetting, UnindexedAdmin)
+admin.site.register(FulfillmentSetting, UnindexedAdmin)
 admin.site.register(Supplier, SupplierAdmin)
