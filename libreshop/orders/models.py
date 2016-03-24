@@ -106,3 +106,8 @@ class TaxRate(TimeStampedModel):
             self.local_tax_rate + self.county_tax_rate +
             self.district_tax_rate + self.state_tax_rate
         )
+
+
+class Communication(TimeStampedModel):
+    order = models.ForeignKey('Order', null=True, blank=True)
+    content = models.TextField()
