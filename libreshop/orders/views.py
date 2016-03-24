@@ -115,7 +115,7 @@ class CheckoutFormView(FormView):
             request.session.modified = True
 
         address_valid = True
-        if self.current_step['name'] == 'payment' and self.shipping_cost is None:
+        if self.current_step['name'] == 'payment' and not self.shipping_cost:
             address_valid = False
             session_data = self.request.session[UUID]
             previous_step_data = session_data.get('shipping', None)
