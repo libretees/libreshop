@@ -77,10 +77,11 @@ class Product(TimeStampedModel):
 
     @property
     def variants(self):
-        return [
-            variant for variant in self.variant_set.all()
-            if variant.enabled and variant.salable
+        salable_variants = [
+            variant for variant in self.variant_set.all() if variant.salable
         ]
+
+        return sorted(salable_variants, key=lambda x: x.price)
 
 
     def validate_unique(self, *args, **kwargs):
