@@ -11,20 +11,10 @@ TEST, TS  12345
 (888) 99-LIBRE
 
 --------------------------------------------
-Transaction Date:
---------------------------------------------
-{{ transaction.created_at }} (24H UTC)
-
---------------------------------------------
-Transaction Country
---------------------------------------------
-{{ transaction.country }}
-
---------------------------------------------
 Purchase(s)
 --------------------------------------------
-{% for purchase in purchases %}{{ purchase.variant.name }} @ ${{ purchase.variant.price }}{% endfor %}
-
+{% for purchase in purchases %}{{ purchase.variant.name }} @ ${{ purchase.variant.price }}
+{% endfor %}
 --------------------------------------------
 Taxes/Fees
 ---------------------------------------------
@@ -50,6 +40,16 @@ Payment Method
 Transaction ID
 --------------------------------------------
 {{ transaction.transaction_id }}
+
+--------------------------------------------
+Transaction Date
+--------------------------------------------
+{{ transaction.created_at }} UTC
+
+--------------------------------------------
+Transaction Country
+--------------------------------------------
+{{ transaction.country }}
 
 --------------------------------------------
 Inquires
