@@ -1,71 +1,57 @@
+We received payment for LibreShop Order {{ order.token }}. Thanks for your business!
+
+Questions? Contact us anytime at contact@libreshop.com!
+
 --------------------------------------------
 Receipt
 --------------------------------------------
-{{ company_name }}
-{{ company_address }}
-{{ company_phone }}
+LIBRESHOP
+GENERAL DELIVERY
+TEST, TS  12345
+(888) 99-LIBRE
 
-{{ company_suport_url }}
---------------------------------------------
 --------------------------------------------
 Transaction Date:
 --------------------------------------------
-MM/DD/YYYY HH:MI:SS (24H UTC)
-
+{{ transaction.created_at }} (24H UTC)
 
 --------------------------------------------
 Transaction Country
 --------------------------------------------
-US
-
-
---------------------------------------------
-Product(s)
---------------------------------------------
-{{ products }}
+{{ transaction.country }}
 
 --------------------------------------------
-Payment amount
+Purchase(s)
 --------------------------------------------
-{{ payment }}
+{% for purchase in purchases %}{{ purchase.variant.name }} @ ${{ purchase.variant.price }}{% endfor %}
 
+--------------------------------------------
+Taxes/Fees
+---------------------------------------------
+Sales Tax: ${{ order.sales_tax }}
+Shipping:  ${{ order.shipping_cost }}
 
 --------------------------------------------
 Total
 --------------------------------------------
-{{ total }}
+${{ order.total }}
 
+--------------------------------------------
+Payment Amount
+--------------------------------------------
+${{ transaction.amount }}
 
 --------------------------------------------
 Payment Method
 --------------------------------------------
-{{ method }}
-
+{{ transaction.payment_card_type }} ending in -{{ transaction.payment_card_last_4 }}
 
 --------------------------------------------
 Transaction ID
 --------------------------------------------
-{{ transaction_id }}
-
-
---------------------------------------------
-For customer at
---------------------------------------------
-{{ zip_code }}
-
-
---------------------------------------------
-Serial Number
---------------------------------------------
-{{ order_token }}
-
+{{ transaction.transaction_id }}
 
 --------------------------------------------
 Inquires
 --------------------------------------------
-{{ company_name }}
-
-
---------------------------------------------
-{{ disclaimer }}
---------------------------------------------
+Write to contact@libreshop.com

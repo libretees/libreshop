@@ -344,6 +344,7 @@ class CheckoutFormView(FormView):
                 transaction_id=form.cleaned_data['transaction_id'],
                 amount=form.cleaned_data['amount'],
                 cardholder_name=form.cleaned_data['cardholder_name'],
+                country=form.cleaned_data['country'],
                 payment_card_type=form.cleaned_data['payment_card_type'],
                 payment_card_last_4=form.cleaned_data['payment_card_last_4'],
                 payment_card_expiration_date=form.cleaned_data[

@@ -55,6 +55,7 @@ class Transaction(TimeStampedModel):
         default=Decimal('0.00')
     )
     cardholder_name = models.CharField(max_length=64, null=True, blank=True)
+    country = models.CharField(max_length=2, null=True, blank=True)
     payment_card_type = models.CharField(
         max_length=8, null=True, blank=True, verbose_name='Card Type'
     )
@@ -72,6 +73,9 @@ class Transaction(TimeStampedModel):
     created_at = models.DateTimeField(default=datetime.now)
     origin_ip_address = models.GenericIPAddressField(null=False, blank=False)
     authorized = models.BooleanField(default=False)
+
+    class Meta:
+        get_latest_by = 'created_at'
 
 
 class Purchase(TimeStampedModel):

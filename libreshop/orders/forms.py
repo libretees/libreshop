@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from django.db.models import Count
 from django.template import Context, Engine
-from .models import Communication, Order
+from .models import Communication, Order, Transaction
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -97,6 +97,7 @@ class PaymentForm(forms.Form):
                     'transaction_id': transaction.id,
                     'amount': transaction.amount,
                     'cardholder_name': payment_card['cardholder_name'],
+                    'country': payment_card['customer_location'],
                     'payment_card_type': payment_card['card_type'],
                     'payment_card_last_4': payment_card['last_4'],
                     'payment_card_expiration_date': (
@@ -287,16 +288,18 @@ class OrderReceiptForm(forms.Form):
             except Order.DoesNotExist as e:
                 pass
             else:
+                # Get the latest transaction.
+                transaction = Transaction.objects.filter(order=order).latest()
+
+                # Load the default template engine.
                 TemplateEngine = Engine.get_default()
+
+                # Render a context to the template specified in `template_name`.
                 template = TemplateEngine.get_template(self.template_name)
                 context = Context({
-                    'products': '\n'.join([
-                        '%s: %s' % (
-                            purchase.variant.name, purchase.variant.price
-                        )
-                        for purchase in order.purchase_set.all()
-                    ]),
-                    'total': order.total
+                    'order': order,
+                    'purchases': order.purchase_set.all(),
+                    'transaction': transaction
                 })
                 body = template.render(context)
 
