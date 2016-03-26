@@ -86,7 +86,6 @@ class ConfirmationView(FormView):
                 context.update({
                     'email_address': email_address,
                     'order': order,
-                    'order_token': order_token,
                     'purchases': purchases,
                 })
 
