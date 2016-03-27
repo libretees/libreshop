@@ -5,7 +5,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.core.urlresolvers import resolve, reverse
 from django.template.response import TemplateResponse
 from django.test import TestCase, RequestFactory
-from carts import SessionList
+from carts.utils import SessionList
 from ..forms import ProductOrderForm
 from ..models import Product, Variant
 from ..views import ProductView

@@ -11,7 +11,7 @@ from django.views.generic import FormView, TemplateView
 from ipware.ip import get_real_ip
 from addresses.forms import AddressForm
 from addresses.models import Address
-from carts.utils import SessionList, UUID as CART_UUID
+from carts.utils import SessionCart
 from products.models import Variant
 from .forms import OrderReceiptForm, PaymentForm
 from .models import Order, Purchase, TaxRate, Transaction
@@ -187,12 +187,8 @@ class CheckoutFormView(FormView):
         if not self.request.session.has_key(UUID):
             self.request.session[UUID] = {}
 
-        session_cart = SessionList(self.request.session)
-        self.cart = [
-            variant for pk in session_cart
-            for variant in Variant.objects.filter(pk=pk)
-        ]
-        self.subtotal = sum(variant.price for variant in self.cart)
+        self.cart = SessionCart(self.request.session)
+        self.subtotal = self.cart.total
 
         self.shipping_address = self.request.session[UUID].get('shipping')
 
@@ -395,11 +391,17 @@ class CheckoutFormView(FormView):
         if self.get_current_step():
             url = reverse('checkout:main')
         else:
+            # Empty the cart.
+            self.cart.empty()
+
+            # Delete all CheckoutFormView Session Data.
             del self.request.session[UUID]
-            del self.request.session[CART_UUID]
+
+            # Add the Order Token to CheckoutFormView Session Data.
             self.request.session[UUID] = {
                 'order_token': self.order_token
             }
+
             url = reverse('checkout:confirmation')
 
         logger.info('Redirecting to %s' % url)

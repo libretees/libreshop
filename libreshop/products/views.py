@@ -2,7 +2,7 @@ import logging
 from django.forms import Form
 from django.views.generic import FormView, TemplateView
 from django.shortcuts import redirect
-from carts import SessionList
+from carts.utils import SessionCart
 from .forms import ProductOrderForm
 from .models import Product, Variant
 
@@ -16,19 +16,13 @@ class HomePageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
 
-        session_cart = SessionList(self.request.session)
-        cart = [
-            variant for pk in session_cart
-            for variant in Variant.objects.filter(pk=pk)
-        ]
-        total = sum(variant.price for variant in cart)
+        cart = SessionCart(self.request.session)
 
         context.update({
             'products': [
                 product for product in Product.objects.all() if product.salable
             ],
-            'cart': cart,
-            'total': total,
+            'cart': cart
         })
 
         return context
@@ -71,7 +65,7 @@ class ProductView(FormView):
     def form_valid(self, form):
         logger.info('%s is valid' % type(form).__name__)
 
-        cart = SessionList(self.request.session)
+        cart = SessionCart(self.request.session)
 
         variants = Variant.objects.filter(product=self.product)
         for variant in variants:
@@ -82,7 +76,7 @@ class ProductView(FormView):
             }
             if relevant_attributes == form.cleaned_data:
                 logger.info('User selected "%s"' % variant)
-                cart.append(variant.id)
+                cart.add(variant)
                 break
 
         return super(ProductView, self).form_valid(form)
@@ -91,17 +85,11 @@ class ProductView(FormView):
     def get_context_data(self, **kwargs):
         context = super(ProductView, self).get_context_data(**kwargs)
 
-        session_cart = SessionList(self.request.session)
-        cart = [
-            variant for pk in session_cart
-            for variant in Variant.objects.filter(pk=pk)
-        ]
-        total = sum(variant.price for variant in cart)
+        cart = SessionCart(self.request.session)
 
         context.update({
             'product': self.product,
-            'cart': cart,
-            'total': total,
+            'cart': cart
         })
 
         return context

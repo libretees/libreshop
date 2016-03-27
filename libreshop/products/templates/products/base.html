@@ -33,7 +33,7 @@
         {% endfor %}
       </ul>
       <div>
-        <p>Subtotal ({{cart|length}} Item{% if cart|length > 1 %}s{% endif %}): ${{ total }}</p>
+        <p>Subtotal ({{ cart|length }} Item{% if cart|length > 1 %}s{% endif %}): ${{ cart.total }}</p>
       </div>
       <div>
         <a href='checkout' class='btn btn-primary center-block'>check out</a>
