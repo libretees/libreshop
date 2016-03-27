@@ -17,7 +17,10 @@
           {% if product.variants|length > 1 %}
             <div class='dropdown pull-right'>
               <button id='price-button-{{ forloop.counter }}' type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>
-                from {{ product.minimum_price }}&nbsp;<span class='caret'></span>
+                {% if product.minimum_price != product.maximum_price %}
+                  from
+                {% endif %}
+                  {{ product.minimum_price }}&nbsp;<span class='caret'></span>
               </button>
           {% else %}
             <div class='pull-right'>
@@ -41,7 +44,10 @@
                         <input type='hidden' name='next' value='{{ request.path }}'>
                         <input type='hidden' name='sku' value='{{ variant.sku }}'>
                         <button type='submit' style='background:none;border:0px;padding:0px;'>
-                          {{ variant.name }} @ ${{ variant.price }}
+                          {{ variant.name }}
+                          {% if product.minimum_price != product.maximum_price %}
+                            @ ${{ variant.price }}
+                          {% endif %}
                         </button>
                       </form>
                     </a>

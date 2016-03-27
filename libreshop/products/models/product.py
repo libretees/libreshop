@@ -65,8 +65,14 @@ class Product(TimeStampedModel):
 
 
     @property
+    def maximum_price(self):
+        price = max([variant.price for variant in self.variants])
+        return ('free' if price == 0.00 else ('$%s' % str(price)))
+
+
+    @property
     def minimum_price(self):
-        price = min([variant.price for variant in self.variant_set.all()])
+        price = min([variant.price for variant in self.variants])
         return ('free' if price == 0.00 else ('$%s' % str(price)))
 
 
