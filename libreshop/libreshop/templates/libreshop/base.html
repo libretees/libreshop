@@ -78,19 +78,23 @@
 
     <footer class='footer'>
       <div class='container'>
-        <div class='row'>
+        <div class='row vertical-align'>
           <div class='col-md-6'>
-            <p>Legal</p>
-            <ul>
-              <li><a href='{% url 'return-policy' %}'>Return Policy</a></li>
-              <li><a href='{% url 'privacy-policy' %}'>Privacy Policy</a></li>
-              <li><a href='{% url 'terms-and-conditions' %}'>Terms & Conditions</a></li>
-            </ul>
+            <div>
+              <h6>Legal</h6>
+              <ul class='fa-ul'>
+                <li><span class='fa-li fa fa-angle-right'></span><a href='{% url 'return-policy' %}'>Return Policy</a></li>
+                <li><span class='fa-li fa fa-angle-right'></span><a href='{% url 'privacy-policy' %}'>Privacy Policy</a></li>
+                <li><span class='fa-li fa fa-angle-right'></span><a href='{% url 'terms-and-conditions' %}'>Terms & Conditions</a></li>
+              </ul>
+            </div>
           </div>
           <div class='col-md-6'>
-            {% if EMAIL_ADDRESS %}
-              <p class='text-muted'>Questions? Contact us at {{ EMAIL_ADDRESS }}</p>
-            {% endif %}
+            <div>
+              {% if EMAIL_ADDRESS %}
+                <p class='text-muted'>Questions? Contact us at {{ EMAIL_ADDRESS }}</p>
+              {% endif %}
+            </div>
           </div>
         </div>
       </div>
