@@ -5,7 +5,7 @@ import sys
 import schedule
 from django.core.management.base import BaseCommand, CommandError
 from daemon import DaemonContext
-from fulfillment.models import Supplier
+from fulfillment.models import FulfillmentOrder, FulfillmentPurchase, Supplier
 from orders.models import Order, Purchase
 
 # Initialize logger.
@@ -192,10 +192,31 @@ class Command(BaseCommand):
         if unfulfilled_purchases:
 
             fulfillment_backend = supplier.load_fulfillment_backend()
-            success = fulfillment_backend(unfulfilled_purchases)
+            order = fulfillment_backend(unfulfilled_purchases)
 
-            if success:
-                for purchase in unfulfilled_purchases:
+            if order:
+                purchase_order = FulfillmentOrder.objects.create(
+                    order_id = order.get('id'),
+                    subtotal = order.get('subtotal'),
+                    shipping_cost = order.get('shipping_cost'),
+                    tax = order.get('tax'),
+                    fees = order.get('fees'),
+                    total = order.get('total'),
+                    created_at = order.get('created_at')
+                )
+
+                line_items = order.get('line_items', [])
+                for line_item in line_items:
+                    purchase = line_item['purchase']
+                    fulfillment = FulfillmentPurchase.objects.create(
+                        order = purchase_order,
+                        purchase = purchase,
+                        subtotal = line_item.get('subtotal'),
+                        shipping_cost = line_item.get('shipping_cost'),
+                        tax = line_item.get('tax'),
+                        fees = line_item.get('fees'),
+                        total = line_item.get('total')
+                    )
                     purchase.fulfilled = True
                     purchase.save()
                     self.stdout.write(self.style.SUCCESS(
