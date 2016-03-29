@@ -184,7 +184,7 @@ class Command(BaseCommand):
 
         unfulfilled_purchases = {
             purchase
-            for setting in supplier.dropshipmentsetting_set.all()
+            for setting in supplier.fulfillmentsetting_set.all()
             for variant in setting.variant_set.all()
             for purchase in variant.purchase_set.filter(fulfilled=False)
         }
