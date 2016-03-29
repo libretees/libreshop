@@ -45,8 +45,8 @@ def calculate_shipping_cost(*args, **kwargs):
             results.append(result)
 
     return (
-        Decimal(results[0]).quantize(Decimal('1.00'), rounding=ROUND_CEILING)
-        if results else Decimal(0.00)
+        Decimal(result).quantize(Decimal('1.00'), rounding=ROUND_CEILING)
+        if result else Decimal(0.00)
     )
 
 
@@ -197,12 +197,21 @@ class CheckoutFormView(FormView):
         self.total = Decimal(0.00)
 
         if self.shipping_address:
+
+            # Calculate the shipping cost.
             self.shipping_cost = calculate_shipping_cost(
                 address=self.shipping_address,
                 products=self.cart
             )
 
-            if self.shipping_address['country'] == 'US':
+            # Reset 'shipping' step, if no shipping cost could be calculated.
+            if not self.shipping_cost:
+                self.shipping_address = None
+                del self.request.session[UUID]['shipping']
+                self.request.session.modified = True
+
+            # Otherwise, calculate sales tax, if the user is based in the US.
+            elif self.shipping_address['country'] == 'US':
                 # Disregard any ZIP+4 information.
                 zip_code = self.shipping_address['postal_code'].split('-')[0]
 
