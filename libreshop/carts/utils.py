@@ -78,6 +78,11 @@ class SessionCart(list):
         super(SessionCart, self).append(item)
 
 
+    def remove(self, item):
+        self._session_list.remove(item.pk)
+        super(SessionCart, self).remove(item)
+
+
     def empty(self):
         del self._session_list.session[UUID]
         super(SessionCart, self).clear()

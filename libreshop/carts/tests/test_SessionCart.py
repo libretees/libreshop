@@ -32,7 +32,7 @@ class SessionCartTest(TestCase):
 
     def test_session_cart_can_have_an_item_added_to_it(self):
         '''
-        Test that SessionCart can have an item added to it.
+        Test that items can be added to a SessionCart.
         '''
         session = self.client.session
         cart = SessionCart(session)
@@ -79,6 +79,20 @@ class SessionCartTest(TestCase):
         cart2 = SessionCart(session)
 
         self.assertIn(self.variant, cart2)
+
+
+    def test_session_cart_can_remove_items(self):
+        '''
+        Test that items can be removed to a SessionCart.
+        '''
+        session = self.client.session
+        cart = SessionCart(session)
+
+        cart.add(self.variant)
+        cart.add(self.variant2)
+        cart.remove(self.variant2)
+
+        self.assertEqual(cart, [self.variant])
 
 
     def test_session_cart_removes_items_that_become_unsalable(self):
