@@ -1,4 +1,5 @@
 import logging
+from decimal import Decimal
 from functools import wraps
 from products.models import Variant
 
@@ -69,13 +70,14 @@ class SessionCart(list):
 
     @property
     def total(self):
-        return sum(variant.price for variant in self)
+        return sum(item.price for item in self).quantize(Decimal(1.00))
 
 
     def add(self, item):
-        item_pk = getattr(item, 'pk')
-        self._session_list.append(item_pk)
+        self._session_list.append(item.pk)
+        super(SessionCart, self).append(item)
 
 
     def empty(self):
         del self._session_list.session[UUID]
+        super(SessionCart, self).clear()
