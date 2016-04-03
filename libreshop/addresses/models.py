@@ -22,7 +22,7 @@ class Address(TimeStampedModel):
     # Field for country.
     country = CountryField(null=False, blank=False)
 
-    def __str__(self):
+    def render(self):
         address = '<br />'.join([
             self.recipient_name, self.street_address.replace('\r\n', '<br />'),
             ('%s, %s  %s' % (self.locality, self.region, self.postal_code)),

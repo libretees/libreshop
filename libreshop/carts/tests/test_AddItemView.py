@@ -17,6 +17,10 @@ class AddItemViewTest(TestCase):
         self.variant = Variant.objects.create(
             product=product, name='bar', price=Decimal(12.34), sub_sku='456'
         )
+        self.variant2 = Variant.objects.create(
+            product=product, name='baz', price=Decimal(12.34), sub_sku='789',
+            enabled=False
+        )
 
         # Generate a Request object.
         factory = RequestFactory()
@@ -71,11 +75,22 @@ class AddItemViewTest(TestCase):
         self.assertIn(self.variant, cart)
 
 
-    def test_view_ignores_invalid_items_or_skus(self):
+    def test_view_ignores_invalid_skus(self):
         '''
-        Test that the AddItemView ignores invalid items or SKUs.
+        Test that the AddItemView ignores invalid SKUs.
         '''
         self.request.POST['sku'] = '654321'
+        view = AddItemView.as_view()
+        response = view(self.request)
+        cart = SessionCart(self.request.session)
+        self.assertEqual(cart, [])
+
+
+    def test_view_ignores_invalid_items(self):
+        '''
+        Test that the AddItemView ignores invalid items.
+        '''
+        self.request.POST['sku'] = '123789'
         view = AddItemView.as_view()
         response = view(self.request)
         cart = SessionCart(self.request.session)

@@ -328,3 +328,29 @@ class AddressModelTest(TestCase):
             pass
         blank = getattr(country, 'null', None)
         self.assertFalse(blank)
+
+
+    def test_model_renders_contents_as_html_markup(self):
+        '''
+        Test that the Address model renders its output as HTML markup.
+        '''
+        address = Address(
+            recipient_name = 'Foo Bar',
+            street_address = 'Apt 123\r\nTest St',
+            locality = 'Test',
+            region = 'OK',
+            postal_code = '12345',
+            country = 'US'
+        )
+
+        markup = (
+            'Foo Bar<br />'
+            'Apt 123<br />'
+            'Test St<br />'
+            'Test, OK  12345<br />'
+            'United States of America'
+        )
+
+        render = address.render()
+
+        self.assertEqual(render, markup)
