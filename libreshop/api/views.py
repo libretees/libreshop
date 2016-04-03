@@ -64,23 +64,26 @@ class UserViewSet(viewsets.ModelViewSet):
             user.save()
 
         if user_email_address:
-            email = EmailMessage(subject='Welcome to LibreShop!',
-                                 body='Test',
-                                 from_email=settings.DEFAULT_FROM_EMAIL,
-                                 to=[user_email_address],
-                                 bcc=[],
-                                 connection=None,
-                                 attachments=None,
-                                 headers=None,
-                                 cc=None,
-                                 reply_to=None)
+            email = EmailMessage(
+                subject='Welcome to LibreShop!',
+                body='Test',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[user_email_address],
+                bcc=[],
+                connection=None,
+                attachments=None,
+                headers=None,
+                cc=None,
+                reply_to=None
+            )
             email.send()
 
         serializer = UserSerializer(user, context={'request': request})
         headers = self.get_success_headers(serializer.data)
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED,
-                        headers=headers)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
 
 
     def _validate_captcha(self, request, *args, **kwargs):

@@ -11,30 +11,42 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('url', 'id', 'username', 'email', 'password',)
-        non_native_fields = ('token', 'captcha',)
+        fields = ('url', 'id', 'username', 'email', 'password')
+        non_native_fields = ('token', 'captcha')
         write_only_fields = ('password',)
-        read_only_fields = ('is_staff', 'is_superuser', 'is_active', 'date_joined',)
+        read_only_fields = (
+            'is_staff', 'is_superuser', 'is_active', 'date_joined'
+        )
 
 
-    def to_internal_value(self, data):
+    def to_internal_value(self, data): # Similar to Form.clean.
         native_fields = self.Meta.fields
         non_native_fields = self.Meta.non_native_fields
-        allowed_fields = native_fields + non_native_fields + ('csrfmiddlewaretoken',)
-        extra_fields = [field for field in data if field not in allowed_fields]
+        allowed_fields = (
+            native_fields + non_native_fields + ('csrfmiddlewaretoken',)
+        )
 
-        for field in extra_fields:
-            error = {'%s' % field: ['Field is not recognized.'], 'description': ['The `%s` field is not permitted.' % field]}
+        unallowed_fields = [
+            field for field in data if field not in allowed_fields
+        ]
+        for field in unallowed_fields:
+            error = {
+                '%s' % field: ['Field is not recognized.'],
+                'description': ['The `%s` field is not permitted.' % field]
+            }
             raise exceptions.ValidationError(error)
 
-        native_data = {key:value for (key, value) in data.items() if key in native_fields}
-        super(UserSerializer, self).to_internal_value(native_data)
+        native_data = {
+            key:value for (key, value) in data.items() if key in native_fields
+        }
+        validated_data = (
+            super(UserSerializer, self).to_internal_value(native_data)
+        )
 
-        password = data.get('password', None)
-        if password:
-            data['password'] = make_password(password)
+        password = validated_data['password']
+        validated_data['password'] = make_password(password)
 
-        return data
+        return validated_data
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
