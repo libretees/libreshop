@@ -1,11 +1,9 @@
 from django.contrib.auth.hashers import check_password
-from django.test import TestCase
-from rest_framework.test import APIRequestFactory
-from .serializers import UserSerializer
+from rest_framework.test import APITestCase
+from ..serializers import UserSerializer
 
 # Create your tests here.
-class UserSerializerTest(TestCase):
-
+class UserSerializerTest(APITestCase):
 
     def test_serializer_rejects_undeclared_non_native_fields(self):
         data = {

@@ -23,8 +23,6 @@ User = get_user_model()
 class UserViewSet(viewsets.ModelViewSet):
 
     serializer_class = UserSerializer
-    model = User
-
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -36,7 +34,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
 
         permissions = None
-        if self.request.method in ['GET', 'PUT', 'PATCH']:
+        if self.request.method in ['GET', 'PUT', 'PATCH', 'HEAD']:
             permissions = (IsAuthenticated(),)
         if self.request.method in ['POST', 'OPTIONS']:
         # allow non-authenticated users to create via POST
