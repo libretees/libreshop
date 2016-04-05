@@ -32,7 +32,7 @@ class UserViewSetTest(APITestCase):
         })
 
 
-    def test_view_returns_403_response_for_unauthenticated_get_request(self):
+    def test_view_returns_403_status_code_for_unauthenticated_get_request(self):
 
         factory = APIRequestFactory()
         request = factory.get('/api/users/')
@@ -43,7 +43,7 @@ class UserViewSetTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
-    def test_view_returns_200_response_for_authenticated_user_get_request(self):
+    def test_view_returns_200_status_code_for_authenticated_user_get_request(self):
 
         factory = APIRequestFactory()
         request = factory.get('/api/users/')
@@ -55,7 +55,7 @@ class UserViewSetTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-    def test_view_returns_200_response_for_authenticated_admin_get_request(self):
+    def test_view_returns_200_status_code_for_authenticated_admin_get_request(self):
 
         factory = APIRequestFactory()
         request = factory.get('/api/users/')
@@ -99,7 +99,7 @@ class UserViewSetTest(APITestCase):
         self.assertTrue(result)
 
 
-    def test_view_returns_201_response_for_successful_user_creation(self):
+    def test_view_returns_201_status_code_for_successful_user_creation(self):
 
         factory = APIRequestFactory()
         request = factory.post('/api/users/', {
@@ -115,7 +115,7 @@ class UserViewSetTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
-    def test_view_sends_email_for_successful_user_creation_when_email_specified(self):
+    def test_view_sends_email_for_successful_user_creation_when_email_field_is_supplied(self):
 
         factory = APIRequestFactory()
         request = factory.post('/api/users/', {
@@ -132,7 +132,7 @@ class UserViewSetTest(APITestCase):
         self.assertEqual(len(mail.outbox), 1)
 
 
-    def test_view_returns_400_response_for_unsuccessful_user_creation(self):
+    def test_view_returns_400_status_code_when_incorrect_captcha_is_supplied(self):
 
         factory = APIRequestFactory()
         request = factory.post('/api/users/', {
@@ -148,7 +148,37 @@ class UserViewSetTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-    def test_view_returns_200_response_for_options_request(self):
+    def test_view_returns_400_status_code_when_token_field_is_not_supplied(self):
+
+        factory = APIRequestFactory()
+        request = factory.post('/api/users/', {
+            'username': 'new_user',
+            'password': 'new_user',
+            'captcha': '1234'
+        })
+
+        response = self.view(request)
+        response.render()
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+    def test_view_returns_400_status_code_when_captcha_field_is_not_supplied(self):
+
+        factory = APIRequestFactory()
+        request = factory.post('/api/users/', {
+            'username': 'new_user',
+            'password': 'new_user',
+            'token': hashlib.sha256('1234'.encode()).hexdigest()
+        })
+
+        response = self.view(request)
+        response.render()
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+    def test_view_returns_200_status_code_for_options_request(self):
 
         factory = APIRequestFactory()
         request = factory.options('/api/users')
@@ -170,7 +200,7 @@ class UserViewSetTest(APITestCase):
         self.assertIn('actions', response.data)
 
 
-    def test_view_returns_403_response_for_unauthenticated_head_request(self):
+    def test_view_returns_403_status_code_for_unauthenticated_head_request(self):
 
         factory = APIRequestFactory()
         request = factory.head('/api/users/')
@@ -181,7 +211,7 @@ class UserViewSetTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
-    def test_view_returns_200_response_for_authenticated_user_head_request(self):
+    def test_view_returns_200_status_code_for_authenticated_user_head_request(self):
 
         factory = APIRequestFactory()
         request = factory.head('/api/users/')
@@ -193,7 +223,7 @@ class UserViewSetTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-    def test_view_returns_200_response_for_authenticated_admin_head_request(self):
+    def test_view_returns_200_status_code_for_authenticated_admin_head_request(self):
 
         factory = APIRequestFactory()
         request = factory.head('/api/users/')
