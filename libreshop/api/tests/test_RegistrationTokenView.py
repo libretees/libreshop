@@ -33,8 +33,6 @@ class RegistrationTokenViewTest(APITestCase):
         response = self.view(request)
         response.render()
 
-        print(' '.join([str(k) for (k,v) in response.data.items()]))
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
