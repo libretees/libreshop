@@ -1,8 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.forms.models import inlineformset_factory
 from django.test import TestCase
-from .forms.models import UniqueTogetherFormSet
-from .models import Inventory, Location, Warehouse
+from ..forms.models import UniqueTogetherFormSet
+from ..models import Inventory, Location, Warehouse
 
 # Create your tests here.
 class UniqueTogetherFormSetTest(TestCase):
@@ -92,7 +92,7 @@ class UniqueTogetherFormSetTest(TestCase):
     def test_formset_handles_null_values(self):
         '''
         Test that UniqueTogetherFormSet does not raise a KeyError exception if a
-        Null value is specified within the FormSet.
+        NULL value is specified within the FormSet.
         '''
         warehouse = Warehouse.objects.create(name='foo')
 
