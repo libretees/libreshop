@@ -31,40 +31,55 @@ from .widgets import CaptchaWidget
 logger = logging.getLogger(__name__)
 
 class CustomerChangeForm(UserChangeForm):
+
+    selected_variants = forms.ModelMultipleChoiceField(
+        Variant.objects.all(),
+        widget=admin.widgets.FilteredSelectMultiple('Variant', False),
+        required=False
+    )
+
     class Meta(UserChangeForm.Meta):
         model = Customer
 
-    selected_variants = forms.ModelMultipleChoiceField(Variant.objects.all(),
-                                                       widget=admin.widgets.FilteredSelectMultiple('Variant', False),
-                                                       required=False)
 
     def __init__(self, *args, **kwargs):
         super(CustomerChangeForm, self).__init__(*args, **kwargs)
 
-        if self.instance.pk:
-            self.initial['selected_variants'] = [customer_cart.product for customer_cart in Cart.objects.filter(customer__user=self.instance.pk)]
-            relation = ManyToManyRel(field=Customer,
-                                     to=Variant,
-                                     through=Cart)
-            self.fields['selected_variants'].widget = admin.widgets.RelatedFieldWidgetWrapper(self.fields['selected_variants'].widget,
-                                                                                              relation,
-                                                                                              admin.site)
+        if self.instance:
+            # Load the Variants that are currently in the Customer's Cart.
+            self.cart_contents = [
+                customer_cart.variant for customer_cart
+                in Cart.objects.filter(customer__user=self.instance)
+            ]
+            self.initial['selected_variants'] = self.cart_contents
+
 
     def save(self, *args, **kwargs):
         instance = super(CustomerChangeForm, self).save(*args, **kwargs)
 
-        if instance.pk:
-            for selected_product in [customer_cart.product for customer_cart in Cart.objects.filter(customer__user=self.instance.pk)]:
-                if selected_product not in self.cleaned_data['selected_variants']:
-                    # remove a product that has been unselected
-                    customer = Customer.objects.get(pk=instance.pk)
-                    Cart.objects.filter(customer__pk=customer.pk, product__pk=selected_product.pk)[0].delete()
+        if instance:
+            customer = Customer.objects.get(user=instance)
 
-            for product in self.cleaned_data['selected_variants']:
-                if product not in [customer_cart.product for customer_cart in Cart.objects.filter(customer__user=self.instance.pk)]:
-                    # add newly-selected products
-                    customer = Customer.objects.get(user=instance.pk)
-                    Cart.objects.create(customer=customer, product=product, saved_product=saved_product)
+            unselected_variants = [
+                variant for variant in self.cart_contents
+                if variant not in self.cleaned_data['selected_variants']
+            ]
+
+            selected_variants = [
+                variant for variant in self.cleaned_data['selected_variants']
+                if variant not in self.cart_contents
+            ]
+
+            # Remove Variants that have been unselected.
+            for variant in unselected_variants:
+                removed_variant = Cart.objects.get(
+                    customer=customer, variant=variant
+                )
+                removed_variant.delete()
+
+            # Add newly-selected Variants.
+            for variant in selected_variants:
+                Cart.objects.create(customer=customer, variant=variant)
 
         return instance
 
