@@ -98,7 +98,7 @@ class Command(BaseCommand):
                     )
             else:
                 # Add new suppliers to the run queue.
-                self.initialize_task_queue(supplier.name)
+                self.initialize_task_queue(supplier_name=supplier.name)
 
         # Determine which jobs on run queue should be removed.
         canceled_jobs = {
@@ -125,11 +125,14 @@ class Command(BaseCommand):
     def server_callback(self, *args, **options):
         logger.info('Fulfillment server starting...')
 
-        self.initialize_task_queue()
-
         while True:
             self.maintain_task_queue()
             schedule.run_pending()
+
+            # Break out of the server loop, if in test mode.
+            test_mode = options.pop('test', False)
+            if test_mode:
+                break;
 
             # Sleep for one second.
             time.sleep(1)
@@ -157,22 +160,27 @@ class Command(BaseCommand):
         # Fulfill any orders specified on the command line.
         if tokens:
             self.fulfill_orders(tokens=tokens)
+        else:
+            # Fulfill all orders, if no command line arguments were provided.
+            self.fulfill_orders()
 
         # Enter the server loop if the '--server' option was specified.
         if server:
             # Set up SIGINT signal to call on ctrl-c.
-            signal.signal(
+            signal.signal(  # pragma: no cover
                 signal.SIGINT, lambda sig, frame: self.exit_callback()
             )
+
+            # Initalize task queue.
+            self.initialize_task_queue()
+
+            # Begin server loop.
             if daemon:
                 logger.info('Daemonizing server process...')
                 with DaemonContext():
                     self.server_callback(*args, **options)
             else:
                 self.server_callback(*args, **options)
-        else:
-            # Fulfill all orders, if no command line arguments were provided.
-            self.fulfill_orders()
 
 
     def fulfill_dropship(self, supplier_name):
@@ -194,7 +202,7 @@ class Command(BaseCommand):
             fulfillment_backend = supplier.load_fulfillment_backend()
             order = fulfillment_backend(unfulfilled_purchases)
 
-            if order:
+            if order:   # pragma: no cover
                 purchase_order = FulfillmentOrder.objects.create(
                     order_id = order.get('id'),
                     subtotal = order.get('subtotal'),
@@ -271,8 +279,10 @@ class Command(BaseCommand):
                 'Fulfilled Order %s.' % order.token
             ))
         else:
-            logger.info('%s %s fulfilled.' %
-                (len(orders), 'Orders were' if len(orders) > 1 else 'Order was')
+            logger.info('%s %s fulfilled.' % (
+                    len(orders),
+                    'Order was' if len(orders) == 1 else 'Orders were'
+                )
             )
 
         logger.info('Processed \'fulfill\' management command...')

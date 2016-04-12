@@ -45,6 +45,12 @@ class Order(TimeStampedModel):
     objects = OrderManager()
 
 
+    @property
+    def fulfilled(self):
+        purchases = Purchase.objects.filter(order=self)
+        return all(purchase.fulfilled for purchase in purchases)
+
+
 class Transaction(TimeStampedModel):
     order = models.ForeignKey('Order', null=True, blank=True)
     transaction_id = models.CharField(
