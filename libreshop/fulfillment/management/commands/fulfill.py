@@ -202,7 +202,7 @@ class Command(BaseCommand):
             fulfillment_backend = supplier.load_fulfillment_backend()
             order = fulfillment_backend(unfulfilled_purchases)
 
-            if order:   # pragma: no cover
+            if order:
                 purchase_order = FulfillmentOrder.objects.create(
                     order_id = order.get('id'),
                     subtotal = order.get('subtotal'),
