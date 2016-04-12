@@ -1,7 +1,6 @@
 from django.test import TestCase
 from ..models import Address
 
-
 # Create your tests here.
 class AddressModelTest(TestCase):
 
