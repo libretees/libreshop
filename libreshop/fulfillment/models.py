@@ -1,9 +1,9 @@
 import importlib
 import logging
-from datetime import datetime
 from decimal import Decimal
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.utils import timezone
 from model_utils.models import TimeStampedModel
 
 # Initialize logger.
@@ -102,7 +102,7 @@ class FulfillmentOrder(TimeStampedModel):
         ]
     )
     created_at = models.DateTimeField(
-        default=datetime.now, null=False, blank=False
+        default=timezone.now, null=False, blank=False
     )
 
 

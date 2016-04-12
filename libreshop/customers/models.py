@@ -18,12 +18,12 @@ User = settings.AUTH_USER_MODEL
 
 # Create your models here.
 class Customer(TimeStampedModel):
-    user = models.OneToOneField(User,
-                                primary_key=True)
-    addresses = models.ManyToManyField('addresses.Address', null=False,
-        blank=True)
-    selected_products = models.ManyToManyField('products.Variant',
-        through='carts.Cart', through_fields=('customer', 'variant'))
+    user = models.OneToOneField(User, primary_key=True)
+    addresses = models.ManyToManyField('addresses.Address', blank=True)
+    selected_products = models.ManyToManyField(
+        'products.Variant', through='carts.Cart',
+        through_fields=('customer', 'variant')
+    )
 
     def __str__(self):
           return "%s's profile" % self.user
