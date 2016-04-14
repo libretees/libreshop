@@ -43,13 +43,13 @@ PyPDF2==1.25.1
 pytest==2.8.5
 pytest-django==2.9.1
 python-daemon==2.1.1
-python-social-auth==0.2.13
-python3-openid==3.0.9
+python-social-auth==0.2.16
+python3-openid==3.0.10
 pytz==2015.4
 PyVirtualDisplay==0.1.5
 reportlab==3.2.0
 requests==2.9.1
-requests-oauthlib==0.6.0
+requests-oauthlib==0.6.1
 schedule==0.3.2
 selenium==2.47.1
 six==1.10.0
