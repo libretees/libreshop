@@ -14,5 +14,5 @@ class InventoryCreationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(InventoryCreationForm, self).__init__(*args, **kwargs)
         self.fields['alternatives'].queryset = Inventory.objects.exclude(
-            id__exact=self.instance.id
+            pk=self.instance.pk
         )

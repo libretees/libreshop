@@ -16,6 +16,29 @@ logger = logging.getLogger(__name__)
 # Create your tests here.
 class LocationModelTest(TestCase):
 
+    def setUp(self):
+        '''
+        Create common test assets prior to each individual unit test run.
+        '''
+        # Set up test data.
+        inventory = Inventory.objects.create(name='foo')
+        warehouse = Warehouse.objects.create(
+            name='foo', address=Address.objects.create()
+        )
+        self.location = Location.objects.create(
+            inventory=inventory, warehouse=warehouse, quantity=Decimal(0.00)
+        )
+
+
+    def test_model_string_representation(self):
+        '''
+        Test that the Location string representation displays properly.
+        '''
+        self.assertEqual(
+            str(self.location), 'Warehouse foo: Location %s' % self.location.pk
+        )
+
+
     def test_model_has_inventory_field(self):
         '''
         Test that Location.inventory is present.
@@ -65,7 +88,7 @@ class LocationModelTest(TestCase):
         location = Location(warehouse=warehouse, inventory=inventory,
             quantity=Decimal(0.00))
         location.save()
-        num_locations = Location.objects.all().count()
+        num_locations = Location.objects.filter(pk=location.pk).count()
         self.assertEqual(num_locations, 1)
 
 
