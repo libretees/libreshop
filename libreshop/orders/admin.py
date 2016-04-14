@@ -25,7 +25,7 @@ class TransactionInline(admin.TabularInline):
     extra = 0
 
     def get_max_num(self, request, obj=None, **kwargs):
-        return Transaction.objects.filter(order=obj).count() if obj else 0
+        return Transaction.objects.filter(order=obj).count()
 
 
 @admin.register(Order)
