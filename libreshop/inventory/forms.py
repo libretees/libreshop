@@ -1,8 +1,6 @@
 import logging
 from django import forms
-from django.contrib import admin
-from django.db.models.fields.related import ManyToManyRel
-from .models import Inventory, Warehouse, Location
+from .models import Inventory
 
 # Initialize logger
 logger = logging.getLogger(__name__)
