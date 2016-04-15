@@ -40,7 +40,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 
     def _fulfilled(self, instance):
-        return instance.fulfilled_purchases == instance.purchase_count
+        return instance.fulfilled
     _fulfilled.boolean = True # Show Icon instead of 'True'/'False' text.
 
 

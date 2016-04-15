@@ -1,7 +1,6 @@
 import logging
 from django.test import TestCase
 from .. import models
-
 try:
     # Try to import from the Python 3.3+ standard library.
     from unittest.mock import patch
