@@ -86,15 +86,15 @@ class TaxRateAdmin(admin.ModelAdmin):
 
 
     def _tax_rate(self, instance):
-        return '%s%%' % (instance.tax_rate * 100).normalize()
+        return '%s%%' % (instance.effective_tax_rate * 100).normalize()
     _tax_rate.short_description = 'Tax Rate'
-    _tax_rate.admin_order_field = 'tax_rate'
+    _tax_rate.admin_order_field = 'effective_tax_rate'
 
 
     def get_queryset(self, request):
         queryset = super(TaxRateAdmin, self).get_queryset(request)
         queryset = queryset.annotate(
-            tax_rate=(
+            effective_tax_rate=(
                 F('local_tax_rate') + F('county_tax_rate') +
                 F('district_tax_rate') + F('state_tax_rate')
             )
