@@ -34,7 +34,7 @@
   {% endfor %}
   <div class='pull-right'>
     <div class='pull-left'>
-      <h2>${{ subtotal }}</h2>
+      <h2>${{ subtotal|floatformat:2 }}</h2>
       <p>subtotal</p>
     </div>
     {% if shipping_cost %}
@@ -42,7 +42,7 @@
         <span class='fa fa-plus math'></span>
       </div>
       <div class='pull-left'>
-        <h2>${{ shipping_cost }}</h2>
+        <h2>${{ shipping_cost|floatformat:2 }}</h2>
         <p>shipping</p>
       </div>
     {% endif %}
@@ -51,7 +51,7 @@
         <span class='fa fa-plus math'></span>
       </div>
       <div class='pull-left'>
-        <h2>${{ sales_tax }}</h2>
+        <h2>${{ sales_tax|floatformat:2 }}</h2>
         <p>sales tax</p>
       </div>
     {% endif %}
@@ -60,7 +60,7 @@
         <span class='fa fa-arrow-right math'></span>
       </div>
       <div class='pull-left'>
-        <h2>${{ total }}</h2>
+        <h2>${{ total|floatformat:2 }}</h2>
         <p>total</p>
       </div>
     {% endif %}
