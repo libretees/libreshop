@@ -2,6 +2,7 @@ from django.forms import Widget
 from django.test import TestCase
 from ..forms import SensitiveDataMixin
 
+
 class SensitiveDataMixinTest(TestCase):
 
     def setUp(self):

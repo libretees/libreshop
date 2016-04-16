@@ -86,6 +86,7 @@ class PaymentForm(forms.Form):
                 'payment_method_nonce': forms.CharField(required=True)
             }
 
+
     def clean(self):
         cleaned_data = super(PaymentForm, self).clean()
         if self.amount:
