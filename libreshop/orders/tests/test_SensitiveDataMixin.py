@@ -14,6 +14,7 @@ class SensitiveDataMixinTest(TestCase):
             pass
 
         self.sensitive_widget = TestWidget(attrs={'name': 'foo'})
+        self.widget = TestWidget()
 
 
     def test_mixin_removes_name_attribute_from_form_widget(self):
@@ -22,5 +23,15 @@ class SensitiveDataMixinTest(TestCase):
         it extends. This is required as part of PCI compliance.
         '''
         attributes = self.sensitive_widget.build_attrs()
+
+        self.assertNotIn('name', attributes)
+
+
+    def test_mixin_does_nothing_if_name_attribute_is_not_present_in_form_widget(self):
+        '''
+        Ensure that the Mixin does nothing if the 'name' attribute is not
+        present in the Widget that it extends.
+        '''
+        attributes = self.widget.build_attrs()
 
         self.assertNotIn('name', attributes)
