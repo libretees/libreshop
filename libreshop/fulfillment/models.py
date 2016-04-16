@@ -46,7 +46,7 @@ class FulfillmentSetting(TimeStampedModel):
     class Meta:
         unique_together = ('supplier', 'name')
 
-    supplier = models.ForeignKey('Supplier', null=True, blank=True)
+    supplier = models.ForeignKey('Supplier', null=False, blank=False)
     name = models.CharField(max_length=64, unique=True, null=False, blank=False)
 
     def __str__(self):
