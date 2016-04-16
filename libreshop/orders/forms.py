@@ -209,8 +209,7 @@ class OrderReceiptForm(forms.Form):
         if self.is_bound and not self.errors:
 
             session_data = (
-                self.request.session.get(UUID)
-                if self.request else None
+                self.request.session.get(UUID) if self.request else None
             )
             self.order_token = (
                 session_data.get('order_token') if session_data else None
@@ -285,13 +284,14 @@ class OrderReceiptForm(forms.Form):
             subject = 'Your Receipt for LibreShop Order %s!' % self.order_token
 
             try:
+                # Get Order from specified token.
                 order = Order.objects.get(token=self.order_token)
-            except Order.DoesNotExist as e:
+
+                # Get the latest Transaction.
+                transaction = Transaction.objects.filter(order=order).latest()
+            except (Order.DoesNotExist, Transaction.DoesNotExist) as e:
                 pass
             else:
-                # Get the latest transaction.
-                transaction = Transaction.objects.filter(order=order).latest()
-
                 # Load the default template engine.
                 TemplateEngine = Engine.get_default()
 
@@ -304,28 +304,28 @@ class OrderReceiptForm(forms.Form):
                 })
                 body = template.render(context)
 
-            message = EmailMessage(
-                subject=subject,
-                body=body,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[email_address],
-                bcc=[],
-                connection=None,
-                attachments=None,
-                headers=None,
-                cc=None,
-                reply_to=None
-            )
-
-            messages_sent = message.send()
-
-            if messages_sent:
-                Communication.objects.create(
-                    order=order,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    to_email=email_address,
+                message = EmailMessage(
                     subject=subject,
-                    body=body
+                    body=body,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    to=[email_address],
+                    bcc=[],
+                    connection=None,
+                    attachments=None,
+                    headers=None,
+                    cc=None,
+                    reply_to=None
                 )
+
+                messages_sent = message.send()
+
+        if messages_sent:
+            Communication.objects.create(
+                order=order,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to_email=email_address,
+                subject=subject,
+                body=body
+            )
 
         return bool(messages_sent)
