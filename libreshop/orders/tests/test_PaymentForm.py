@@ -12,6 +12,17 @@ except ImportError as e:
 # Create your tests here.
 class PaymentFormTest(TestCase):
 
+    def test_form_is_pci_compliant(self):
+        '''
+        Test that the Form is PCI Compliant and does not send any sensitive data
+        to the server in its POST request.
+        '''
+        # Instantiate Form.
+        form = PaymentForm()
+
+        self.assertNotIn(' name=', str(form))
+
+
     def test_form_is_valid_when_provided_with_valid_nonce(self):
         '''
         Test that the Form is valid when a nonce is received from the user on
@@ -29,6 +40,24 @@ class PaymentFormTest(TestCase):
         result = form.is_valid()
 
         self.assertTrue(result)
+
+
+    def test_form_does_not_submit_transaction_for_zero_amount(self):
+        '''
+        Test that the form does not submit a transaction to the Payment Gateway
+        if the payment amount is zero.
+        '''
+        # Instantiate Form.
+        form = PaymentForm(
+            amount=Decimal(0.00),
+            data={
+                'payment_method_nonce': 'fake-valid-nonce'
+            }
+        )
+        # Perform Form validation.
+        result = form.is_valid()
+
+        self.assertNotIn('transaction_id', form.cleaned_data)
 
 
     def test_form_is_invalid_when_processor_declines_payment(self):
