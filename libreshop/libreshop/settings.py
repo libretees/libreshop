@@ -53,6 +53,7 @@ THIRD_PARTY_APPS = (
     'rest_framework',
     'widget_tweaks',
     'django_countries',
+    'versatileimagefield',
 )
 
 LOCAL_APPS = (

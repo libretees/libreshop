@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.template.defaultfilters import slugify
 from model_utils.models import TimeStampedModel
+from versatileimagefield.fields import PPOIField, VersatileImageField
 from .variant import Variant
 
 # Initialize logger.
@@ -31,9 +32,13 @@ class Product(TimeStampedModel):
     sku = models.CharField(max_length=8, unique=True, null=False, blank=False)
     name = models.CharField(max_length=64, unique=True, null=False, blank=False)
     description = models.CharField(max_length=2048, null=True, blank=True)
-    image = models.ImageField(
-        upload_to='images/product', max_length=255, null=True, blank=True
+
+    image = VersatileImageField(
+        upload_to='images/product', max_length=255, null=True, blank=True,
+        ppoi_field='image_ppoi' # Image Primary Point of Interest (PPOI)
     )
+    image_ppoi = PPOIField(verbose_name='Primary Point of Interest')
+
     slug = models.SlugField(unique=True, null=True, blank=True)
 
     objects = ProductManager()
