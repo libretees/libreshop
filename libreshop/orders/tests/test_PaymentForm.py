@@ -35,7 +35,6 @@ class PaymentFormTest(TestCase):
                 'payment_method_nonce': 'fake-valid-nonce'
             }
         )
-
         # Perform Form validation.
         result = form.is_valid()
 
