@@ -69,7 +69,7 @@ class FulfillmentSettingValue(TimeStampedModel):
 
 class FulfillmentOrder(TimeStampedModel):
     order_id = models.CharField(
-        max_length=8, null=False, blank=False, unique=True, verbose_name='ID'
+        max_length=32, null=False, blank=False, unique=True, verbose_name='ID'
     )
     subtotal = models.DecimalField(
         max_digits=8, decimal_places=2, null=False, blank=False,
