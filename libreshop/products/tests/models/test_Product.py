@@ -363,3 +363,27 @@ class ProductModelTest(TestCase):
         product.save()
         product.refresh_from_db()
         self.assertEqual(variant2.name, 'baz')
+
+
+    def test_variants_property_provides_variants_in_order(self):
+        '''
+        Test that tha Product.variants property sorts salable variants by price
+        and then by creation time.
+        '''
+        product = Product.objects.create(sku='foo', name='foo')
+
+        variant = product.variant_set.first()
+        variant.price = Decimal(1.00)
+        variant.sub_sku = '001'
+        variant.save()
+
+        variant3 = Variant.objects.create(
+            product=product, name='baz', sub_sku='003', price=Decimal(2.00)
+        )
+        variant2 = Variant.objects.create(
+            product=product, name='bar', sub_sku='002', price=Decimal(1.00)
+        )
+
+        variants = getattr(product, 'variants', None)
+
+        self.assertEqual(variants, [variant, variant2, variant3])

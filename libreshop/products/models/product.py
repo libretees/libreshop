@@ -92,7 +92,7 @@ class Product(TimeStampedModel):
             variant for variant in self.variant_set.all() if variant.salable
         ]
 
-        return sorted(salable_variants, key=lambda x: x.price)
+        return sorted(salable_variants, key=lambda x: (x.price, x.created))
 
 
     def validate_unique(self, *args, **kwargs):
