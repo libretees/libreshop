@@ -143,3 +143,35 @@ class ProductViewTest(TestCase):
         cart = context.get('cart')
 
         self.assertIsNotNone(cart)
+
+
+    def test_template_does_not_escape_the_value_of_the_description_field(self):
+        '''
+        Test that the template used by ProductView marks the Product.description
+        field value as HTML-safe output.
+        '''
+        description = "This description includes a <a href='#'>link</a>."
+
+        product = Product.objects.create(
+            name='foo', sku='1000', description=description
+        )
+
+        factory = RequestFactory()
+        request = factory.get(
+            reverse('products:product', kwargs={'slug': 'foo'})
+        )
+
+        # Set `session` manually, since middleware is not supported.
+        engine = import_module(settings.SESSION_ENGINE)
+        session_key = None
+        request.session = engine.SessionStore(session_key)
+
+        # Set `user` manually, since middleware is not supported.
+        request.user = AnonymousUser()
+
+        view = ProductView.as_view()
+        response = view(request, slug='foo')
+        response = response.render()
+        rendered_html = response.content.decode()
+
+        self.assertIn(description, rendered_html)

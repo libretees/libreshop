@@ -17,7 +17,7 @@
         </div>
         <div class='jumbotron-content col-md-7'>
           <h1 id='product-name'>{{ product.name }}</h1>
-          <p>{{ product.description }}</p>
+          <p>{{ product.description|safe }}</p>
 
           <form method='POST'>
           {% csrf_token %}
