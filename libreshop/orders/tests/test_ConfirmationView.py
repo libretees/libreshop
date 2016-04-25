@@ -11,6 +11,9 @@ class ConfirmationViewTest(TestCase):
 
     def create_http_request(self, method, data=None):
         '''
+        Create an HTTP request based on the `method` parameter. Any data that is
+        to be passed along with the request should come in dict form with the
+        `data` parameter.
         '''
         factory = RequestFactory()
 
