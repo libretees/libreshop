@@ -55,7 +55,17 @@ class SessionCartTest(TestCase):
         self.assertEquals(cart, [])
 
 
-    def test_session_cart_can_calculate_the_total_price_of_its_contents(self):
+    def test_session_cart_can_calculate_total_price_when_empty(self):
+        '''
+        Test that SessionCart can calculate the total price when it is empty.
+        '''
+        session = self.client.session
+        cart = SessionCart(session)
+
+        self.assertEquals(cart.total, Decimal(0.00))
+
+
+    def test_session_cart_can_calculate_total_price_of_contents(self):
         '''
         Test that SessionCart can calculate the total price of its contents.
         '''
