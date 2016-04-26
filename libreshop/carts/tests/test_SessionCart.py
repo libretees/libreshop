@@ -65,6 +65,19 @@ class SessionCartTest(TestCase):
         self.assertEquals(cart.total, Decimal(0.00))
 
 
+    def test_session_cart_can_calculate_total_price_with_one_item(self):
+        '''
+        Test that SessionCart can calculate the total price when it contains one
+        item.
+        '''
+        session = self.client.session
+        cart = SessionCart(session)
+
+        cart.add(self.variant)
+
+        self.assertAlmostEqual(cart.total, Decimal(12.34), places=2)
+
+
     def test_session_cart_can_calculate_total_price_of_contents(self):
         '''
         Test that SessionCart can calculate the total price of its contents.
@@ -75,7 +88,7 @@ class SessionCartTest(TestCase):
         cart.add(self.variant)
         cart.add(self.variant2)
 
-        self.assertEquals(cart.total, Decimal(55.55).quantize(Decimal(1.00)))
+        self.assertAlmostEqual(cart.total, Decimal(55.55), places=2)
 
 
     def test_session_cart_preserves_contents_between_instantiations(self):

@@ -71,7 +71,7 @@ class SessionCart(list):
     @property
     def total(self):
         return (
-            sum(item.price for item in self).quantize(Decimal(1.00))
+            sum(item.price for item in self).quantize(Decimal(10) ** -2)
             if self else Decimal(0.00)
         )
 
