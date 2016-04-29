@@ -41,6 +41,25 @@ class PaymentFormTest(TestCase):
         self.assertTrue(result)
 
 
+    def test_form_is_invalid_when_no_nonce_is_provided(self):
+        '''
+        Test that the Form is invalid when no nonce is received from the user.
+        This could happen if the Payment Processor's JavaScript Client is not
+        loaded.
+        '''
+        # Instantiate Form.
+        form = PaymentForm(
+            amount=Decimal(1.00),   # Set Test Amount to 'Authorized'.
+            data={
+                'payment_method_nonce': None
+            }
+        )
+        # Perform Form validation.
+        result = form.is_valid()
+
+        self.assertFalse(result)
+
+
     def test_form_does_not_submit_transaction_for_zero_amount(self):
         '''
         Test that the form does not submit a transaction to the Payment Gateway

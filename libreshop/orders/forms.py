@@ -89,7 +89,8 @@ class PaymentForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(PaymentForm, self).clean()
-        if self.amount:
+
+        if self.amount and not self.errors:
             result = self.create_transaction(self.amount)
             if result.is_success:
                 transaction = result.transaction
