@@ -8,6 +8,13 @@ from orders.models import Order, Purchase, Transaction
 from carts.utils import SessionCart
 from products.models import Product, Variant
 from ..views import CheckoutFormView, UUID
+try:
+    # Try to import from the Python 3.3+ standard library.
+    from unittest.mock import patch
+except ImportError as e:
+    # Otherwise, import from the `mock` project dependency.
+    from mock import patch
+
 
 class CheckoutFormViewTest(TestCase):
 
@@ -83,6 +90,11 @@ class CheckoutFormViewTest(TestCase):
         '''
         Test that the CheckoutFormView initially redirects to itself.
         '''
+        view_url = reverse('checkout:main')
+
+        cart = SessionCart(self.client.session)
+        cart.add(self.variant)
+
         # Set up HTTP POST request.
         request_data = {
             'recipient_name': 'Foo Bar',
@@ -92,12 +104,35 @@ class CheckoutFormViewTest(TestCase):
             'postal_code': '12345',
             'country': 'US'
         }
-        self.create_http_request('POST', data=request_data)
+
+        response = self.client.post(view_url, data=request_data)
+
+        self.assertEqual(response.url, view_url)
+
+
+    @patch('orders.views.calculate_shipping_cost')
+    def test_view_advances_to_payment_form(self, calculate_shipping_cost_mock):
+        '''
+        Test that the CheckoutFormView can advance to the PaymentForm
+        '''
+        view_url = reverse('checkout:main')
 
         cart = SessionCart(self.client.session)
         cart.add(self.variant)
 
-        response = self.view(self.request, **request_data)
+        calculate_shipping_cost_mock.return_value = Decimal(1.00)
 
-        view_url = reverse('checkout:main')
-        self.assertEqual(response.url, view_url)
+        # Set up HTTP POST request.
+        request_data = {
+            'recipient_name': 'Foo Bar',
+            'street_address': '123 Test St',
+            'locality': 'Test',
+            'region': 'OK',
+            'postal_code': '12345',
+            'country': 'US'
+        }
+
+        response = self.client.post(view_url, data=request_data, follow=True)
+        rendered_html = response.content.decode()
+
+        self.assertIn('how are you paying?', rendered_html)
