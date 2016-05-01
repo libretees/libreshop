@@ -4,8 +4,10 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
+from django.utils import timezone
 from orders.models import Order, Purchase, Transaction
 from carts.utils import SessionCart
+from orders.models import Order
 from products.models import Product, Variant
 from ..views import CheckoutFormView, UUID
 try:
@@ -136,3 +138,57 @@ class CheckoutFormViewTest(TestCase):
         rendered_html = response.content.decode()
 
         self.assertIn('how are you paying?', rendered_html)
+
+
+    @patch('orders.views.calculate_shipping_cost')
+    @patch('orders.forms.braintree.Transaction.sale')
+    def test_view_advances_to_confirmation_page(self, sale_mock, calculate_shipping_cost_mock):
+        '''
+        Test that the CheckoutFormView can advance to the PaymentForm
+        '''
+        view_url = reverse('checkout:main')
+
+        cart = SessionCart(self.client.session)
+        cart.add(self.variant)
+
+        calculate_shipping_cost_mock.return_value = Decimal(1.00)
+
+        sale_mock.return_value.is_success = True
+        sale_mock.return_value.transaction.id = '12345'
+        sale_mock.return_value.transaction.amount = Decimal(1.00)
+        sale_mock.return_value.transaction.created_at = timezone.now()
+        sale_mock.return_value.transaction.credit_card = {
+            'cardholder_name': 'Foo Bar',
+            'customer_location': 'US',
+            'card_type': 'Foo',
+            'last_4': '1234',
+            'expiration_month': '12',
+            'expiration_year': '2034',
+        }
+
+        # Set up HTTP POST request.
+        request_data = {
+            'recipient_name': 'Foo Bar',
+            'street_address': '123 Test St',
+            'locality': 'Test',
+            'region': 'OK',
+            'postal_code': '12345',
+            'country': 'US'
+        }
+
+        response1 = self.client.post(view_url, data=request_data, follow=True)
+
+        request_data = {
+            'payment_method_nonce': 'fake-valid-nonce'
+        }
+
+        response2 = self.client.post(view_url, data=request_data, follow=True)
+        rendered_html = response2.content.decode()
+
+        order = Order.objects.last()
+        expected = (
+            '<h2>Order <strong>%s</strong> has been received!</h2>' %
+            order.token
+        )
+
+        self.assertIn(expected, rendered_html)
