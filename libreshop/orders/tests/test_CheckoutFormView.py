@@ -148,9 +148,6 @@ class CheckoutFormViewTest(TestCase):
         '''
         view_url = reverse('checkout:main')
 
-        cart = SessionCart(self.client.session)
-        cart.add(self.variant)
-
         calculate_shipping_cost_mock.return_value = Decimal(1.00)
 
         sale_mock.return_value.is_success = True
@@ -192,3 +189,32 @@ class CheckoutFormViewTest(TestCase):
         )
 
         self.assertIn(expected, rendered_html)
+
+
+    @patch('orders.views.calculate_shipping_cost')
+    def test_view_adds_valid_shipping_information_to_session_variable(self, calculate_shipping_cost_mock):
+        '''
+        Test that the CheckoutFormView adds valid shipping information from the
+        AddressForm to the User's Session.
+        '''
+        # Set up HTTP POST request.
+        request_data = {
+            'recipient_name': 'Foo Bar',
+            'street_address': '123 Test St',
+            'locality': 'Test',
+            'region': 'OK',
+            'postal_code': '12345',
+            'country': 'US'
+        }
+        self.create_http_request('post', data=request_data)
+
+        session = self.request.session
+
+        cart = SessionCart(session)
+        cart.add(self.variant)
+
+        calculate_shipping_cost_mock.return_value = Decimal(1.00)
+
+        response = self.view(self.request, **request_data)
+
+        self.assertEqual(session[UUID]['shipping'], request_data)
