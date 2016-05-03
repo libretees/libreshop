@@ -20,7 +20,7 @@ except ImportError as e:
 
 class CheckoutFormViewTest(TestCase):
 
-    def create_http_request(self, method, data=None):
+    def create_http_request(self, method, data=None, session=None):
         '''
         Create an HTTP request based on the `method` parameter. Any data that is
         to be passed along with the request should come in dict form with the
@@ -35,9 +35,12 @@ class CheckoutFormViewTest(TestCase):
         self.request.user = AnonymousUser()
 
         # Set `session` manually, since middleware is not supported.
-        engine = import_module(settings.SESSION_ENGINE)
-        session_key = None
-        self.request.session = engine.SessionStore(session_key)
+        if session is not None:
+            self.request.session = session
+        else:
+            engine = import_module(settings.SESSION_ENGINE)
+            session_key = None
+            self.request.session = engine.SessionStore(session_key)
 
 
     def setUp(self):
@@ -218,3 +221,40 @@ class CheckoutFormViewTest(TestCase):
         response = self.view(self.request, **request_data)
 
         self.assertEqual(session[UUID]['shipping'], request_data)
+
+
+    @patch('orders.views.calculate_shipping_cost')
+    def test_view_removes_step_data_for_key_in_get_request(self, calculate_shipping_cost_mock):
+        '''
+        Test that the CheckoutFormView adds valid shipping information from the
+        AddressForm to the User's Session.
+        '''
+        # Set up HTTP POST request.
+        request_data = {
+            'recipient_name': 'Foo Bar',
+            'street_address': '123 Test St',
+            'locality': 'Test',
+            'region': 'OK',
+            'postal_code': '12345',
+            'country': 'US'
+        }
+        self.create_http_request('post', data=request_data)
+
+        session = self.request.session
+
+        cart = SessionCart(session)
+        cart.add(self.variant)
+
+        calculate_shipping_cost_mock.return_value = Decimal(1.00)
+
+        response = self.view(self.request, **request_data)
+
+        # Set up HTTP GET request.
+        request_data = {
+            'shipping': 'shipping'
+        }
+        self.create_http_request('get', data=request_data, session=session)
+
+        response = self.view(self.request, **request_data)
+
+        self.assertNotIn('shipping', session[UUID])
