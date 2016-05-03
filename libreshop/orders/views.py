@@ -107,7 +107,10 @@ class CheckoutFormView(FormView):
     def get(self, request, *args, **kwargs):
 
         previous_step_data = {}
-        for key in request.GET:
+        deleted_steps = [
+            key for key in request.GET if key in self.request.session[UUID]
+        ]
+        for key in deleted_steps:
             session_data = self.request.session[UUID]
             previous_step_data = session_data.get(key, None)
             del session_data[key]

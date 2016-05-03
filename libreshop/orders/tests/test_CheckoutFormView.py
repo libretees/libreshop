@@ -226,8 +226,8 @@ class CheckoutFormViewTest(TestCase):
     @patch('orders.views.calculate_shipping_cost')
     def test_view_removes_step_data_for_key_in_get_request(self, calculate_shipping_cost_mock):
         '''
-        Test that the CheckoutFormView adds valid shipping information from the
-        AddressForm to the User's Session.
+        Test that the CheckoutFormView can remove a given key from checkout
+        Session Data when it is specified in an HTTP GET request.
         '''
         # Set up HTTP POST request.
         request_data = {
@@ -254,6 +254,30 @@ class CheckoutFormViewTest(TestCase):
             'shipping': 'shipping'
         }
         self.create_http_request('get', data=request_data, session=session)
+
+        response = self.view(self.request, **request_data)
+
+        self.assertNotIn('shipping', session[UUID])
+
+
+    @patch('orders.views.calculate_shipping_cost')
+    def test_view_gracefully_handles_invalid_step_data_deletion_requests(self, calculate_shipping_cost_mock):
+        '''
+        Test that the CheckoutFormView gracefully handles step deletion when the
+        step is not present within checkout Session Data.
+        '''
+        # Set up HTTP GET request.
+        request_data = {
+            'shipping': 'shipping'
+        }
+        self.create_http_request('get', data=request_data)
+
+        session = self.request.session
+
+        cart = SessionCart(session)
+        cart.add(self.variant)
+
+        calculate_shipping_cost_mock.return_value = Decimal(1.00)
 
         response = self.view(self.request, **request_data)
 
