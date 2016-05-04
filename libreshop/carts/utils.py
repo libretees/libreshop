@@ -43,6 +43,7 @@ class SessionList(list):
 
     def _update_session(self):
         self.session[UUID] = list(self)
+        self.session.save()
 
 
 class SessionCart(list):
@@ -50,7 +51,6 @@ class SessionCart(list):
     def __init__(self, session, *args, **kwargs):
 
         self._session_list = SessionList(session, *args, **kwargs)
-
         # Map the PKs in the SessionList to their respective Variants and
         # populate the SessionCart.
         self += [
