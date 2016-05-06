@@ -20,29 +20,6 @@ except ImportError as e:
 
 class CheckoutFormViewTest(TestCase):
 
-    def create_http_request(self, method, data=None, session=None):
-        '''
-        Create an HTTP request based on the `method` parameter. Any data that is
-        to be passed along with the request should come in dict form with the
-        `data` parameter.
-        '''
-        factory = RequestFactory()
-
-        http_method = getattr(factory, method.lower())
-        self.request = http_method(reverse('checkout:main'), data=data)
-
-        # Set `user` manually, since middleware is not supported.
-        self.request.user = AnonymousUser()
-
-        # Set `session` manually, since middleware is not supported.
-        if session is not None:
-            self.request.session = session
-        else:
-            engine = import_module(settings.SESSION_ENGINE)
-            session_key = None
-            self.request.session = engine.SessionStore(session_key)
-
-
     def setUp(self):
         '''
         Create common test assets prior to each individual unit test run.
@@ -54,14 +31,8 @@ class CheckoutFormViewTest(TestCase):
         variant.sub_sku = '456'
         variant.save()
         self.variant = variant
-        self.variant2 = Variant.objects.create(
-            product=product, name='bar', price=Decimal(43.21), sub_sku='789'
-        )
 
-        self.view = CheckoutFormView.as_view()
-
-        # Set up HTTP request.
-        self.create_http_request('GET')
+        self.view_url = reverse('checkout:main')
 
 
     def test_view_returns_200_status_if_no_variants_are_in_cart(self):
@@ -69,7 +40,7 @@ class CheckoutFormViewTest(TestCase):
         Test that the CheckoutFormView returns a 200 OK status if there are no
         Variants within the SessionCart.
         '''
-        response = self.view(self.request)
+        response = self.client.get(self.view_url)
         response = response.render()
         rendered_html = response.content.decode()
 
@@ -81,10 +52,10 @@ class CheckoutFormViewTest(TestCase):
         Test that the CheckoutFormView returns a 200 OK status if there are
         Variants the SessionCart.
         '''
-        cart = SessionCart(self.request.session)
+        cart = SessionCart(self.client.session)
         cart.add(self.variant)
 
-        response = self.view(self.request)
+        response = self.client.get(self.view_url)
         response = response.render()
         rendered_html = response.content.decode()
 
@@ -95,8 +66,6 @@ class CheckoutFormViewTest(TestCase):
         '''
         Test that the CheckoutFormView initially redirects to itself.
         '''
-        view_url = reverse('checkout:main')
-
         cart = SessionCart(self.client.session)
         cart.add(self.variant)
 
@@ -110,9 +79,9 @@ class CheckoutFormViewTest(TestCase):
             'country': 'US'
         }
 
-        response = self.client.post(view_url, data=request_data)
+        response = self.client.post(self.view_url, data=request_data)
 
-        self.assertEqual(response.url, view_url)
+        self.assertEqual(response.url, self.view_url)
 
 
     @patch('orders.views.calculate_shipping_cost')
@@ -120,12 +89,10 @@ class CheckoutFormViewTest(TestCase):
         '''
         Test that the CheckoutFormView can advance to the PaymentForm
         '''
-        view_url = reverse('checkout:main')
+        calculate_shipping_cost_mock.return_value = Decimal(1.00)
 
         cart = SessionCart(self.client.session)
         cart.add(self.variant)
-
-        calculate_shipping_cost_mock.return_value = Decimal(1.00)
 
         # Set up HTTP POST request.
         request_data = {
@@ -137,7 +104,9 @@ class CheckoutFormViewTest(TestCase):
             'country': 'US'
         }
 
-        response = self.client.post(view_url, data=request_data, follow=True)
+        response = self.client.post(
+            self.view_url, data=request_data, follow=True
+        )
         rendered_html = response.content.decode()
 
         self.assertIn('how are you paying?', rendered_html)
@@ -149,8 +118,6 @@ class CheckoutFormViewTest(TestCase):
         '''
         Test that the CheckoutFormView can advance to the PaymentForm
         '''
-        view_url = reverse('checkout:main')
-
         calculate_shipping_cost_mock.return_value = Decimal(1.00)
 
         sale_mock.return_value.is_success = True
@@ -175,14 +142,16 @@ class CheckoutFormViewTest(TestCase):
             'postal_code': '12345',
             'country': 'US'
         }
-
-        response1 = self.client.post(view_url, data=request_data, follow=True)
+        response1 = self.client.post(
+            self.view_url, data=request_data, follow=True
+        )
 
         request_data = {
             'payment_method_nonce': 'fake-valid-nonce'
         }
-
-        response2 = self.client.post(view_url, data=request_data, follow=True)
+        response2 = self.client.post(
+            self.view_url, data=request_data, follow=True
+        )
         rendered_html = response2.content.decode()
 
         order = Order.objects.last()
@@ -200,6 +169,11 @@ class CheckoutFormViewTest(TestCase):
         Test that the CheckoutFormView adds valid shipping information from the
         AddressForm to the User's Session.
         '''
+        calculate_shipping_cost_mock.return_value = Decimal(1.00)
+
+        cart = SessionCart(self.client.session)
+        cart.add(self.variant)
+
         # Set up HTTP POST request.
         request_data = {
             'recipient_name': 'Foo Bar',
@@ -209,18 +183,13 @@ class CheckoutFormViewTest(TestCase):
             'postal_code': '12345',
             'country': 'US'
         }
-        self.create_http_request('post', data=request_data)
+        response = self.client.post(
+            reverse('checkout:main'),
+            data=request_data,
+            follow=True
+        )
 
-        session = self.request.session
-
-        cart = SessionCart(session)
-        cart.add(self.variant)
-
-        calculate_shipping_cost_mock.return_value = Decimal(1.00)
-
-        response = self.view(self.request, **request_data)
-
-        self.assertEqual(session[UUID]['shipping'], request_data)
+        self.assertEqual(self.client.session[UUID]['shipping'], request_data)
 
 
     @patch('orders.views.calculate_shipping_cost')
@@ -229,7 +198,11 @@ class CheckoutFormViewTest(TestCase):
         Test that the CheckoutFormView can remove a given key from checkout
         Session Data when it is specified in an HTTP GET request.
         '''
-        # Set up HTTP POST request.
+        calculate_shipping_cost_mock.return_value = Decimal(1.00)
+
+        cart = SessionCart(self.client.session)
+        cart.add(self.variant)
+
         request_data = {
             'recipient_name': 'Foo Bar',
             'street_address': '123 Test St',
@@ -238,26 +211,17 @@ class CheckoutFormViewTest(TestCase):
             'postal_code': '12345',
             'country': 'US'
         }
-        self.create_http_request('post', data=request_data)
+        response = self.client.post(
+            self.view_url, data=request_data, follow=True
+        )
 
-        session = self.request.session
-
-        cart = SessionCart(session)
-        cart.add(self.variant)
-
-        calculate_shipping_cost_mock.return_value = Decimal(1.00)
-
-        response = self.view(self.request, **request_data)
-
-        # Set up HTTP GET request.
         request_data = {
             'shipping': 'shipping'
         }
-        self.create_http_request('get', data=request_data, session=session)
 
-        response = self.view(self.request, **request_data)
+        response = self.client.get(self.view_url, data=request_data)
 
-        self.assertNotIn('shipping', session[UUID])
+        self.assertNotIn('shipping', self.client.session[UUID])
 
 
     @patch('orders.views.calculate_shipping_cost')
@@ -266,19 +230,15 @@ class CheckoutFormViewTest(TestCase):
         Test that the CheckoutFormView gracefully handles step deletion when the
         step is not present within checkout Session Data.
         '''
+        calculate_shipping_cost_mock.return_value = Decimal(1.00)
+
+        cart = SessionCart(self.client.session)
+        cart.add(self.variant)
+
         # Set up HTTP GET request.
         request_data = {
             'shipping': 'shipping'
         }
-        self.create_http_request('get', data=request_data)
+        response = self.client.get(self.view_url, data=request_data)
 
-        session = self.request.session
-
-        cart = SessionCart(session)
-        cart.add(self.variant)
-
-        calculate_shipping_cost_mock.return_value = Decimal(1.00)
-
-        response = self.view(self.request, **request_data)
-
-        self.assertNotIn('shipping', session[UUID])
+        self.assertNotIn('shipping', self.client.session[UUID])
