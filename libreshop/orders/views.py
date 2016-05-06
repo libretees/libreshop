@@ -116,14 +116,6 @@ class CheckoutFormView(FormView):
             del session_data[key]
             request.session.modified = True
 
-        address_valid = True
-        if self.current_step['name'] == 'payment' and not self.shipping_cost:
-            address_valid = False
-            session_data = self.request.session[UUID]
-            previous_step_data = session_data.get('shipping', None)
-            del session_data['shipping']
-            request.session.modified = True
-
         template_response = None
         if previous_step_data:
             self.current_step = self.get_current_step()
@@ -133,8 +125,6 @@ class CheckoutFormView(FormView):
 
             if not form.is_valid():
                 form.add_error(None, 'Something went wrong here...')
-            elif not address_valid:
-                form.add_error(None, 'We\'re sorry, but we couldn\'t validate the address below.')
 
             template_names = self.get_template_names()
             context_data = self.get_context_data(form=form)

@@ -184,10 +184,41 @@ class CheckoutFormViewTest(TestCase):
             'country': 'US'
         }
         response = self.client.post(
-            reverse('checkout:main'),
+            self.view_url,
             data=request_data,
             follow=True
         )
+
+        self.assertEqual(self.client.session[UUID]['shipping'], request_data)
+
+
+    def test_view_can_load_and_retrieve_shipping_cost_from_backend(self):
+        '''
+        Test that the CheckoutFormView can successfully load and retrieve a
+        shipping cost from an API.
+        '''
+        cart = SessionCart(self.client.session)
+        cart.add(self.variant)
+
+        # Set up HTTP POST request.
+        request_data = {
+            'recipient_name': 'Foo Bar',
+            'street_address': '123 Test St',
+            'locality': 'Test',
+            'region': 'OK',
+            'postal_code': '12345',
+            'country': 'US'
+        }
+
+        for shipping_api in settings.SHIPPING_APIS:
+            with patch(shipping_api) as shipping_api_mock:
+                shipping_api_mock.return_value = Decimal(1.00)
+
+                response = self.client.post(
+                    self.view_url,
+                    data=request_data,
+                    follow=True
+                )
 
         self.assertEqual(self.client.session[UUID]['shipping'], request_data)
 
@@ -218,7 +249,6 @@ class CheckoutFormViewTest(TestCase):
         request_data = {
             'shipping': 'shipping'
         }
-
         response = self.client.get(self.view_url, data=request_data)
 
         self.assertNotIn('shipping', self.client.session[UUID])
