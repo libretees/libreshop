@@ -46,7 +46,7 @@ def calculate_shipping_cost(*args, **kwargs):
 
     return (
         Decimal(result).quantize(Decimal('1.00'), rounding=ROUND_CEILING)
-        if result else Decimal(0.00)
+        if len(results) else Decimal(0.00)
     )
 
 

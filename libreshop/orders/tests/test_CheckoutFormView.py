@@ -9,7 +9,7 @@ from orders.models import Order, Purchase, Transaction
 from carts.utils import SessionCart
 from orders.models import Order
 from products.models import Product, Variant
-from ..views import CheckoutFormView, UUID
+from .. import views
 try:
     # Try to import from the Python 3.3+ standard library.
     from unittest.mock import patch
@@ -189,16 +189,54 @@ class CheckoutFormViewTest(TestCase):
             follow=True
         )
 
-        self.assertEqual(self.client.session[UUID]['shipping'], request_data)
+        self.assertEqual(
+            self.client.session[views.UUID]['shipping'], request_data
+        )
 
 
-    def test_view_can_load_and_retrieve_shipping_cost_from_backend(self):
+    @patch('django.core.mail.backends.locmem.EmailBackend')
+    def test_view_can_load_and_retrieve_shipping_cost_from_valid_backend(self, shipping_api_mock):
         '''
         Test that the CheckoutFormView can successfully load and retrieve a
         shipping cost from an API.
         '''
         settings.SHIPPING_APIS = (
             'django.core.mail.backends.locmem.EmailBackend',
+        )
+        shipping_api_mock.return_value = Decimal(1.00)
+
+        cart = SessionCart(self.client.session)
+        cart.add(self.variant)
+
+        # Set up HTTP POST request.
+        request_data = {
+            'recipient_name': 'Foo Bar',
+            'street_address': '123 Test St',
+            'locality': 'Test',
+            'region': 'OK',
+            'postal_code': '12345',
+            'country': 'US'
+        }
+
+        response = self.client.post(
+            self.view_url,
+            data=request_data,
+            follow=True
+        )
+
+        self.assertEqual(
+            self.client.session[views.UUID]['shipping'], request_data
+        )
+
+
+    @patch.object(views, 'settings')
+    def test_view_can_load_and_retrieve_shipping_cost_from_invalid_backend(self, settings_mock):
+        '''
+        Test that the CheckoutFormView can successfully load and retrieve a
+        shipping cost from an API.
+        '''
+        settings_mock.SHIPPING_APIS = (
+            'foo',
         )
 
         cart = SessionCart(self.client.session)
@@ -214,17 +252,53 @@ class CheckoutFormViewTest(TestCase):
             'country': 'US'
         }
 
-        for shipping_api in settings.SHIPPING_APIS:
-            with patch(shipping_api) as shipping_api_mock:
-                shipping_api_mock.return_value = Decimal(1.00)
+        response = self.client.post(
+            self.view_url,
+            data=request_data,
+            follow=True
+        )
 
-                response = self.client.post(
-                    self.view_url,
-                    data=request_data,
-                    follow=True
-                )
+        self.assertNotIn(
+            'shipping', self.client.session[views.UUID]
+        )
 
-        self.assertEqual(self.client.session[UUID]['shipping'], request_data)
+
+    @patch.object(views, 'settings')
+    def test_view_can_load_and_retrieve_shipping_cost_from_invalid_backend_attribute(self, settings_mock):
+        '''
+        Test that the CheckoutFormView can successfully load and retrieve a
+        shipping cost from an API.
+        '''
+        settings_mock.SHIPPING_APIS = (
+            'django.core.mail.backends.locmem.foo',
+        )
+
+        cart = SessionCart(self.client.session)
+        cart.add(self.variant)
+
+        # Set up HTTP POST request.
+        request_data = {
+            'recipient_name': 'Foo Bar',
+            'street_address': '123 Test St',
+            'locality': 'Test',
+            'region': 'OK',
+            'postal_code': '12345',
+            'country': 'US'
+        }
+
+        shipping_api = settings.SHIPPING_APIS[0]
+        with patch(shipping_api) as shipping_api_mock:
+            shipping_api_mock.return_value = Decimal(1.00)
+
+            response = self.client.post(
+                self.view_url,
+                data=request_data,
+                follow=True
+            )
+
+        self.assertNotIn(
+            'shipping', self.client.session[views.UUID]
+        )
 
 
     @patch('orders.views.calculate_shipping_cost')
@@ -255,7 +329,7 @@ class CheckoutFormViewTest(TestCase):
         }
         response = self.client.get(self.view_url, data=request_data)
 
-        self.assertNotIn('shipping', self.client.session[UUID])
+        self.assertNotIn('shipping', self.client.session[views.UUID])
 
 
     @patch('orders.views.calculate_shipping_cost')
@@ -275,4 +349,4 @@ class CheckoutFormViewTest(TestCase):
         }
         response = self.client.get(self.view_url, data=request_data)
 
-        self.assertNotIn('shipping', self.client.session[UUID])
+        self.assertNotIn('shipping', self.client.session[views.UUID])
