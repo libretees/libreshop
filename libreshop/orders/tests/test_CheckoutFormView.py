@@ -197,6 +197,10 @@ class CheckoutFormViewTest(TestCase):
         Test that the CheckoutFormView can successfully load and retrieve a
         shipping cost from an API.
         '''
+        settings.SHIPPING_APIS = (
+            'django.core.mail.backends.locmem.EmailBackend',
+        )
+
         cart = SessionCart(self.client.session)
         cart.add(self.variant)
 
