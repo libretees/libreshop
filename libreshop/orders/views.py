@@ -102,36 +102,20 @@ class CheckoutFormView(FormView):
         super(CheckoutFormView, self).__init__(*args, **kwargs)
 
         self.client_token = braintree.ClientToken.generate()
+        self.deleted_data = None
 
 
     def get(self, request, *args, **kwargs):
 
-        previous_step_data = {}
         deleted_steps = [
             key for key in request.GET if key in self.request.session[UUID]
         ]
         for key in deleted_steps:
-            session_data = self.request.session[UUID]
-            previous_step_data = session_data.get(key, None)
-            del session_data[key]
-            request.session.modified = True
+            self.delete_previous_step(key)
 
         template_response = None
-        if previous_step_data:
-            self.current_step = self.get_current_step()
-
-            form_class = self.get_form_class()
-            form = form_class(data=previous_step_data)
-
-            if not form.is_valid():
-                form.add_error(None, 'Something went wrong here...')
-
-            template_names = self.get_template_names()
-            context_data = self.get_context_data(form=form)
-
-            template_response = TemplateResponse(
-                request, template_names, context_data
-            )
+        if deleted_steps:
+            template_response = self.load_previous_step()
 
         return (
             super(CheckoutFormView, self).get(request, *args, **kwargs)
@@ -142,32 +126,9 @@ class CheckoutFormView(FormView):
     def post(self, request, *args, **kwargs):
 
         template_response = None
+
         if not self.session_data_is_valid():
-            session_data = self.request.session[UUID]
-
-            previous_index = self.steps.index(self.current_step)-1
-            previous_step_key = self.steps[previous_index]['name']
-
-            malformed_data = session_data.get(previous_step_key, None)
-
-            if previous_step_key in session_data:
-                del session_data[previous_step_key]
-                self.request.session.modified = True
-
-            self.current_step = self.get_current_step()
-
-            form_class = self.get_form_class()
-            form = form_class(data=malformed_data)
-
-            if not form.is_valid():
-                form.add_error(None, 'Something went wrong here...')
-
-            template_names = self.get_template_names()
-            context_data = self.get_context_data(form=form)
-
-            template_response = TemplateResponse(
-                request, template_names, context_data
-            )
+            template_response = self.load_previous_step()
 
         return (
             super(CheckoutFormView, self).post(request, *args, **kwargs)
@@ -385,6 +346,44 @@ class CheckoutFormView(FormView):
                     break
 
         return is_valid
+
+
+    def delete_previous_step(self, key=None):
+        '''
+        '''
+        session_data = self.request.session[UUID]
+
+        if not key:
+            previous_index = self.steps.index(self.current_step)-1
+            key = self.steps[previous_index]['name']
+
+        if key in session_data:
+            self.deleted_data = session_data.get(key, None)
+            del session_data[key]
+            self.request.session.modified = True
+
+        self.current_step = self.get_current_step()
+
+
+    def load_previous_step(self):
+        '''
+        '''
+        self.current_step = self.get_current_step()
+
+        form_class = self.get_form_class()
+        form = form_class(data=self.deleted_data)
+
+        if not form.is_valid():
+            form.add_error(None, 'Something went wrong here...')
+
+        template_names = self.get_template_names()
+        context_data = self.get_context_data(form=form)
+
+        template_response = TemplateResponse(
+            self.request, template_names, context_data
+        )
+
+        return template_response
 
 
     def get_success_url(self):
