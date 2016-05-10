@@ -205,7 +205,7 @@ class OrderReceiptForm(forms.Form):
     def clean(self):
         from .views import UUID
 
-        cleaned_data = super(OrderReceiptForm, self).clean()
+        self.cleaned_data = super(OrderReceiptForm, self).clean()
 
         if self.is_bound and not self.errors:
 
@@ -229,11 +229,11 @@ class OrderReceiptForm(forms.Form):
                     )
                 else:
                     session_data.update({
-                        'email_address': cleaned_data.get('email_address'),
+                        'email_address': self.cleaned_data.get('email_address'),
                     })
                     self.request.session.modified = True
 
-        return cleaned_data
+        return self.cleaned_data
 
 
     def prevent_abuse(self):

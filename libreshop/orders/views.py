@@ -368,7 +368,7 @@ class CheckoutFormView(FormView):
     def load_previous_step(self):
         '''
         '''
-        self.current_step = self.get_current_step()
+        self.delete_previous_step()
 
         form_class = self.get_form_class()
         form = form_class(data=self.deleted_data)

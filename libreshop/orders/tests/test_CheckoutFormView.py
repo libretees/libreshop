@@ -194,6 +194,41 @@ class CheckoutFormViewTest(TestCase):
         )
 
 
+    @patch('orders.views.calculate_shipping_cost')
+    def test_view_detects_malformed_session_data(self, calculate_shipping_cost_mock):
+        '''
+        Test that the View validates Session Data on an ongoing basis.
+        '''
+        calculate_shipping_cost_mock.return_value = Decimal(1.00)
+
+        cart = SessionCart(self.client.session)
+        cart.add(self.variant)
+
+        # Set up HTTP POST request.
+        session_data = {
+            'recipient_name': 'Foo Bar',
+            'street_address': '123 Test St',
+            'locality': 'Test',
+            'region': 'OK',
+            'postal_code': '1234567890', # Simulate bad ZIP code.
+            'country': 'US'
+        }
+
+        session = self.client.session
+        session[views.UUID] = {'shipping': session_data}
+        session.save()
+
+        request_data = {
+            'payment_method_nonce': 'fake-valid-nonce'
+        }
+        response = self.client.post(
+            self.view_url, data=request_data, follow=True
+        )
+        rendered_html = response.content.decode()
+
+        self.assertNotIn('shipping', self.client.session[views.UUID])
+
+
     @patch('django.core.mail.backends.locmem.EmailBackend')
     def test_view_can_load_and_retrieve_shipping_cost_from_valid_backend(self, shipping_api_mock):
         '''
