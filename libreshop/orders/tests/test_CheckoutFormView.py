@@ -7,7 +7,7 @@ from django.test import TestCase, RequestFactory
 from django.utils import timezone
 from orders.models import Order, Purchase, Transaction
 from carts.utils import SessionCart
-from orders.models import Order
+from orders.models import Order, TaxRate
 from products.models import Product, Variant
 from .. import views
 try:
@@ -385,3 +385,39 @@ class CheckoutFormViewTest(TestCase):
         response = self.client.get(self.view_url, data=request_data)
 
         self.assertNotIn('shipping', self.client.session[views.UUID])
+
+
+    @patch('orders.views.calculate_shipping_cost')
+    def test_view_calculates_sales_tax_if_nexus_exists(self, calculate_shipping_cost_mock):
+        '''
+        Test that the CheckoutFormView adds valid shipping information from the
+        AddressForm to the User's Session.
+        '''
+        calculate_shipping_cost_mock.return_value = Decimal(1.00)
+
+        rate = TaxRate.objects.create(
+            city='Test', state='OK', postal_code='12345',
+            local_tax_rate=Decimal(0.01), state_tax_rate=Decimal(0.043)
+        )
+
+        cart = SessionCart(self.client.session)
+        cart.add(self.variant)
+
+        # Set up HTTP POST request.
+        request_data = {
+            'recipient_name': 'Foo Bar',
+            'street_address': '123 Test St',
+            'locality': 'Test',
+            'region': 'OK',
+            'postal_code': '12345',
+            'country': 'US'
+        }
+        response = self.client.post(
+            self.view_url,
+            data=request_data,
+            follow=True
+        )
+        response = response.render()
+        rendered_html = response.content.decode()
+
+        self.assertIn('sales tax', rendered_html)
