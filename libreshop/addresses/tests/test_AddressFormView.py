@@ -39,8 +39,11 @@ class AddressFormViewTest(TestCase):
 
         form = view.get_form()
 
-        selected_option = ('<option value="US" selected="selected">'
-                    'United States of America</option>')
+        selected_option = (
+            '<option value="US" selected="selected">'
+                'United States of America'
+            '</option>'
+        )
         self.assertIn(selected_option, str(form))
 
 

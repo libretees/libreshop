@@ -314,6 +314,7 @@ class AddressFormTest(TestCase):
         '''
         assert_valid('US', '12345')
 
+
 # Define pytest tests.
 @pytest.mark.parametrize(
     'postal_code', [

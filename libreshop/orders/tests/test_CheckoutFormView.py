@@ -120,6 +120,9 @@ class CheckoutFormViewTest(TestCase):
         '''
         calculate_shipping_cost_mock.return_value = Decimal(1.00)
 
+        cart = SessionCart(self.client.session)
+        cart.add(self.variant)
+
         sale_mock.return_value.is_success = True
         sale_mock.return_value.transaction.id = '12345'
         sale_mock.return_value.transaction.amount = Decimal(1.00)
@@ -421,3 +424,28 @@ class CheckoutFormViewTest(TestCase):
         rendered_html = response.content.decode()
 
         self.assertIn('sales tax', rendered_html)
+
+
+    @patch('orders.views.get_real_ip')
+    @patch('orders.views.GeoIP2.country')
+    def test_unbound_form_defaults_to_users_country_if_ip_found(
+        self, country_mock, get_real_ip_mock):
+        '''
+        Test that the view geolocates the user's country when a valid IP is
+        returned by the `django-ipware` package.
+        '''
+        get_real_ip_mock.return_value = '127.0.0.1'
+        country_mock.return_value = {
+            'country_name': 'United States', 'country_code': 'US'
+        }
+
+        response = self.client.get(self.view_url)
+        response = response.render()
+        rendered_html = response.content.decode()
+
+        selected_option = (
+            '<option value="US" selected="selected">'
+                'United States of America'
+            '</option>'
+        )
+        self.assertIn(selected_option, rendered_html)
