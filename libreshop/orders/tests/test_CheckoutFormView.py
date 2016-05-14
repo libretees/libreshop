@@ -52,8 +52,10 @@ class CheckoutFormViewTest(TestCase):
         Test that the CheckoutFormView returns a 200 OK status if there are
         Variants the SessionCart.
         '''
-        cart = SessionCart(self.client.session)
+        session = self.client.session
+        cart = SessionCart(session)
         cart.add(self.variant)
+        session.save()
 
         response = self.client.get(self.view_url)
         response = response.render()
@@ -66,8 +68,10 @@ class CheckoutFormViewTest(TestCase):
         '''
         Test that the CheckoutFormView initially redirects to itself.
         '''
-        cart = SessionCart(self.client.session)
+        session = self.client.session
+        cart = SessionCart(session)
         cart.add(self.variant)
+        session.save()
 
         # Set up HTTP POST request.
         request_data = {
@@ -91,8 +95,10 @@ class CheckoutFormViewTest(TestCase):
         '''
         calculate_shipping_cost_mock.return_value = Decimal(1.00)
 
-        cart = SessionCart(self.client.session)
+        session = self.client.session
+        cart = SessionCart(session)
         cart.add(self.variant)
+        session.save()
 
         # Set up HTTP POST request.
         request_data = {
@@ -120,8 +126,10 @@ class CheckoutFormViewTest(TestCase):
         '''
         calculate_shipping_cost_mock.return_value = Decimal(1.00)
 
-        cart = SessionCart(self.client.session)
+        session = self.client.session
+        cart = SessionCart(session)
         cart.add(self.variant)
+        session.save()
 
         sale_mock.return_value.is_success = True
         sale_mock.return_value.transaction.id = '12345'
@@ -174,8 +182,10 @@ class CheckoutFormViewTest(TestCase):
         '''
         calculate_shipping_cost_mock.return_value = Decimal(1.00)
 
-        cart = SessionCart(self.client.session)
+        session = self.client.session
+        cart = SessionCart(session)
         cart.add(self.variant)
+        session.save()
 
         # Set up HTTP POST request.
         request_data = {
@@ -204,8 +214,10 @@ class CheckoutFormViewTest(TestCase):
         '''
         calculate_shipping_cost_mock.return_value = Decimal(1.00)
 
-        cart = SessionCart(self.client.session)
+        session = self.client.session
+        cart = SessionCart(session)
         cart.add(self.variant)
+        session.save()
 
         # Set up HTTP POST request.
         session_data = {
@@ -243,8 +255,10 @@ class CheckoutFormViewTest(TestCase):
         )
         shipping_api_mock.return_value = Decimal(1.00)
 
-        cart = SessionCart(self.client.session)
+        session = self.client.session
+        cart = SessionCart(session)
         cart.add(self.variant)
+        session.save()
 
         # Set up HTTP POST request.
         request_data = {
@@ -277,8 +291,10 @@ class CheckoutFormViewTest(TestCase):
             'foo',
         )
 
-        cart = SessionCart(self.client.session)
+        session = self.client.session
+        cart = SessionCart(session)
         cart.add(self.variant)
+        session.save()
 
         # Set up HTTP POST request.
         request_data = {
@@ -311,8 +327,10 @@ class CheckoutFormViewTest(TestCase):
             'django.core.mail.backends.locmem.foo',
         )
 
-        cart = SessionCart(self.client.session)
+        session = self.client.session
+        cart = SessionCart(session)
         cart.add(self.variant)
+        session.save()
 
         # Set up HTTP POST request.
         request_data = {
@@ -347,8 +365,10 @@ class CheckoutFormViewTest(TestCase):
         '''
         calculate_shipping_cost_mock.return_value = Decimal(1.00)
 
-        cart = SessionCart(self.client.session)
+        session = self.client.session
+        cart = SessionCart(session)
         cart.add(self.variant)
+        session.save()
 
         request_data = {
             'recipient_name': 'Foo Bar',
@@ -378,8 +398,10 @@ class CheckoutFormViewTest(TestCase):
         '''
         calculate_shipping_cost_mock.return_value = Decimal(1.00)
 
-        cart = SessionCart(self.client.session)
+        session = self.client.session
+        cart = SessionCart(session)
         cart.add(self.variant)
+        session.save()
 
         # Set up HTTP GET request.
         request_data = {
@@ -393,8 +415,8 @@ class CheckoutFormViewTest(TestCase):
     @patch('orders.views.calculate_shipping_cost')
     def test_view_calculates_sales_tax_if_nexus_exists(self, calculate_shipping_cost_mock):
         '''
-        Test that the CheckoutFormView adds valid shipping information from the
-        AddressForm to the User's Session.
+        Test that the CheckoutFormView calculates sales tax when the User
+        resides within the nexus of the seller.
         '''
         calculate_shipping_cost_mock.return_value = Decimal(1.00)
 
@@ -403,8 +425,10 @@ class CheckoutFormViewTest(TestCase):
             local_tax_rate=Decimal(0.01), state_tax_rate=Decimal(0.043)
         )
 
-        cart = SessionCart(self.client.session)
+        session = self.client.session
+        cart = SessionCart(session)
         cart.add(self.variant)
+        session.save()
 
         # Set up HTTP POST request.
         request_data = {
@@ -424,6 +448,42 @@ class CheckoutFormViewTest(TestCase):
         rendered_html = response.content.decode()
 
         self.assertIn('sales tax', rendered_html)
+
+
+    @patch('orders.views.calculate_shipping_cost')
+    def test_view_d0es_not_calculate_sales_tax_if_no_nexus_exists(self, calculate_shipping_cost_mock):
+        '''
+        Test that the CheckoutFormView calculates sales tax when the User
+        does not reside within the nexus of the seller.
+        '''
+        calculate_shipping_cost_mock.return_value = Decimal(1.00)
+
+        rate = TaxRate.objects.create(
+            city='Test', state='OK', postal_code='12345',
+            local_tax_rate=Decimal(0.01), state_tax_rate=Decimal(0.043)
+        )
+
+        session = self.client.session
+        cart = SessionCart(session)
+        cart.add(self.variant)
+        session.save()
+
+        # Set up HTTP POST request.
+        request_data = {
+            'street_address': 'Buckingham Palace',
+            'locality': 'London',
+            'postal_code': 'SW1A 1AA',
+            'country': 'GB'
+        }
+        response = self.client.post(
+            self.view_url,
+            data=request_data,
+            follow=True
+        )
+        response = response.render()
+        rendered_html = response.content.decode()
+
+        self.assertNotIn('sales tax', rendered_html)
 
 
     @patch('orders.views.get_real_ip')

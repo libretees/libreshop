@@ -43,7 +43,7 @@ class SessionList(list):
 
     def _update_session(self):
         self.session[UUID] = list(self)
-        self.session.save()
+        self.session.modified = True
 
 
 class SessionCart(list):
