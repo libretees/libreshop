@@ -5,34 +5,9 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 from orders.models import Order, Purchase, Transaction
 from products.models import Product, Variant
-from ..views import ConfirmationView, UUID
+from ..views import UUID
 
 class ConfirmationViewTest(TestCase):
-
-    def create_http_request(self, method, data=None):
-        '''
-        Create an HTTP request based on the `method` parameter. Any data that is
-        to be passed along with the request should come in dict form with the
-        `data` parameter.
-        '''
-        factory = RequestFactory()
-
-        http_method = getattr(factory, method.lower())
-        self.request = http_method(reverse('checkout:confirmation'), data=data)
-
-        # Set `user` manually, since middleware is not supported.
-        self.request.user = AnonymousUser()
-
-        # Set `session` manually, since middleware is not supported.
-        engine = import_module(settings.SESSION_ENGINE)
-        session_key = None
-        self.request.session = engine.SessionStore(session_key)
-
-        # Add Order Token to session variables.
-        self.request.session[UUID] = {}
-        self.request.session[UUID]['order_token'] = self.order.token
-        self.request.session.modified = True
-
 
     def setUp(self):
         '''
@@ -50,11 +25,17 @@ class ConfirmationViewTest(TestCase):
         self.transaction = Transaction.objects.create(
             order=self.order, transaction_id='foo'
         )
-        self.view = ConfirmationView.as_view()
 
-        # Set up HTTP request.
-        self.create_http_request('GET')
+        # Put Order Token within session variable.
+        session = self.client.session
+        session.update({
+            UUID: {
+                'order_token': self.order.token
+            }
+        })
+        session.save()
 
+        self.view_url = reverse('checkout:confirmation')
 
 
     def test_view_returns_200_status_if_no_order_token_is_in_session_variables(self):
@@ -62,12 +43,14 @@ class ConfirmationViewTest(TestCase):
         Test that the ConfirmationView returns a 200 OK status if there is no
         Order Token within session variables.
         '''
-        # Delete session variable.
-        del self.request.session[UUID]['order_token']
+        session = self.client.session
+        del session[UUID]['order_token']
+        session.save()
 
-        response = self.view(self.request)
-        response = response.render()
+        # Perform test.
+        response = self.client.get(self.view_url)
         rendered_html = response.content.decode()
+        print(rendered_html)
 
         self.assertEqual(response.status_code, 200)
 
@@ -78,9 +61,7 @@ class ConfirmationViewTest(TestCase):
         is present within session variables.
         '''
         # Perform test.
-        response = self.view(self.request)
-        response = response.render()
-        rendered_html = response.content.decode()
+        response = self.client.get(self.view_url)
 
         self.assertEqual(response.status_code, 200)
 
@@ -91,10 +72,9 @@ class ConfirmationViewTest(TestCase):
         status if valid Form data is POSTed to the View's OrderReceiptForm.
         '''
         # Set up HTTP POST request.
-        data = {'email_address': 'test@example.com'}
-        self.create_http_request('POST', data=data)
+        request_data = {'email_address': 'test@example.com'}
 
         # Perform test.
-        response = self.view(self.request, **data)
+        response = self.client.post(self.view_url, data=request_data, follow=False)
 
-        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, self.view_url)
