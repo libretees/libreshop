@@ -191,7 +191,7 @@ class AddressModelTest(TestCase):
         self.assertIsNotNone(region)
 
 
-    def test_model_region_field_is_required(self):
+    def test_model_region_field_is_not_required(self):
         '''
         Test that Address.region is required.
         '''
@@ -202,10 +202,10 @@ class AddressModelTest(TestCase):
         except:
             pass
         nullable = getattr(region, 'null', None)
-        self.assertFalse(nullable)
+        self.assertTrue(nullable)
 
 
-    def test_model_region_field_cannot_be_blank(self):
+    def test_model_region_field_can_be_blank(self):
         '''
         Test that Address.region does not allow blank values in forms.
         '''
@@ -216,7 +216,7 @@ class AddressModelTest(TestCase):
         except:
             pass
         blank = getattr(region, 'null', None)
-        self.assertFalse(blank)
+        self.assertTrue(blank)
 
 
     def test_model_region_field_has_max_length(self):

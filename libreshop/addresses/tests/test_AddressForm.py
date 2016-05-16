@@ -1,11 +1,16 @@
 import pytest
-from unittest.mock import patch
 from django.forms import Textarea
 from django.test import TestCase
 from django_countries import Countries
 from django_countries.widgets import CountrySelectWidget
 from ..forms import AddressForm
 from ..models import Address
+try:
+    # Try to import from the Python 3.3+ standard library.
+    from unittest.mock import patch
+except ImportError as e:
+    # Otherwise, import from the `mock` project dependency.
+    from mock import patch
 
 # Establish helper functions.
 def get_form(country, postal_code):
@@ -14,11 +19,11 @@ def get_form(country, postal_code):
     '''
     form = AddressForm()
     cleaned_data = {
-        'country': country,
+        'region': 'OK',
         'postal_code': postal_code,
+        'country': country
     }
-
-    with patch('django.forms.ModelForm.clean') as clean_mock:
+    with patch('addresses.forms.ModelForm.clean') as clean_mock:
         clean_mock.return_value = cleaned_data
         cleaned_data = form.clean()
 

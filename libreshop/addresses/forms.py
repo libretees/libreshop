@@ -51,10 +51,12 @@ class AddressForm(ModelForm):
             match = re.match(regex, postal_code)
             if not match:
                 error_message = (
-                    ('The %s specified (%s) is invalid for the selected '
-                    'country (%s).') %
-                    (self.fields['postal_code'].label, postal_code,
-                    self.country_name)
+                    'The %s specified (%s) is invalid for the selected country '
+                    '(%s).' % (
+                        self.fields['postal_code'].label,
+                        postal_code,
+                        self.country_name
+                    )
                 )
                 self.add_error('postal_code', error_message)
 
@@ -64,13 +66,29 @@ class AddressForm(ModelForm):
 
         country = self.cleaned_data.get('country')
         postal_code = self.cleaned_data.get('postal_code')
+        region = self.cleaned_data.get('region')
 
         self.country_name = Countries().name(country)
+
+        # Require a Region (State/Province/County) in countries where required.
+        if country and country != 'GB' and not region:
+            error_message = (
+                'The %s field is required for addresses within the selected '
+                'country (%s).' % (
+                    self.fields['region'].label,
+                    self.country_name
+                )
+            )
+            self.add_error('region', error_message)
+
+        # Require a Postal Code in countries where required.
         if country and country != 'IE' and not postal_code:
             error_message = (
-                ('The %s field is required for addresses within the selected '
-                'country (%s).') %
-                (self.fields['postal_code'].label, self.country_name)
+                'The %s field is required for addresses within the selected '
+                'country (%s).' % (
+                    self.fields['postal_code'].label,
+                    self.country_name
+                )
             )
             self.add_error('postal_code', error_message)
         elif country == 'IE' and postal_code:

@@ -15,11 +15,11 @@ class Address(TimeStampedModel):
     street_address = models.CharField(max_length=1024, null=False, blank=False)
     # Field for City/Town.
     locality = models.CharField(max_length=16, null=False, blank=False)
-    # Field for State/Province/Region.
-    region = models.CharField(max_length=16, null=False, blank=False)
+    # Field for State/Province/County.
+    region = models.CharField(max_length=16, null=True, blank=True)
     # Field for ZIP/Postal Code.
     postal_code = models.CharField(max_length=16, null=True, blank=True)
-    # Field for country.
+    # Field for Country.
     country = CountryField(null=False, blank=False)
 
     def render(self):
