@@ -6,7 +6,7 @@ from ..admin import TransactionInline
 from ..models import Order, Purchase, Transaction
 
 # Create your tests here.
-class TransactionInlineInlineTest(TestCase):
+class TransactionInlineTest(TestCase):
 
     def setUp(self):
         '''
