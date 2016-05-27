@@ -16,7 +16,9 @@ from rest_framework import exceptions
 
 from customers.forms import RegistrationToken
 
-from .serializers import UserSerializer, GroupSerializer, RegistrationTokenSerializer
+from .serializers import (
+    UserSerializer, GroupSerializer, RegistrationTokenSerializer
+)
 
 User = get_user_model()
 
