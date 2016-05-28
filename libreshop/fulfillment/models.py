@@ -58,11 +58,14 @@ class FulfillmentSettingValue(TimeStampedModel):
     class Meta:
         verbose_name = 'Fulfillment Setting'
         verbose_name_plural = 'Fulfillment Settings'
-        unique_together = ('setting', 'variant')
+        unique_together = (
+            ('setting', 'product'), ('setting', 'variant')
+        )
 
     setting = models.ForeignKey(
         'FulfillmentSetting', null=True, blank=True
     )
+    product = models.ForeignKey('products.Product', null=True, blank=True)
     variant = models.ForeignKey('products.Variant', null=True, blank=True)
     value = models.CharField(max_length=128, null=True, blank=True)
 

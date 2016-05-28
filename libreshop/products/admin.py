@@ -13,6 +13,11 @@ from .forms import (
 logger = logging.getLogger(__name__)
 
 
+class DefaultFulfillmentSettingInline(FulfillmentSettingValueInline):
+    verbose_name = 'Default Fulfillment Setting'
+    verbose_name_plural = 'Default Fulfillment Settings'
+
+
 class VariantInline(admin.TabularInline):
     model = models.Variant
     fields = ('name', 'sub_sku', 'price')
@@ -20,7 +25,7 @@ class VariantInline(admin.TabularInline):
     show_change_link = True
 
     def get_max_num(self, request, obj=None, **kwargs):
-        return models.Variant.objects.filter(product=obj).count() if obj else 1
+        return models.Variant.objects.filter(product=obj).count()
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -48,7 +53,9 @@ class ProductAdmin(admin.ModelAdmin):
 
         if obj:
             inlines = set(self.inlines)
-            inlines = inlines.union({VariantInline,})
+            inlines = inlines.union(
+                {DefaultFulfillmentSettingInline, VariantInline,}
+            )
             self.inlines = list(inlines)
         else:
             self.inlines = []

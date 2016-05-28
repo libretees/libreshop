@@ -40,6 +40,13 @@ class Product(TimeStampedModel):
     image_ppoi = PPOIField(verbose_name='Primary Point of Interest')
 
     slug = models.SlugField(unique=True, null=True, blank=True)
+    default_fulfillment_settings = models.ManyToManyField(
+        'fulfillment.FulfillmentSetting',
+        verbose_name='Default Fulfillment Settings',
+        through='fulfillment.FulfillmentSettingValue',
+        through_fields=('product', 'setting'),
+        blank=True
+    )
 
     objects = ProductManager()
 
