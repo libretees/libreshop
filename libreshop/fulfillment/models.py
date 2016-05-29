@@ -56,8 +56,6 @@ class FulfillmentSetting(TimeStampedModel):
 class FulfillmentSettingValue(TimeStampedModel):
 
     class Meta:
-        verbose_name = 'Fulfillment Setting'
-        verbose_name_plural = 'Fulfillment Settings'
         unique_together = (
             ('setting', 'product'), ('setting', 'variant')
         )

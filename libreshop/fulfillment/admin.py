@@ -35,8 +35,10 @@ class FulfillmentOrderAdmin(admin.ModelAdmin):
 
 
 class FulfillmentSettingValueInline(admin.TabularInline):
-    fields = ('setting', 'value')
     model = FulfillmentSettingValue
+    fields = ('setting', 'value')
+    verbose_name = 'Fulfillment Setting'
+    verbose_name_plural = 'Fulfillment Settings'
     formset = UniqueTogetherFormSet
     extra = 0
 
