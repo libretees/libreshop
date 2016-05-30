@@ -3,6 +3,9 @@ from django.core.exceptions import ValidationError
 from decimal import Decimal
 from django.test import TestCase
 from inventory.models import Inventory
+from fulfillment.models import (
+    FulfillmentSetting, FulfillmentSettingValue, Supplier
+)
 from ...models import Attribute, AttributeValue, Product, Variant, Component
 
 # Initialize logger.
@@ -10,6 +13,111 @@ logger = logging.getLogger(__name__)
 
 # Create your tests here.
 class VariantModelTest(TestCase):
+
+    def test_model_overrides_combined_json_fulfillment_settings(self):
+        '''
+        Test that JSON-formatted settings set in Variant.product and in the
+        model are overridden when there is a key collision.
+        '''
+        product = Product.objects.create(name='foo', sku='123')
+        variant = Variant.objects.create(
+            product=product, name='bar', sub_sku='456'
+        )
+        supplier = Supplier.objects.create(
+            name='foo',
+            fulfillment_backend='django.core.mail.backends.locmem.EmailBackend'
+        )
+        setting = FulfillmentSetting.objects.create(
+            supplier=supplier, name='setting'
+        )
+        default_setting_value = FulfillmentSettingValue.objects.create(
+            setting=setting, product=product, value="{'foo': 'bar'}"
+        )
+        setting_value = FulfillmentSettingValue.objects.create(
+            setting=setting, variant=variant, value="{'foo': 'baz'}"
+        )
+
+        self.assertEqual(
+            variant.fulfillment_settings, {'setting': {'foo': 'baz'}}
+        )
+
+
+    def test_model_combines_json_fulfillment_settings(self):
+        '''
+        Test that JSON-formatted settings set in Variant.product and in the
+        model are combined.
+        '''
+        product = Product.objects.create(name='foo', sku='123')
+        variant = Variant.objects.create(
+            product=product, name='bar', sub_sku='456'
+        )
+        supplier = Supplier.objects.create(
+            name='foo',
+            fulfillment_backend='django.core.mail.backends.locmem.EmailBackend'
+        )
+        setting = FulfillmentSetting.objects.create(
+            supplier=supplier, name='setting'
+        )
+        default_setting_value = FulfillmentSettingValue.objects.create(
+            setting=setting, product=product, value="{'foo': 'bar'}"
+        )
+        setting_value = FulfillmentSettingValue.objects.create(
+            setting=setting, variant=variant, value="{'bar': 'baz'}"
+        )
+
+        self.assertEqual(
+            variant.fulfillment_settings,
+            {'setting': {'foo': 'bar', 'bar': 'baz'}}
+        )
+
+
+    def test_model_overrides_default_fulfillment_settings_from_parent(self):
+        '''
+        Test that settings from Variant.product are overridden when they are set
+        in the model.
+        '''
+        product = Product.objects.create(name='foo', sku='123')
+        variant = Variant.objects.create(
+            product=product, name='bar', sub_sku='456'
+        )
+        supplier = Supplier.objects.create(
+            name='foo',
+            fulfillment_backend='django.core.mail.backends.locmem.EmailBackend'
+        )
+        setting = FulfillmentSetting.objects.create(
+            supplier=supplier, name='foo'
+        )
+        default_setting_value = FulfillmentSettingValue.objects.create(
+            setting=setting, product=product, value="'foo'"
+        )
+        setting_value = FulfillmentSettingValue.objects.create(
+            setting=setting, variant=variant, value="'bar'"
+        )
+
+        self.assertEqual(variant.fulfillment_settings, {'foo': 'bar'})
+
+
+    def test_model_inherits_default_fulfillment_settings_from_parent(self):
+        '''
+        Test that default settings are inherited from Variant.product.
+        '''
+        product = Product.objects.create(name='foo', sku='123')
+        variant = Variant.objects.create(
+            product=product, name='bar', sub_sku='456'
+        )
+        supplier = Supplier.objects.create(
+            name='foo',
+            fulfillment_backend='django.core.mail.backends.locmem.EmailBackend'
+        )
+        setting = FulfillmentSetting.objects.create(
+            supplier=supplier, name='default'
+        )
+        setting_value = FulfillmentSettingValue.objects.create(
+            setting=setting, product=product, value="'foo'"
+        )
+
+        self.assertIn('default', variant.fulfillment_settings)
+
 
     def test_model_has_product_field(self):
         '''

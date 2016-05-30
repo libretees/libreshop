@@ -1,5 +1,6 @@
 import re
 import logging
+from ast import literal_eval
 from collections import OrderedDict
 from decimal import Decimal
 from operator import itemgetter
@@ -102,10 +103,11 @@ class Variant(TimeStampedModel):
         'Attribute', through='AttributeValue',
         through_fields=('inventory', 'attribute')
     )
-    fulfillment_settings = models.ManyToManyField(
+    _fulfillment_settings = models.ManyToManyField(
         'fulfillment.FulfillmentSetting',
         through='fulfillment.FulfillmentSettingValue',
-        through_fields=('variant', 'setting'), blank=True
+        through_fields=('variant', 'setting'),
+        blank=True
     )
     enabled = models.BooleanField(default=True)
 
@@ -114,6 +116,32 @@ class Variant(TimeStampedModel):
         super(Variant, self).__init__(*args, **kwargs)
         self._meta.get_field('sub_sku').verbose_name = 'Sub-SKU'
         self._meta.get_field('sub_sku').verbose_name_plural = 'Sub-SKUs'
+
+
+    @property
+    def fulfillment_settings(self):
+        '''
+        Return a JSON-formatted dict of fulfillment settings.
+        '''
+        defaults = {
+            setting.setting.name:literal_eval(setting.value)
+            for setting
+            in self.product.fulfillmentsettingvalue_set.all()
+        }
+        json_settings = {
+            k:v for k, v in defaults.items() if isinstance(v, dict)
+        }
+        defaults.update({
+            setting.setting.name:literal_eval(setting.value)
+            for setting
+            in self.fulfillmentsettingvalue_set.all()
+        })
+        combined_settings = [key for key in defaults if key in json_settings]
+        for key in combined_settings:
+            json_settings[key].update(defaults[key])
+            defaults[key] = json_settings[key]
+
+        return defaults
 
 
     @property
