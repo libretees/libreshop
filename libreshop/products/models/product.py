@@ -21,8 +21,10 @@ class ProductManager(models.Manager):
 
             variants = Variant.objects.filter(product=product)
             if not variants:
-                variant = Variant.objects.create(product=product,
-                    name=product.name)
+                variant = Variant.objects.create(
+                    product=product,
+                    name=product.name
+                )
 
         return product
 
@@ -32,15 +34,9 @@ class Product(TimeStampedModel):
     sku = models.CharField(max_length=8, unique=True, null=False, blank=False)
     name = models.CharField(max_length=64, unique=True, null=False, blank=False)
     description = models.CharField(max_length=2048, null=True, blank=True)
-
-    image = VersatileImageField(
-        upload_to='images/product', max_length=255, null=True, blank=True,
-        ppoi_field='image_ppoi' # Image Primary Point of Interest (PPOI)
-    )
-    image_ppoi = PPOIField(verbose_name='Primary Point of Interest')
-
     slug = models.SlugField(unique=True, null=True, blank=True)
-    default_fulfillment_settings = models.ManyToManyField(
+
+    fulfillment_settings = models.ManyToManyField(
         'fulfillment.FulfillmentSetting',
         verbose_name='Default Fulfillment Settings',
         through='fulfillment.FulfillmentSettingValue',

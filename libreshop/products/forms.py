@@ -46,7 +46,7 @@ class ProductChangeForm(forms.ModelForm):
 
     class Meta:
         model = models.Product
-        fields = ('sku', 'name', 'description', 'image')
+        fields = ('sku', 'name', 'description')
         widgets = {'description': Textarea(attrs={'cols': 80, 'rows': 5})}
 
 

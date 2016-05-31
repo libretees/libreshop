@@ -2,6 +2,8 @@ import logging
 from django.contrib import admin
 from django.contrib.admin.options import IS_POPUP_VAR
 from common.admin import UnindexedAdmin
+from django.forms.models import inlineformset_factory
+from django.forms.widgets import Textarea
 from fulfillment.admin import FulfillmentSettingValueInline
 from . import models
 from .forms import (
@@ -16,6 +18,15 @@ logger = logging.getLogger(__name__)
 class DefaultFulfillmentSettingInline(FulfillmentSettingValueInline):
     verbose_name = 'Default Fulfillment Setting'
     verbose_name_plural = 'Default Fulfillment Settings'
+
+
+class ImageInline(admin.TabularInline):
+    model = models.Image
+    formset = inlineformset_factory(models.Product, models.Image,
+        fields=('image', 'description', 'featured')
+        widgets={'description': Textarea(attrs={'cols': 40, 'rows': 23})}
+    )
+    extra = 0
 
 
 class VariantInline(admin.TabularInline):
@@ -54,7 +65,7 @@ class ProductAdmin(admin.ModelAdmin):
         if obj:
             inlines = set(self.inlines)
             inlines = inlines.union(
-                {DefaultFulfillmentSettingInline, VariantInline,}
+                {DefaultFulfillmentSettingInline, ImageInline, VariantInline}
             )
             self.inlines = list(inlines)
         else:
