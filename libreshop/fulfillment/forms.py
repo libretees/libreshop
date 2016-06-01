@@ -1,7 +1,7 @@
 import importlib
 import logging
-from django.conf import settings
 from django import forms
+from django.conf import settings
 from . import models
 
 # Initialize logger.

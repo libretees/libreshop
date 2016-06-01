@@ -7,8 +7,8 @@ from django.forms.widgets import Textarea
 from fulfillment.admin import FulfillmentSettingValueInline
 from . import models
 from .forms import (
-    PopulatedFormFactory, ProductCreationForm, ProductChangeForm,
-    VariantCreationForm
+    ImageInlineForm, PopulatedFormFactory, ProductCreationForm,
+    ProductChangeForm, VariantCreationForm
 )
 
 # Initialize logger
@@ -22,10 +22,7 @@ class DefaultFulfillmentSettingInline(FulfillmentSettingValueInline):
 
 class ImageInline(admin.TabularInline):
     model = models.Image
-    formset = inlineformset_factory(models.Product, models.Image,
-        fields=('image', 'description', 'featured')
-        widgets={'description': Textarea(attrs={'cols': 40, 'rows': 23})}
-    )
+    form = ImageInlineForm
     extra = 0
 
 

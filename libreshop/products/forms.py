@@ -2,10 +2,11 @@ import re
 import logging
 from xml.etree import ElementTree
 from django import forms
-from django.forms.widgets import Select, Textarea
+from django.forms.widgets import Select, Textarea, TextInput
 from django.contrib import admin
 from django.db.models.fields.related import OneToOneRel
 from django.utils.safestring import mark_safe
+from versatileimagefield.widgets import VersatileImagePPOIClickWidget
 from . import models
 
 
@@ -40,6 +41,28 @@ class RelatedFieldWidgetWrapper(admin.widgets.RelatedFieldWidgetWrapper):
             html = ElementTree.tostring(xml)
 
         return mark_safe(html)
+
+
+class AlwaysChangedModelForm(forms.ModelForm):
+    """
+    Ensures VersatileImageField's inline models ALWAYS get saved so PPOI
+    values will make their way into the database.
+    """
+    def has_changed(self):
+        return True
+
+
+class ImageInlineForm(AlwaysChangedModelForm):
+    class Meta:
+        model = models.Image
+        fields = ('title', 'description', 'featured', 'file')
+        widgets = {
+            'title': TextInput(attrs={'size': 20}),
+            'description': Textarea(attrs={
+                'cols': 40, 'rows': 1, 'style': 'resize:vertical;'
+            }),
+            'file': VersatileImagePPOIClickWidget()
+        }
 
 
 class ProductChangeForm(forms.ModelForm):
