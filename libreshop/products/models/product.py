@@ -4,6 +4,7 @@ from django.db import models, transaction
 from django.template.defaultfilters import slugify
 from model_utils.models import TimeStampedModel
 from versatileimagefield.fields import PPOIField, VersatileImageField
+from . import Image
 from .variant import Variant
 
 # Initialize logger.
@@ -70,6 +71,12 @@ class Product(TimeStampedModel):
                             attributes[key].append(attribute)
 
         return attributes
+
+
+    @property
+    def image(self):
+        image = Image.objects.filter(product=self, featured=True).latest()
+        return image.file if image else None
 
 
     @property

@@ -20,3 +20,6 @@ class Image(TimeStampedModel):
 
     def __str__(self):
         return self.title if self.title else self.file.url
+
+    class Meta:
+        get_latest_by = 'modified'
