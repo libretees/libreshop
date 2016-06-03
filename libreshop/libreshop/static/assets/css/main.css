@@ -63,6 +63,14 @@ textarea {
   min-height: 34px;
 }
 
+.center-block {
+  text-align: center;
+}
+
+.center-block > img {
+  /* remove float:left here */
+  display:inline-block;
+}
 
 /* Implement a sticky footer. */
 

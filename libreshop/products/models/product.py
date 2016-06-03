@@ -74,9 +74,15 @@ class Product(TimeStampedModel):
 
 
     @property
-    def image(self):
+    def featured_image(self):
         image = Image.objects.filter(product=self, featured=True).latest()
         return image.file if image else None
+
+
+    @property
+    def images(self):
+        images = Image.objects.filter(product=self, featured=False)
+        return [image.file for image in images]
 
 
     @property

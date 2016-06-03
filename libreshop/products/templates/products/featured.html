@@ -4,18 +4,29 @@
 {% block products_content %}
     <div class="jumbotron">
       <div class="row">
-        <div class='jumbotron-content col-md-5'>
-        {% if product.image and not cart %}
-          <img src="{{ product.image.thumbnail.285x400 }}" class="img-responsive">
-        {% elif product.image and cart %}
-          <img src="{{ product.image.thumbnail.400x500 }}" class="img-responsive">
-        {% elif cart and not product.image %}
-          <img data-src="holder.js/285x400?bg=555555" class="img-responsive">
-        {% else %}
-          <img data-src="holder.js/400x500?bg=555555" class="img-responsive">
-        {% endif %}
+        <div class='jumbotron-content col-md-4'>
+          <div class='row'>
+            <div class='col-md-12 center-block'>
+              {% if product.featured_image and not cart %}
+                <img src="{{ product.featured_image.thumbnail.285x400 }}" class="img-responsive img-rounded">
+              {% elif product.featured_image and cart %}
+                <img src="{{ product.featured_image.thumbnail.400x500 }}" class="img-responsive img-rounded">
+              {% elif cart and not product.featured_image %}
+                <img data-src="holder.js/285x400?bg=555555" class="img-responsive img-rounded">
+              {% else %}
+                <img data-src="holder.js/400x500?bg=555555" class="img-responsive img-rounded">
+              {% endif %}
+            </div>
+          </div>
+          <div class='row'>
+            <div class='col-md-12 center-block'>
+              {% for image in product.images %}
+                <img src='{{ image.thumbnail.50x50 }}' class='img-responsive img-rounded'>
+              {% endfor %}
+            </div>
+          </div>
         </div>
-        <div class='jumbotron-content col-md-7'>
+        <div class='jumbotron-content col-md-6'>
           <h1 id='product-name'>{{ product.name }}</h1>
           <p>{{ product.description|safe }}</p>
 

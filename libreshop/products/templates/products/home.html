@@ -7,10 +7,10 @@
         <div style='background:rgb(238, 238, 238);min-height:200px;border-radius:6px;margin-bottom:15px;padding:15px;'>
           <div>
             <a href="{% url 'products:product' slug=product.slug %}">
-              {% if product.image %}
-                <img src='{{ product.image.crop.540x200 }}' class='img-responsive' />
+              {% if product.featured_image %}
+                <img src='{{ product.featured_image.crop.540x200 }}' class='img-responsive img-rounded' />
               {% else %}
-                <img data-src='holder.js/540x200?bg=555555' class='img-responsive' />
+                <img data-src='holder.js/540x200?bg=555555' class='img-responsive img-rounded' />
               {% endif %}
             </a>
           </div>
