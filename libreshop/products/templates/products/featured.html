@@ -19,9 +19,9 @@
             </div>
           </div>
           <div class='row'>
-            <div class='col-md-12 center-block'>
+            <div id='product-thumbnails' class='col-md-12 center-block'>
               {% for image in product.images %}
-                <img src='{{ image.thumbnail.50x50 }}' class='img-responsive img-rounded'>
+                <a href='#'><img src='{{ image.thumbnail.50x50 }}' class='img-responsive img-rounded'></a>
               {% endfor %}
             </div>
           </div>
@@ -54,3 +54,16 @@
     </div>
   </div>
 {% endblock products_content %}
+
+{% block scripts %}
+
+  <script>
+    $(document).ready(function() {
+      $('#product-thumbnails img').click(function(event) {
+        $('body').prepend("<div class='overlay'><p>test</p></div>")
+        event.preventDefault();
+      });
+    })
+  </script>
+
+{% endblock scripts %}

@@ -67,9 +67,22 @@ textarea {
   text-align: center;
 }
 
-.center-block > img {
+.center-block img {
   /* remove float:left here */
   display:inline-block;
+}
+
+/* The Overlay (background) */
+.overlay {
+  height: 100%;
+  width: 100%;
+  position: fixed; /* Stay in place */
+  z-index: 2048; /* Sit on top */
+  left: 0;
+  top: 0;
+  background-color: rgb(0,0,0); /* Black fallback color */
+  background-color: rgba(0,0,0, 0.7); /* Black w/opacity */
+  overflow-x: hidden; /* Disable horizontal scroll */
 }
 
 /* Implement a sticky footer. */
