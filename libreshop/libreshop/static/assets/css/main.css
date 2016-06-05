@@ -72,6 +72,10 @@ textarea {
   display:inline-block;
 }
 
+.thumbnails > a {
+  text-decoration: none;
+}
+
 /* The Overlay (background) */
 .overlay {
   height: 100%;
@@ -84,6 +88,7 @@ textarea {
   background-color: rgba(0,0,0, 0.7); /* Black w/opacity */
   overflow-x: hidden; /* Disable horizontal scroll */
 }
+
 
 /* Implement a sticky footer. */
 

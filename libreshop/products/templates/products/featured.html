@@ -6,11 +6,15 @@
       <div class="row">
         <div class='jumbotron-content col-md-4'>
           <div class='row'>
-            <div class='col-md-12 center-block'>
+            <div class='col-md-12 center-block {% if product.featured_image %}thumbnails{% endif %}'>
               {% if product.featured_image and not cart %}
-                <img src="{{ product.featured_image.thumbnail.285x400 }}" class="img-responsive img-rounded">
+                <a href='{{ product.featured_image.url }}'>
+                  <img src="{{ product.featured_image.thumbnail.285x400 }}" class="img-responsive img-rounded">
+                </a>
               {% elif product.featured_image and cart %}
-                <img src="{{ product.featured_image.thumbnail.400x500 }}" class="img-responsive img-rounded">
+                <a href='{{ product.featured_image.url }}'>
+                  <img src="{{ product.featured_image.thumbnail.400x500 }}" class="img-responsive img-rounded">
+                </a>
               {% elif cart and not product.featured_image %}
                 <img data-src="holder.js/285x400?bg=555555" class="img-responsive img-rounded">
               {% else %}
@@ -19,9 +23,11 @@
             </div>
           </div>
           <div class='row'>
-            <div id='product-thumbnails' class='col-md-12 center-block'>
+            <div class='col-md-12 center-block thumbnails'>
               {% for image in product.images %}
-                <a href='#'><img src='{{ image.thumbnail.50x50 }}' class='img-responsive img-rounded'></a>
+                <a href='{{ image.url }}'>
+                  <img src='{{ image.thumbnail.50x50 }}' class='img-responsive img-rounded'>
+                </a>
               {% endfor %}
             </div>
           </div>
@@ -59,8 +65,15 @@
 
   <script>
     $(document).ready(function() {
-      $('#product-thumbnails img').click(function(event) {
-        $('body').prepend("<div class='overlay'><p>test</p></div>")
+      $('.thumbnails > a').click(function(event) {
+        url = $(this).attr('href');
+        $('body').prepend("<div class='overlay center-block'><img src='" + url + "' /></div>");
+
+        $('.overlay').click(function(event) {
+          $(this).unbind('click');
+          $(this).remove();
+        })
+
         event.preventDefault();
       });
     })
