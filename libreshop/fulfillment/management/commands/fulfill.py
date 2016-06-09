@@ -160,9 +160,6 @@ class Command(BaseCommand):
         # Fulfill any orders specified on the command line.
         if tokens:
             self.fulfill_orders(tokens=tokens)
-        else:
-            # Fulfill all orders, if no command line arguments were provided.
-            self.fulfill_orders()
 
         # Enter the server loop if the '--server' option was specified.
         if server:
@@ -198,11 +195,10 @@ class Command(BaseCommand):
         }
 
         if unfulfilled_purchases:
-
             fulfillment_backend = supplier.load_fulfillment_backend()
-            order = fulfillment_backend(unfulfilled_purchases)
+            orders = fulfillment_backend(unfulfilled_purchases)
 
-            if order:
+            for order in orders:
                 purchase_order = FulfillmentOrder.objects.create(
                     order_id = order.get('id'),
                     subtotal = order.get('subtotal'),
