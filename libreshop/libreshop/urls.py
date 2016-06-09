@@ -18,11 +18,12 @@ from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
-from products.views import HomePageView
+from products.views import HomePageView, CategoryView
 
 
 urlpatterns = [
     url(r'^$', HomePageView.as_view(), name='home'),
+    url(r'^category/(?P<category_name>.+)$', CategoryView.as_view(), name='category'),
     url(r'^checkout/', include('orders.urls', namespace='checkout')),
     # Add URL for Privacy Policy.
     url(r'^policy/privacy-policy',

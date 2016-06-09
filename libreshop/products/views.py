@@ -4,7 +4,7 @@ from django.views.generic import FormView, TemplateView
 from django.shortcuts import redirect
 from carts.utils import SessionCart
 from .forms import ProductOrderForm
-from .models import Product, Variant
+from .models import Category, Product, Variant
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +28,40 @@ class HomePageView(TemplateView):
         return context
 
 
+class CategoryView(TemplateView):
+
+    template_name = 'products/home.html'
+
+    def dispatch(self, request, *args, **kwargs):
+
+        category_name = kwargs.get('category_name')
+
+        try:
+            self.category = Category.objects.get(slug=category_name)
+        except Category.DoesNotExist:
+            pass
+
+        return (
+            redirect('products:home') if not self.category else
+            super(CategoryView, self).dispatch(request, *args, **kwargs)
+        )
+
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryView, self).get_context_data(**kwargs)
+
+        cart = SessionCart(self.request.session)
+
+        context.update({
+            'products': [
+                product
+                for product in self.category.products.all() if product.salable
+            ],
+            'cart': cart
+        })
+
+        return context
+
 
 class ProductView(FormView):
 
@@ -36,8 +70,8 @@ class ProductView(FormView):
     success_url = '/'
 
     def __init__(self, *args, **kwargs):
-        self.product = None
         super(ProductView, self).__init__(*args, **kwargs)
+        self.product = None
 
 
     def dispatch(self, request, *args, **kwargs):
