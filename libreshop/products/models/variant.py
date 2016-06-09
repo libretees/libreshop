@@ -155,6 +155,14 @@ class Variant(TimeStampedModel):
 
 
     @property
+    def suppliers(self):
+        return list({
+            setting_value.setting.supplier.name
+            for setting_value in self.fulfillmentsettingvalue_set.all()
+        })
+
+
+    @property
     def attributes(self):
 
         attributes = {

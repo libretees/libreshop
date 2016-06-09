@@ -25,27 +25,44 @@ logger = logging.getLogger(__name__)
 
 def calculate_shipping_cost(*args, **kwargs):
 
+    products = kwargs.pop('products', [])
+
     results = []
-    for api_name in settings.SHIPPING_APIS:
+    for supplier, api_name in settings.SHIPPING_APIS.items():
+        kwargs.update({
+            'products': [
+                product for product in products if supplier in product.suppliers
+            ]
+        })
+
         index = api_name.rfind('.')
         module_name, attribute_name = api_name[:index], api_name[index+1:]
         module, function = None, None
         try:
             module = importlib.import_module(module_name)
+            logger.debug(
+                'Getting attribute \'%s\' from \'%s\'...' %
+                (attribute_name, module_name)
+            )
             function = getattr(module, attribute_name)
+            logger.debug('Calling \'%s.%s\'...' % (module_name, attribute_name))
+            result = function(*args, **kwargs)
+            logger.debug('Called \'%s.%s\'.' % (module_name, attribute_name))
         except ImportError as e:
             logger.critical('Unable to import module \'%s\'.' % module_name)
         except AttributeError as e:
             logger.critical('\'%s\' module has no attribute \'%s\'.' %
                 (module_name, attribute_name))
+        except KeyError as e:
+            logger.critical(
+                'KeyError within \'%s.%s\' backend: %s' %
+                (module_name, attribute_name, e)
+            )
         else:
-            logger.info('Calling \'%s.%s\'...' % (module_name, attribute_name))
-            result = function(*args, **kwargs)
-            logger.info('Called \'%s.%s\'.' % (module_name, attribute_name))
             results.append(result)
 
     return (
-        Decimal(result).quantize(Decimal('1.00'), rounding=ROUND_CEILING)
+        Decimal(sum(results)).quantize(Decimal('1.00'), rounding=ROUND_CEILING)
         if len(results) else Decimal(0.00)
     )
 
