@@ -2,10 +2,9 @@ import hashlib
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
-
 from django.core.mail import EmailMessage
 from django.db import transaction
-
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -142,3 +141,9 @@ class OrderViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser,)
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+
+    def retrieve(self, request, pk=None):
+        queryset = Order.objects.all()
+        order = get_object_or_404(queryset, token=pk)
+        serializer = OrderSerializer(order)
+        return Response(serializer.data)
