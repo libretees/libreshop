@@ -20,7 +20,8 @@ from orders.models import Order, Purchase
 
 from .serializers import (
     UserSerializer, GroupSerializer, RegistrationTokenSerializer,
-    OrderSerializer)
+    OrderSerializer, PurchaseSerializer
+)
 
 User = get_user_model()
 
@@ -134,9 +135,9 @@ class RegistrationTokenView(APIView):
         return Response(serializer.data)
 
 
-class OrderViewSet(viewsets.ModelViewSet):
+class OrderViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API endpoint that allows Orders to be viewed or edited.
+    API endpoint that allows Orders to be viewed.
     """
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
@@ -148,3 +149,9 @@ class OrderViewSet(viewsets.ModelViewSet):
         order = get_object_or_404(queryset, token=token)
         serializer = OrderSerializer(order, context={'request': request})
         return Response(serializer.data)
+
+
+class PurchaseViewSet(viewsets.ModelViewSet):
+    queryset = Purchase.objects.all()
+    serializer_class = PurchaseSerializer
+    permission_classes = (IsAdminUser,)
