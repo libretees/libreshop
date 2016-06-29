@@ -3,6 +3,8 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
 from rest_framework import serializers
 from rest_framework import exceptions
+from addresses.models import Address
+from orders.models import Order, Purchase
 
 User = get_user_model()
 
@@ -59,3 +61,31 @@ class RegistrationTokenSerializer(serializers.Serializer):
     token = serializers.CharField()
     image = serializers.CharField()
     audio = serializers.CharField()
+
+
+class AddressSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Address
+        fields = (
+            'recipient_name', 'street_address', 'locality', 'region',
+            'postal_code', 'country')
+
+
+class PurchaseSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Purchase
+        fields = ('name', 'sku', 'price', 'fulfilled')
+
+
+class OrderSerializer(serializers.ModelSerializer):
+
+    shipping_address = AddressSerializer(many=False, read_only=True)
+    purchases = PurchaseSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Order
+        fields = (
+            'token', 'shipping_address', 'subtotal', 'sales_tax',
+            'shipping_cost', 'total', 'fulfilled', 'purchases')

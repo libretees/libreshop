@@ -85,11 +85,20 @@ class Transaction(TimeStampedModel):
 
 
 class Purchase(TimeStampedModel):
-    order = models.ForeignKey('orders.Order', null=False)
+    order = models.ForeignKey(
+        'orders.Order', null=False, related_name='purchases')
     variant = models.ForeignKey('products.Variant', null=False)
     price = models.DecimalField(max_digits=8, decimal_places=2, null=False,
             blank=False, default=Decimal('0.00'))
     fulfilled = models.BooleanField(default=False)
+
+    @property
+    def name(self):
+        return self.variant.name
+
+    @property
+    def sku(self):
+        return self.variant.sku
 
 
 class TaxRate(TimeStampedModel):

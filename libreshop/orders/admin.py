@@ -65,10 +65,10 @@ class OrderAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         queryset = super(OrderAdmin, self).get_queryset(request)
         queryset = queryset.annotate(
-            purchase_count=Count('purchase'),
+            purchase_count=Count('purchases'),
             fulfilled_purchases=Sum(
                 Case(
-                    When(purchase__fulfilled=True, then=1),
+                    When(purchases__fulfilled=True, then=1),
                     default=0,
                     output_field=IntegerField()
                 )
@@ -83,7 +83,6 @@ class TaxRateAdmin(admin.ModelAdmin):
     list_display = (
         'postal_code', '_tax_rate', 'city', 'county', 'district', 'state'
     )
-
 
     def _tax_rate(self, instance):
         return '%s%%' % (instance.effective_tax_rate * 100).normalize()

@@ -10,15 +10,18 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework import status
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework import exceptions
 
 
 from customers.forms import RegistrationToken
 
+from addresses.models import Address
+from orders.models import Order, Purchase
+
 from .serializers import (
-    UserSerializer, GroupSerializer, RegistrationTokenSerializer
-)
+    UserSerializer, GroupSerializer, RegistrationTokenSerializer,
+    OrderSerializer)
 
 User = get_user_model()
 
@@ -130,3 +133,12 @@ class RegistrationTokenView(APIView):
         serializer = RegistrationTokenSerializer(registration_token)
 
         return Response(serializer.data)
+
+
+class OrderViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    permission_classes = (IsAdminUser,)
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer

@@ -1,10 +1,13 @@
 from django.conf.urls import url, include
 from rest_framework import routers
-from .views import UserViewSet, GroupViewSet, RegistrationTokenView
+from .views import (
+    UserViewSet, GroupViewSet, RegistrationTokenView, OrderViewSet)
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'users', UserViewSet, base_name='user')
 router.register(r'groups', GroupViewSet)
+router.register(r'orders', OrderViewSet)
+
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
