@@ -79,7 +79,7 @@ class PurchaseSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('name', 'sku', 'price', 'fulfilled')
 
 
-class OrderSerializer(serializers.ModelSerializer):
+class OrderSerializer(serializers.HyperlinkedModelSerializer):
 
     shipping_address = AddressSerializer(many=False, read_only=True)
     purchases = PurchaseSerializer(many=True, read_only=True)
@@ -87,5 +87,9 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = (
-            'token', 'shipping_address', 'subtotal', 'sales_tax',
-            'shipping_cost', 'total', 'fulfilled', 'purchases')
+            'url', 'token', 'shipping_address', 'subtotal', 'sales_tax',
+            'shipping_cost', 'total', 'fulfilled', 'purchases'
+        )
+        extra_kwargs = {
+            'url': {'lookup_field': 'token'}
+        }

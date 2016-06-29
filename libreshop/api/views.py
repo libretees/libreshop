@@ -136,14 +136,15 @@ class RegistrationTokenView(APIView):
 
 class OrderViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows Orders to be viewed or edited.
     """
-    permission_classes = (IsAdminUser,)
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    permission_classes = (IsAdminUser,)
+    lookup_field = 'token'
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, token=None):
         queryset = Order.objects.all()
-        order = get_object_or_404(queryset, token=pk)
-        serializer = OrderSerializer(order)
+        order = get_object_or_404(queryset, token=token)
+        serializer = OrderSerializer(order, context={'request': request})
         return Response(serializer.data)
