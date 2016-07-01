@@ -3,6 +3,9 @@ from decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
+
+from django_measurement.models import MeasurementField
+from measurement.measures import Weight
 from model_utils.models import TimeStampedModel
 
 # Initialize logger.
@@ -79,7 +82,18 @@ class Inventory(TimeStampedModel):
             MinValueValidator(Decimal('0.00'))
         ]
     )
-
+    weight = MeasurementField(
+        measurement=Weight, blank=False, null=False,
+        unit_choices=(
+            ('g', 'g'),
+            ('kg', 'kg'),
+            ('oz', 'oz'),
+            ('lb', 'lb')
+        ),
+        validators=[
+            MinValueValidator(Weight(g=0))
+        ]
+    )
 
     def delete(self, *args, **kwargs):
         from products.models import Component

@@ -97,6 +97,10 @@ class Purchase(TimeStampedModel):
         return self.variant.name
 
     @property
+    def drop_shipped(self):
+        return bool(self.variant.suppliers)
+
+    @property
     def sku(self):
         return self.variant.sku
 

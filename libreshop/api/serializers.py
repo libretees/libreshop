@@ -76,7 +76,7 @@ class PurchaseSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Purchase
-        fields = ('url', 'name', 'sku', 'price', 'fulfilled')
+        fields = ('url', 'name', 'sku', 'price', 'drop_shipped', 'fulfilled')
 
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
