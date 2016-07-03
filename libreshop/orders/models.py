@@ -104,6 +104,10 @@ class Purchase(TimeStampedModel):
     def sku(self):
         return self.variant.sku
 
+    @property
+    def weight(self):
+        return self.variant.weight
+
 
 class TaxRate(TimeStampedModel):
 
