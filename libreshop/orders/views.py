@@ -63,7 +63,7 @@ def create_customs_items(products):
 
     customs_items = list()
     for item_name, quantity in products_aggregate.items():
-        purchase = next(
+        product = next(
             product for product in products if product.name == item_name
         )
         product_weight = Weight(g=product.weight * quantity)
