@@ -2,13 +2,16 @@ import importlib
 import logging
 import random
 import braintree
+from collections import Counter
 from decimal import Decimal, ROUND_CEILING
 from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
 from django.core.urlresolvers import reverse
 from django.template.response import TemplateResponse
 from django.views.generic import FormView, TemplateView
+import easypost
 from ipware.ip import get_real_ip
+from measurement.measures import Weight
 from addresses.forms import AddressForm
 from addresses.models import Address
 from carts.utils import SessionCart
@@ -19,8 +22,108 @@ from .models import Order, Purchase, TaxRate, Transaction
 # Set a universally unique identifier (UUID).
 UUID = '9bf75036-ec58-4188-be12-4f983cac7e55'
 
+easypost.api_key = settings.EASYPOST_API_KEY
+
 # Initialize logger.
 logger = logging.getLogger(__name__)
+
+def create_address(address_info, verify=['delivery']):
+
+    address = None
+    try:
+        street_address = address_info['street_address'].split('\r\n', 1)
+        address = easypost.Address.create(
+            verify=verify,
+            name = address_info['recipient_name'],
+            street1 = street_address[0],
+            street2 = (
+                street_address[1] if len(street_address) > 1 else None
+            ),
+            city = address_info['locality'],
+            state = address_info['region'],
+            zip = address_info['postal_code'],
+            country = address_info['country']
+        )
+    except easypost.Error as e:
+        error = e.json_body.get('error')
+        if error is not None:
+            error_code = error.get('code')
+            if error_code == 'ADDRESS.VERIFY.INTL_NOT_ENABLED':
+                logger.info('Retrying address creation without delivery validation...')
+                address = create_address(address_info, verify=None)
+            else:
+                logger.error('Error received from Easypost API (%s).' % str(e))
+
+    return address
+
+
+def create_customs_items(products):
+
+    products_aggregate = Counter(product.name for product in products)
+
+    customs_items = list()
+    for item_name, quantity in products_aggregate.items():
+        purchase = next(
+            product for product in products if product.name == item_name
+        )
+        product_weight = Weight(g=product.weight * quantity)
+
+        customs_item = easypost.CustomsItem.create(
+            description=product.name,
+            quantity=quantity,
+            value=product.price * quantity,
+            weight=max(0.1, product_weight.oz),
+            origin_country='US'
+        )
+        customs_items.append(customs_item)
+
+    return customs_items
+
+
+def get_shipping_rate(address, products):
+
+    shipping_weight = Weight(g=sum([
+        product.weight for product in products])
+    )
+
+    to_address = create_address(address)
+    from_address = create_address({
+        'recipient_name': 'LibreTees',
+        'street_address': '2111 Jefferson Davis Hwy\r\nApt 405S',
+        'locality': 'Arlington',
+        'region': 'VA',
+        'postal_code': '22202',
+        'country': 'US',
+        'phone': '888-995-4273'
+    })
+
+    customs_info = None
+    if to_address.country != from_address.country:
+        customs_items = create_customs_items(products)
+        customs_info = easypost.CustomsInfo.create(
+            customs_certify=True,
+            customs_signer='libreshop',
+            contents_type='merchandise',
+            restriction_type='none',
+            restriction_comments='',
+            customs_items=customs_items
+        )
+
+    parcel = easypost.Parcel.create(
+        predefined_package='Parcel',
+        weight=shipping_weight.oz
+    )
+
+    shipment = easypost.Shipment.create(
+        to_address = to_address,
+        from_address = from_address,
+        parcel = parcel,
+        customs_info = customs_info
+    )
+
+    rate_info = shipment.lowest_rate()
+
+    return float(rate_info.rate)
 
 
 def calculate_shipping_cost(*args, **kwargs):
@@ -60,6 +163,15 @@ def calculate_shipping_cost(*args, **kwargs):
             )
         else:
             results.append(result)
+
+    manufactured_products = [
+        product for product in products if not product.suppliers
+    ]
+
+    if manufactured_products:
+        address = kwargs.pop('address')
+        rate = get_shipping_rate(address, manufactured_products)
+        results.append(rate)
 
     return (
         Decimal(sum(results)).quantize(Decimal('1.00'), rounding=ROUND_CEILING)
