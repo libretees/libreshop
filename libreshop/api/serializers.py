@@ -90,7 +90,8 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
         model = Order
         fields = (
             'url', 'token', 'shipping_address', 'subtotal', 'sales_tax',
-            'shipping_cost', 'total', 'fulfilled', 'purchases'
+            'shipping_cost', 'total', 'fulfilled', 'purchases', 'created',
+            'modified'
         )
         extra_kwargs = {
             'url': {'lookup_field': 'token'}
