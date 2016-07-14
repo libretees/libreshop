@@ -92,22 +92,6 @@ class Purchase(TimeStampedModel):
             blank=False, default=Decimal('0.00'))
     fulfilled = models.BooleanField(default=False)
 
-    @property
-    def name(self):
-        return self.variant.name
-
-    @property
-    def drop_shipped(self):
-        return bool(self.variant.suppliers)
-
-    @property
-    def sku(self):
-        return self.variant.sku
-
-    @property
-    def weight(self):
-        return self.variant.weight
-
 
 class TaxRate(TimeStampedModel):
 

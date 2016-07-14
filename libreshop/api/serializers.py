@@ -74,25 +74,52 @@ class AddressSerializer(serializers.HyperlinkedModelSerializer):
 
 class PurchaseSerializer(serializers.HyperlinkedModelSerializer):
 
+    drop_shipped = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
+    sku = serializers.SerializerMethodField()
+    weight = serializers.SerializerMethodField()
+
     class Meta:
         model = Purchase
         fields = (
             'url', 'name', 'sku', 'price', 'drop_shipped', 'fulfilled', 'weight'
         )
 
+    def get_drop_shipped(self, obj):
+        return bool(obj.variant.suppliers)
+
+    def get_name(self, obj):
+        return obj.variant.name
+
+    def get_sku(self, obj):
+        return obj.variant.sku
+
+    def get_weight(self, obj):
+        return obj.variant.weight
+
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
 
     shipping_address = AddressSerializer(many=False, read_only=True)
     purchases = PurchaseSerializer(many=True, read_only=True)
+    last_4 = serializers.SerializerMethodField()
+    payment_method = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
         fields = (
             'url', 'token', 'shipping_address', 'subtotal', 'sales_tax',
-            'shipping_cost', 'total', 'fulfilled', 'purchases', 'created',
-            'modified'
+            'shipping_cost', 'total', 'payment_method', 'last_4', 'fulfilled',
+            'purchases', 'created', 'modified'
         )
         extra_kwargs = {
             'url': {'lookup_field': 'token'}
         }
+
+    def get_last_4(self, obj):
+        transaction = obj.transaction_set.first()
+        return transaction.payment_card_last_4
+
+    def get_payment_method(self, obj):
+        transaction = obj.transaction_set.first()
+        return transaction.payment_card_type
