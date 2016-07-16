@@ -89,10 +89,7 @@ class Inventory(TimeStampedModel):
             ('kg', 'kg'),
             ('oz', 'oz'),
             ('lb', 'lb')
-        ),
-        validators=[
-            MinValueValidator(Weight(g=0))
-        ]
+        )
     )
 
     def delete(self, *args, **kwargs):
