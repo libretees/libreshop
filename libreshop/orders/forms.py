@@ -300,7 +300,7 @@ class OrderReceiptForm(forms.Form):
                 template = TemplateEngine.get_template(self.template_name)
                 context = Context({
                     'order': order,
-                    'purchases': order.purchase_set.all(),
+                    'purchases': order.purchases.all(),
                     'transaction': transaction
                 })
                 body = template.render(context)

@@ -142,8 +142,8 @@ class ShipmentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Shipment
-        fields = ('order', 'carrier', 'tracking_id', 'shipping_cost', 'created',
-            'modified')
+        fields = ('url', 'order', 'carrier', 'tracking_id', 'shipping_cost',
+            'created', 'modified')
 
     def get_carrier(self, obj):
         return obj.carrier.name
@@ -172,3 +172,8 @@ class ShipmentSerializer(serializers.HyperlinkedModelSerializer):
             'order': order
         })
         return validated_data
+
+    def create(self, validated_data):
+        shipment = super(ShipmentSerializer, self).create(validated_data)
+        shipment.notify_recipient()
+        return shipment

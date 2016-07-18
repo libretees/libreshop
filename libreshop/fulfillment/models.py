@@ -1,8 +1,11 @@
 import importlib
 import logging
 from decimal import Decimal
+from django.conf import settings
 from django.core.validators import MinValueValidator
+from django.core.mail import EmailMessage
 from django.db import models
+from django.template import Context, Engine
 from django.utils import timezone
 from model_utils.models import TimeStampedModel
 
@@ -155,6 +158,8 @@ class Carrier(TimeStampedModel):
 
 class Shipment(TimeStampedModel):
 
+    template_name = 'fulfillment/shipment_confirmation.html'
+
     order = models.ForeignKey('orders.Order', null=False, blank=False)
     carrier = models.ForeignKey('Carrier', null=False, blank=False)
     tracking_id = models.CharField(
@@ -167,3 +172,52 @@ class Shipment(TimeStampedModel):
             MinValueValidator(Decimal('0.00'))
         ]
     )
+
+    def get_email_body(self):
+        # Load the default template engine.
+        TemplateEngine = Engine.get_default()
+
+        # Render a context to the template specified in `template_name`.
+        template = TemplateEngine.get_template(self.template_name)
+        context = Context({
+            'carrier': self.carrier,
+            'order': self.order,
+            'tracking_id': self.tracking_id,
+            'multiple_shipments': any(
+                bool(purchase.variant.suppliers) for purchase
+                in self.order.purchases.all()
+            ),
+            'shipment_date': self.created
+        })
+        body = template.render(context)
+
+        return body
+
+    def notify_recipient(self):
+
+        email_addresses = {
+            communication.to_email for communication
+            in self.order.communication_set.all()
+        }
+
+        emails_sent = 0
+        if email_addresses:
+            body = self.get_email_body()
+            for email_address in email_addresses:
+                email = EmailMessage(
+                    subject='Your LibreShop Order %s has shipped!' % self.order.token,
+                    body=body,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    to=[email_address],
+                    bcc=[],
+                    connection=None,
+                    attachments=None,
+                    headers=None,
+                    cc=None,
+                    reply_to=None
+                )
+                emails_sent += email.send()
+
+        return (
+            bool(len(email_addresses)) and (emails_sent == len(email_addresses))
+        )

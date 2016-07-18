@@ -1,0 +1,27 @@
+Your LibreShop Order {{ order.token }} has shipped!
+
+Questions? Contact us anytime at contact@libreshop.com!
+{% if multiple_shipments %}
+--------------------------------------------
+!!! - Multiple Shipments - !!!
+--------------------------------------------
+Please note that your order has been split into multiple shipments.
+{% endif %}
+--------------------------------------------
+Shipment Date
+--------------------------------------------
+{{ shipment_date }}
+
+--------------------------------------------
+Carrier/Tracking
+--------------------------------------------
+Carrier: {{ carrier }}
+Tracking ID: {{ tracking_id }}
+
+You can track your shipment by visiting the following URL:{% if carrier|upper == 'USPS' %}
+https://tools.usps.com/go/TrackConfirmAction.action?tLabels={{ tracking_id }}{% endif %}
+
+--------------------------------------------
+Inquires
+--------------------------------------------
+Write to contact@libreshop.com
