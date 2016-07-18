@@ -427,22 +427,6 @@ class CheckoutFormView(FormView):
                 total=self.total
             )
 
-            Transaction.objects.create(
-                order=order,
-                transaction_id=form.cleaned_data['transaction_id'],
-                amount=form.cleaned_data['amount'],
-                cardholder_name=form.cleaned_data['cardholder_name'],
-                country=form.cleaned_data['country'],
-                payment_card_type=form.cleaned_data['payment_card_type'],
-                payment_card_last_4=form.cleaned_data['payment_card_last_4'],
-                payment_card_expiration_date=form.cleaned_data[
-                    'payment_card_expiration_date'
-                ],
-                created_at = form.cleaned_data['created_at'],
-                origin_ip_address = get_real_ip(self.request),
-                authorized = form.cleaned_data['authorized']
-            )
-
             self.order_token = order.token
 
             for variant in self.cart:
@@ -451,6 +435,22 @@ class CheckoutFormView(FormView):
                     variant=variant,
                     price=variant.price
                 )
+
+            Transaction.objects.create(
+                order=order,
+                transaction_id=form.cleaned_data.get('transaction_id'),
+                amount=form.cleaned_data.get('amount'),
+                cardholder_name=form.cleaned_data.get('cardholder_name'),
+                country=form.cleaned_data.get('country'),
+                payment_card_type=form.cleaned_data.get('payment_card_type'),
+                payment_card_last_4=form.cleaned_data.get('payment_card_last_4'),
+                payment_card_expiration_date=form.cleaned_data.get(
+                    'payment_card_expiration_date'
+                ),
+                created_at = form.cleaned_data.get('created_at'),
+                origin_ip_address = get_real_ip(self.request),
+                authorized = form.cleaned_data.get('authorized')
+            )
 
         return super(CheckoutFormView, self).form_valid(form)
 
