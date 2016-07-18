@@ -36,7 +36,7 @@
         <p>Subtotal ({{ cart|length }} Item{% if cart|length > 1 %}s{% endif %}): ${{ cart.total|floatformat:2 }}</p>
       </div>
       <div>
-        <a href='checkout' class='btn btn-primary center-block'>check out</a>
+        <a href="{% url 'checkout:main' %}" class='btn btn-primary center-block'>check out</a>
       </div>
     </div>
   </div>
