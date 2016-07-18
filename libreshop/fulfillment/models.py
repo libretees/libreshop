@@ -144,14 +144,22 @@ class FulfillmentPurchase(TimeStampedModel):
     )
 
 
+class Carrier(TimeStampedModel):
+    name = models.CharField(
+        max_length=32, null=False, blank=False, unique=True
+    )
+
+    def __str__(self):
+        return self.name
+
+
 class Shipment(TimeStampedModel):
 
-    order = models.ForeignKey('FulfillmentOrder', null=False, blank=False)
-    carrier = models.CharField(
-        max_length=32, null=False, blank=False, unique=True, verbose_name='ID'
-    )
-    tracking_number = models.CharField(
-        max_length=64, null=False, blank=False, unique=True, verbose_name='ID'
+    order = models.ForeignKey('orders.Order', null=False, blank=False)
+    carrier = models.ForeignKey('Carrier', null=False, blank=False)
+    tracking_id = models.CharField(
+        max_length=64, null=False, blank=False, unique=True,
+        verbose_name='Tracking ID'
     )
     shipping_cost = models.DecimalField(
         max_digits=8, decimal_places=2, null=True, blank=True,

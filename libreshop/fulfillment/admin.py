@@ -4,8 +4,8 @@ from common.admin import UnindexedAdmin
 from common.forms import UniqueTogetherFormSet
 from .forms import SupplierCreationForm
 from .models import (
-    FulfillmentOrder, FulfillmentPurchase, FulfillmentSetting,
-    FulfillmentSettingValue, Supplier
+    Carrier, FulfillmentOrder, FulfillmentPurchase, FulfillmentSetting,
+    FulfillmentSettingValue, Shipment, Supplier
 )
 
 # Initialize logger
@@ -50,4 +50,6 @@ class SupplierAdmin(admin.ModelAdmin):
 
 
 # Register your models here.
+admin.site.register(Carrier)
+admin.site.register(Shipment)
 admin.site.register(FulfillmentSetting, UnindexedAdmin)

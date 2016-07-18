@@ -17,10 +17,11 @@ from customers.forms import RegistrationToken
 
 from addresses.models import Address
 from orders.models import Order, Purchase
+from fulfillment.models import Carrier, Shipment
 
 from .serializers import (
     UserSerializer, GroupSerializer, RegistrationTokenSerializer,
-    OrderSerializer, PurchaseSerializer
+    ShipmentSerializer, OrderSerializer, PurchaseSerializer
 )
 
 User = get_user_model()
@@ -154,4 +155,13 @@ class OrderViewSet(viewsets.ReadOnlyModelViewSet):
 class PurchaseViewSet(viewsets.ModelViewSet):
     queryset = Purchase.objects.all()
     serializer_class = PurchaseSerializer
+    permission_classes = (IsAdminUser,)
+
+
+class ShipmentViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Shipments to be viewed or edited.
+    """
+    queryset = Shipment.objects.all()
+    serializer_class = ShipmentSerializer
     permission_classes = (IsAdminUser,)

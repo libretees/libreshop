@@ -1,10 +1,12 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework import exceptions
 from addresses.models import Address
-from orders.models import Order, Purchase
+from fulfillment.models import Carrier, Shipment
+from orders.models import Order, Purchase, Transaction
 
 User = get_user_model()
 
@@ -117,9 +119,56 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
         }
 
     def get_last_4(self, obj):
-        transaction = obj.transaction_set.first()
-        return transaction.payment_card_last_4
+        transaction = None
+        try:
+            transaction = obj.transaction_set.first()
+        except Transaction.DoesNotExist as e:
+            pass
+        return transaction.payment_card_last_4 if transaction else None
 
     def get_payment_method(self, obj):
-        transaction = obj.transaction_set.first()
-        return transaction.payment_card_type
+        transaction = None
+        try:
+            transaction = obj.transaction_set.first()
+        except Transaction.DoesNotExist as e:
+            pass
+        return transaction.payment_card_type if transaction else None
+
+
+class ShipmentSerializer(serializers.HyperlinkedModelSerializer):
+
+    order = OrderSerializer(many=False, read_only=True)
+    carrier = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Shipment
+        fields = ('order', 'carrier', 'tracking_id', 'shipping_cost', 'created',
+            'modified')
+
+    def get_carrier(self, obj):
+        return obj.carrier.name
+
+    def to_internal_value(self, data): # Similar to Form.clean.
+        validated_data = super(ShipmentSerializer, self).to_internal_value(data)
+
+        carrier = None
+        try:
+            carrier_name = data.get('carrier')
+            carrier = Carrier.objects.get(name=carrier_name)
+        except Carrier.DoesNotExist as e:
+            raise serializers.ValidationError({
+                'carrier': 'Invalid carrier specified (%s)!' % carrier_name})
+
+        order = None
+        try:
+            order_token = data.get('order_token')
+            order = Order.objects.get(token=order_token)
+        except Order.DoesNotExist as e:
+            raise serializers.ValidationError({
+                'order': 'Invalid order token specified (%s)!' % order_token})
+
+        validated_data.update({
+            'carrier': carrier,
+            'order': order
+        })
+        return validated_data
