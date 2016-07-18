@@ -142,3 +142,20 @@ class FulfillmentPurchase(TimeStampedModel):
             MinValueValidator(Decimal('0.00'))
         ]
     )
+
+
+class Shipment(TimeStampedModel):
+
+    order = models.ForeignKey('FulfillmentOrder', null=False, blank=False)
+    carrier = models.CharField(
+        max_length=32, null=False, blank=False, unique=True, verbose_name='ID'
+    )
+    tracking_number = models.CharField(
+        max_length=64, null=False, blank=False, unique=True, verbose_name='ID'
+    )
+    shipping_cost = models.DecimalField(
+        max_digits=8, decimal_places=2, null=True, blank=True,
+        default=Decimal('0.00'), validators=[
+            MinValueValidator(Decimal('0.00'))
+        ]
+    )
