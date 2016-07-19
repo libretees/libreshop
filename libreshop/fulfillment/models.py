@@ -1,6 +1,7 @@
 import importlib
 import logging
 from decimal import Decimal
+from random import randrange
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.core.mail import EmailMessage
@@ -156,11 +157,33 @@ class Carrier(TimeStampedModel):
         return self.name
 
 
+def get_token(token=None):
+    generate = lambda: '{:08x}'.format(randrange(2**32))
+    if not token:
+        token = generate()
+    while Shipment.objects.filter(token=token):
+        token = generate()
+    return token
+
+
+
+class ShipmentManager(models.Manager):
+
+    def create(self, *args, **kwargs):
+        token = kwargs.pop('token', None)
+        kwargs.update({
+            'token': get_token(token=token)
+        })
+        return super(ShipmentManager, self).create(*args, **kwargs)
+
+
 class Shipment(TimeStampedModel):
 
     template_name = 'fulfillment/shipment_confirmation.html'
 
     order = models.ForeignKey('orders.Order', null=False, blank=False)
+    token = models.CharField(max_length=8, null=False, blank=False, unique=True,
+        default=get_token)
     carrier = models.ForeignKey('Carrier', null=False, blank=False)
     tracking_id = models.CharField(
         max_length=64, null=False, blank=False, unique=True,
@@ -172,6 +195,8 @@ class Shipment(TimeStampedModel):
             MinValueValidator(Decimal('0.00'))
         ]
     )
+
+    objects = ShipmentManager()
 
     def get_email_body(self):
         # Load the default template engine.

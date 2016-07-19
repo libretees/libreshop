@@ -165,3 +165,10 @@ class ShipmentViewSet(viewsets.ModelViewSet):
     queryset = Shipment.objects.all()
     serializer_class = ShipmentSerializer
     permission_classes = (IsAdminUser,)
+    lookup_field = 'token'
+
+    def retrieve(self, request, token=None):
+        queryset = Shipment.objects.all()
+        shipment = get_object_or_404(queryset, token=token)
+        serializer = ShipmentSerializer(shipment, context={'request': request})
+        return Response(serializer.data)

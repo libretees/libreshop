@@ -144,6 +144,9 @@ class ShipmentSerializer(serializers.HyperlinkedModelSerializer):
         model = Shipment
         fields = ('url', 'order', 'carrier', 'tracking_id', 'shipping_cost',
             'created', 'modified')
+        extra_kwargs = {
+            'url': {'lookup_field': 'token'}
+        }
 
     def get_carrier(self, obj):
         return obj.carrier.name
