@@ -63,7 +63,7 @@ class Transaction(TimeStampedModel):
     cardholder_name = models.CharField(max_length=64, null=True, blank=True)
     country = models.CharField(max_length=2, null=True, blank=True)
     payment_card_type = models.CharField(
-        max_length=8, null=True, blank=True, verbose_name='Card Type'
+        max_length=16, null=True, blank=True, verbose_name='Card Type'
     )
     payment_card_last_4 = models.CharField(
         max_length=8, null=True, blank=True, verbose_name='Last 4'
