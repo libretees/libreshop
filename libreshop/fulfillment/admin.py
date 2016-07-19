@@ -45,11 +45,16 @@ class FulfillmentSettingValueInline(admin.TabularInline):
 
 @admin.register(Supplier)
 class SupplierAdmin(admin.ModelAdmin):
-
     form = SupplierCreationForm
+
+
+@admin.register(Shipment)
+class TaxRateAdmin(admin.ModelAdmin):
+    list_display = (
+        'token', 'carrier', 'tracking_id', 'shipping_cost'
+    )
 
 
 # Register your models here.
 admin.site.register(Carrier)
-admin.site.register(Shipment)
 admin.site.register(FulfillmentSetting, UnindexedAdmin)

@@ -50,6 +50,9 @@ class Order(TimeStampedModel):
         purchases = Purchase.objects.filter(order=self)
         return all(purchase.fulfilled for purchase in purchases)
 
+    def __str__(self):
+        return self.token
+
 
 class Transaction(TimeStampedModel):
     order = models.ForeignKey('Order', null=True, blank=True)
