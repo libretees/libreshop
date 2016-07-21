@@ -9,6 +9,7 @@ from django.db import models
 from django.template import Context, Engine
 from django.utils import timezone
 from model_utils.models import TimeStampedModel
+from orders.models import Communication
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -229,8 +230,10 @@ class Shipment(TimeStampedModel):
         if email_addresses:
             body = self.get_email_body()
             for email_address in email_addresses:
+                subject = (
+                    'Your LibreShop Order %s has shipped!' % self.order.token)
                 email = EmailMessage(
-                    subject='Your LibreShop Order %s has shipped!' % self.order.token,
+                    subject=subject,
                     body=body,
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     to=[email_address],
@@ -241,7 +244,17 @@ class Shipment(TimeStampedModel):
                     cc=None,
                     reply_to=None
                 )
-                emails_sent += email.send()
+                email_sent = email.send()
+                emails_sent += email_sent
+
+                if bool(email_sent):
+                    Communication.objects.create(
+                        order=self.order,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        to_email=[email_address],
+                        subject=subject,
+                        body=body
+                    )
 
         return (
             bool(len(email_addresses)) and (emails_sent == len(email_addresses))
