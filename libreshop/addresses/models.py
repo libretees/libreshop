@@ -22,6 +22,21 @@ class Address(TimeStampedModel):
     # Field for Country.
     country = CountryField(null=False, blank=False)
 
+    def __str__(self):
+
+        postal_region = (
+            '%s %s' % (self.region, self.postal_code)
+            if (self.region and self.postal_code) else None)
+
+        address_fields = [
+            self.recipient_name, self.street_address.replace('\r\n', ', '),
+            self.locality, postal_region, str(self.country.name)]
+
+        populated_address_fields = [
+            field for field in address_fields if field is not None]
+
+        return ', '.join(populated_address_fields)
+
     def render(self):
         address = '<br />'.join([
             self.recipient_name, self.street_address.replace('\r\n', '<br />'),
