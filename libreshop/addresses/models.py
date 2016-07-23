@@ -26,14 +26,14 @@ class Address(TimeStampedModel):
 
         postal_region = (
             '%s %s' % (self.region, self.postal_code)
-            if (self.region and self.postal_code) else None)
+            if (self.region and self.postal_code) else self.postal_code)
 
         address_fields = [
             self.recipient_name, self.street_address.replace('\r\n', ', '),
             self.locality, postal_region, str(self.country.name)]
 
         populated_address_fields = [
-            field for field in address_fields if field is not None]
+            field for field in address_fields if field]
 
         return ', '.join(populated_address_fields)
 
