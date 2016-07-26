@@ -1,7 +1,11 @@
+import logging
 from django.db import models
 from django.utils.safestring import mark_safe
 from model_utils.models import TimeStampedModel
 from django_countries.fields import CountryField
+
+# Initialize logger.
+logger = logging.getLogger(__name__)
 
 # Create your models here.
 class Address(TimeStampedModel):
@@ -45,3 +49,35 @@ class Address(TimeStampedModel):
         ])
 
         return mark_safe(address)
+
+    def save(self, *args, **kwargs):
+
+        logger.debug('Retrieving Address...')
+        address = None
+        try:
+            address = Address.objects.get(
+                recipient_name = self.recipient_name.strip(),
+                street_address = self.street_address.strip(),
+                locality = self.locality.strip(),
+                region = self.region.strip(),
+                postal_code = self.postal_code.strip(),
+                country = self.country
+            )
+        except Address.DoesNotExist as e:
+            logger.debug('No address found!')
+        else:
+            logger.debug('Address found (%s)!' % str(address))
+            self.pk = address.pk
+
+        if address is None:
+            logger.debug('Creating Address...')
+
+            # Strip whitespace from the beginning & end of fields prior to save.
+            for field in ['recipient_name', 'street_address', 'locality',
+                'region', 'postal_code']:
+                setattr(self, field, getattr(self, field).strip())
+
+            address = super(Address, self).save(*args, **kwargs)
+            logger.debug('Created Address (%s).' % str(self))
+
+        return address

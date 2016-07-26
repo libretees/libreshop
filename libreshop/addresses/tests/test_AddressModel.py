@@ -1,3 +1,4 @@
+import re
 from django.test import TestCase
 from ..models import Address
 
@@ -353,3 +354,85 @@ class AddressModelTest(TestCase):
         render = address.render()
 
         self.assertEqual(render, markup)
+
+
+    def test_model_does_not_allow_duplicate_records_to_be_saved(self):
+        '''
+        Test that the Address model does not permit duplicate records to be
+        saved.
+        '''
+        address1 = Address(
+            recipient_name = 'Foo Bar',
+            street_address = 'Apt 123\r\nTest St',
+            locality = 'Test',
+            region = 'OK',
+            postal_code = '12345',
+            country = 'US'
+        )
+        address1.save()
+
+        address2 = Address(
+            recipient_name = 'Foo Bar',
+            street_address = 'Apt 123\r\nTest St',
+            locality = 'Test',
+            region = 'OK',
+            postal_code = '12345',
+            country = 'US'
+        )
+        address2.save()
+
+        self.assertEqual(address1.pk, address2.pk)
+
+
+    def test_model_does_not_allow_duplicate_records_to_be_created(self):
+        '''
+        Test that the Address model does not permit duplicate records to be
+        saved.
+        '''
+        address1 = Address.objects.create(
+            recipient_name = 'Foo Bar',
+            street_address = 'Apt 123\r\nTest St',
+            locality = 'Test',
+            region = 'OK',
+            postal_code = '12345',
+            country = 'US'
+        )
+
+        address2 = Address.objects.create(
+            recipient_name = 'Foo Bar',
+            street_address = 'Apt 123\r\nTest St',
+            locality = 'Test',
+            region = 'OK',
+            postal_code = '12345',
+            country = 'US'
+        )
+
+        self.assertEqual(address1.pk, address2.pk)
+
+
+    def test_model_strips_fields_prior_to_save(self):
+        '''
+        Test that the Address model strips whitespace from the beginning and end
+        of all fields prior to saving.
+        '''
+        # Set up test data.
+        address = Address.objects.create(
+            recipient_name = ' Foo Bar ',
+            street_address = ' Apt 123\r\nTest St ',
+            locality = ' Test ',
+            region = ' OK ',
+            postal_code = ' 12345 ',
+            country = 'US'
+        )
+        address.save()
+
+        # Load Address from database.
+        address = Address.objects.first()
+        address_fields = [
+            address.recipient_name, address.street_address, address.locality,
+            address.region, address.postal_code]
+
+        self.assertFalse(
+            any(re.search('^\s.*\s$', field, re.DOTALL)
+            for field in address_fields)
+        )
