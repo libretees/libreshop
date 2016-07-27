@@ -51,13 +51,20 @@ class SupplierAdmin(admin.ModelAdmin):
 @admin.register(Shipment)
 class ShipmentAdmin(admin.ModelAdmin):
     list_display = (
-        'token', 'carrier', 'tracking_id', 'weight', '_destination', 'shipping_cost'
-    )
+        'token', '_recipient', 'carrier', 'tracking_id', 'weight',
+        '_destination', 'shipping_cost')
 
     def _destination(self, instance):
         address = instance.order.shipping_address
         return '%s, %s, %s' % (address.locality, address.region, address.country)
     _destination.short_description = 'Destination'
+    _destination.admin_order_field = 'order__shipping_address__locality'
+
+    def _recipient(self, instance):
+        address = instance.order.shipping_address
+        return '%s' % address.recipient_name
+    _recipient.short_description = 'Recipient'
+    _recipient.admin_order_field = 'order__shipping_address__recipient_name'
 
 
 # Register your models here.
