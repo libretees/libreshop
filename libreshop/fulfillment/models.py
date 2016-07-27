@@ -155,6 +155,12 @@ class Carrier(TimeStampedModel):
     name = models.CharField(
         max_length=32, null=False, blank=False, unique=True
     )
+    unit_of_measure = models.CharField(verbose_name='Preferred Unit of Measure',
+        max_length=2, choices=(
+            ('g', 'g'),
+            ('kg', 'kg'),
+            ('oz', 'oz'),
+            ('lb', 'lb')))
 
     def __str__(self):
         return self.name
