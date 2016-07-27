@@ -51,7 +51,7 @@ class SupplierAdmin(admin.ModelAdmin):
 @admin.register(Shipment)
 class TaxRateAdmin(admin.ModelAdmin):
     list_display = (
-        'token', 'carrier', 'tracking_id', 'shipping_cost'
+        'token', 'carrier', 'tracking_id', 'weight', 'shipping_cost'
     )
 
 

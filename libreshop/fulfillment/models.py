@@ -10,6 +10,8 @@ from django.template import Context, Engine
 from django.utils import timezone
 from model_utils.models import TimeStampedModel
 from orders.models import Communication
+from django_measurement.models import MeasurementField
+from measurement.measures import Weight
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -195,6 +197,15 @@ class Shipment(TimeStampedModel):
         default=Decimal('0.00'), validators=[
             MinValueValidator(Decimal('0.00'))
         ]
+    )
+    weight = MeasurementField(
+        measurement=Weight, blank=True, null=True,
+        unit_choices=(
+            ('g', 'g'),
+            ('kg', 'kg'),
+            ('oz', 'oz'),
+            ('lb', 'lb')
+        )
     )
 
     objects = ShipmentManager()
