@@ -49,10 +49,15 @@ class SupplierAdmin(admin.ModelAdmin):
 
 
 @admin.register(Shipment)
-class TaxRateAdmin(admin.ModelAdmin):
+class ShipmentAdmin(admin.ModelAdmin):
     list_display = (
-        'token', 'carrier', 'tracking_id', 'weight', 'shipping_cost'
+        'token', 'carrier', 'tracking_id', 'weight', '_destination', 'shipping_cost'
     )
+
+    def _destination(self, instance):
+        address = instance.order.shipping_address
+        return '%s, %s, %s' % (address.locality, address.region, address.country)
+    _destination.short_description = 'Destination'
 
 
 # Register your models here.
