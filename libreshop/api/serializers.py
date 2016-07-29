@@ -195,7 +195,7 @@ class ShipmentSerializer(serializers.HyperlinkedModelSerializer):
                 weight_components = floating_point_regex.findall(weight)
                 unit_components = re.findall('[a-z]+', weight)
                 assert len(weight_components) == 1 and len(unit_components) == 1
-                unit, weight = unit_components[0], float(weight_components[0])
+                weight, unit = float(weight_components[0]), unit_components[0]
 
                 # Create Weight object.
                 weight = Weight(**{unit: weight})

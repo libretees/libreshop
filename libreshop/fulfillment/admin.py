@@ -51,7 +51,7 @@ class SupplierAdmin(admin.ModelAdmin):
 @admin.register(Shipment)
 class ShipmentAdmin(admin.ModelAdmin):
     list_display = (
-        'token', '_recipient', 'carrier', 'tracking_id', 'weight',
+        'token', '_recipient', 'carrier', 'tracking_id', '_weight',
         '_destination', 'shipping_cost')
 
     def _destination(self, instance):
@@ -65,6 +65,14 @@ class ShipmentAdmin(admin.ModelAdmin):
         return '%s' % address.recipient_name
     _recipient.short_description = 'Recipient'
     _recipient.admin_order_field = 'order__shipping_address__recipient_name'
+
+    def _weight(self, instance):
+        carrier_preferred_unit = instance.carrier.unit_of_measure
+        return '%s %s' % (
+            getattr(instance.weight, carrier_preferred_unit, 0),
+            carrier_preferred_unit)
+    _weight.short_description = 'Weight'
+    _weight.admin_order_field = 'weight'
 
 
 # Register your models here.
