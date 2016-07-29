@@ -1,3 +1,4 @@
+import re
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
@@ -7,6 +8,7 @@ from rest_framework import exceptions
 from addresses.models import Address
 from fulfillment.models import Carrier, Shipment
 from orders.models import Order, Purchase, Transaction
+from measurement.measures import Weight
 
 User = get_user_model()
 
@@ -139,17 +141,21 @@ class ShipmentSerializer(serializers.HyperlinkedModelSerializer):
 
     order = OrderSerializer(many=False, read_only=True)
     carrier = serializers.SerializerMethodField()
+    weight = serializers.SerializerMethodField()
 
     class Meta:
         model = Shipment
         fields = ('url', 'order', 'carrier', 'tracking_id', 'shipping_cost',
-            'created', 'modified')
+            'weight', 'created', 'modified')
         extra_kwargs = {
             'url': {'lookup_field': 'token'}
         }
 
     def get_carrier(self, obj):
         return obj.carrier.name
+
+    def get_weight(self, obj):
+        return str(obj.weight)
 
     def to_internal_value(self, data): # Similar to Form.clean.
         validated_data = super(ShipmentSerializer, self).to_internal_value(data)
@@ -170,9 +176,38 @@ class ShipmentSerializer(serializers.HyperlinkedModelSerializer):
             raise serializers.ValidationError({
                 'order': 'Invalid order token specified (%s)!' % order_token})
 
+        floating_point_pattern = r'''
+            [-+]? # Optional sign.
+            (?:
+                (?: \d* \. \d+ ) # .1 .12 .123 etc. 9.1 etc. 98.1 etc.
+                |
+                (?: \d+ \.? ) # 1. 12. 123. etc. 1 12 123 etc.
+            )
+            # Followed by optional exponent part, if desired.
+            (?: [Ee] [+-]? \d+ ) ?
+        '''
+        floating_point_regex = re.compile(floating_point_pattern, re.VERBOSE)
+
+        weight = data.get('weight')
+        if weight is not None:
+            try:
+                # Extract weight and unit of measurement from input.
+                weight_components = floating_point_regex.findall(weight)
+                unit_components = re.findall('[a-z]+', weight)
+                assert len(weight_components) == 1 and len(unit_components) == 1
+                unit, weight = unit_components[0], float(weight_components[0])
+
+                # Create Weight object.
+                weight = Weight(**{unit: weight})
+            except (AttributeError, AssertionError) as e:
+                weight = None
+                raise serializers.ValidationError({
+                    'weight': 'Invalid weight specified: (%s)' % weight_input})
+
         validated_data.update({
             'carrier': carrier,
-            'order': order
+            'order': order,
+            'weight': weight
         })
         return validated_data
 
