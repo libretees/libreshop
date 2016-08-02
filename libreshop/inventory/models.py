@@ -114,3 +114,22 @@ class Supply(TimeStampedModel):
         max_digits=8, decimal_places=2, null=True, blank=True,
         validators=[MinValueValidator(Decimal('0.00'))])
     receipt_date = models.DateTimeField(default=timezone.now)
+
+
+class PurchaseOrder(TimeStampedModel):
+
+    number = models.CharField(verbose_name='Purchase Order (PO) Number',
+        max_length=64, unique=True, null=False, blank=False)
+    subtotal = models.DecimalField(
+        max_digits=8, decimal_places=2, default=Decimal(0.00),
+        validators=[MinValueValidator(Decimal('0.00'))])
+    sales_tax = models.DecimalField(
+        max_digits=8, decimal_places=2, default=Decimal(0.00),
+        validators=[MinValueValidator(Decimal('0.00'))])
+    shipping_cost = models.DecimalField(max_digits=8, decimal_places=2,
+        null=False, blank=False, default=Decimal('0.00'))
+    total = models.DecimalField(max_digits=8, decimal_places=2, null=False,
+        blank=False, default=Decimal('0.00'))
+    submitted = models.DateTimeField(default=timezone.now)
+    supplies = models.ManyToManyField('Supply', blank=False)
+    warehouse = models.ForeignKey('Warehouse', null=False, blank=False)
