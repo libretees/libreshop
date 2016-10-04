@@ -109,14 +109,28 @@ class Inventory(TimeStampedModel):
 
 
 class Supply(TimeStampedModel):
-    inventory = models.ForeignKey('Inventory', null=False, blank=False)
+
+    class Meta:
+        verbose_name_plural = 'Supplies'
+
+    inventory = models.ForeignKey('Inventory', null=True, blank=True)
+    purchase_order = models.ForeignKey('PurchaseOrder', null=False, blank=False)
+    name = models.CharField(max_length=64, unique=True, null=True, blank=True)
     quantity = models.DecimalField(
         max_digits=8, decimal_places=2, null=True, blank=True,
         validators=[MinValueValidator(Decimal('0.00'))])
-    receipt_date = models.DateTimeField(default=timezone.now)
+    cost = models.DecimalField(max_digits=8, decimal_places=2,
+        null=False, blank=False, default=Decimal('0.00'))
+    landed_cost = models.DecimalField(max_digits=8, decimal_places=2,
+        null=True, blank=True, default=Decimal('0.00'))
+    receipt_date = models.DateTimeField(null=True, blank=True)
 
 
 class PurchaseOrder(TimeStampedModel):
+
+    class Meta:
+        verbose_name = 'Purchase Order'
+        verbose_name_plural = 'Purchase Orders'
 
     number = models.CharField(verbose_name='Purchase Order (PO) Number',
         max_length=64, unique=True, null=False, blank=False)
@@ -131,5 +145,4 @@ class PurchaseOrder(TimeStampedModel):
     total = models.DecimalField(max_digits=8, decimal_places=2, null=False,
         blank=False, default=Decimal('0.00'))
     submitted = models.DateTimeField(default=timezone.now)
-    supplies = models.ManyToManyField('Supply', blank=False)
     warehouse = models.ForeignKey('Warehouse', null=False, blank=False)
