@@ -120,6 +120,9 @@ class TaxRate(TimeStampedModel):
             self.district_tax_rate + self.state_tax_rate
         )
 
+    class Meta:
+        unique_together = ('state', 'district', 'county', 'city', 'postal_code')
+
 
 class Communication(TimeStampedModel):
     order = models.ForeignKey('Order', null=True, blank=True)
