@@ -1,0 +1,17 @@
+[
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Pago Pago",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "N/A",
+            "state": "American Samoa",
+            "postal_code": 96799,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    }
+]

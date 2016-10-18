@@ -1,0 +1,4097 @@
+[
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99501,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99502,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99503,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99504,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Jber",
+            "state": "Alaska",
+            "postal_code": 99505,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Jber",
+            "state": "Alaska",
+            "postal_code": 99506,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99507,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99508,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99509,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99510,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99511,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99513,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99514,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99515,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99516,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99517,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99518,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99519,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99520,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99521,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99522,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99523,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99524,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99529,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99530,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Indian",
+            "state": "Alaska",
+            "postal_code": 99540,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Kongiganak",
+            "state": "Alaska",
+            "postal_code": 99545,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Aleutians West",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Adak",
+            "state": "Alaska",
+            "postal_code": 99546,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Aleutians West",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Atka",
+            "state": "Alaska",
+            "postal_code": 99547,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Lake And Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Chignik Lake",
+            "state": "Alaska",
+            "postal_code": 99548,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Lake And Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Port Heiden",
+            "state": "Alaska",
+            "postal_code": 99549,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kodiak Island",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Port Lions",
+            "state": "Alaska",
+            "postal_code": 99550,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Akiachak",
+            "state": "Alaska",
+            "postal_code": 99551,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Akiak",
+            "state": "Alaska",
+            "postal_code": 99552,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Aleutians East",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Akutan",
+            "state": "Alaska",
+            "postal_code": 99553,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Wade Hampton",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Alakanuk",
+            "state": "Alaska",
+            "postal_code": 99554,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Dillingham",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Aleknagik",
+            "state": "Alaska",
+            "postal_code": 99555,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kenai Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchor Point",
+            "state": "Alaska",
+            "postal_code": 99556,
+            "state_tax_rate": 0,
+            "county_tax_rate": 3,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Aniak",
+            "state": "Alaska",
+            "postal_code": 99557,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anvik",
+            "state": "Alaska",
+            "postal_code": 99558,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 6,
+            "county": "Bethel",
+            "state": "Alaska",
+            "postal_code": 99559,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Chefornak",
+            "state": "Alaska",
+            "postal_code": 99561,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Wade Hampton",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Chevak",
+            "state": "Alaska",
+            "postal_code": 99563,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Lake And Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Chignik",
+            "state": "Alaska",
+            "postal_code": 99564,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Lake And Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Chignik Lagoon",
+            "state": "Alaska",
+            "postal_code": 99565,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Valdez Cordova",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Chitina",
+            "state": "Alaska",
+            "postal_code": 99566,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Chugiak",
+            "state": "Alaska",
+            "postal_code": 99567,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kenai Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Clam Gulch",
+            "state": "Alaska",
+            "postal_code": 99568,
+            "state_tax_rate": 0,
+            "county_tax_rate": 3,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Dillingham",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Clarks Point",
+            "state": "Alaska",
+            "postal_code": 99569,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Aleutians East",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Cold Bay",
+            "state": "Alaska",
+            "postal_code": 99571,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kenai Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Cooper Landing",
+            "state": "Alaska",
+            "postal_code": 99572,
+            "state_tax_rate": 0,
+            "county_tax_rate": 3,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Valdez Cordova",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Copper Center",
+            "state": "Alaska",
+            "postal_code": 99573,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Valdez Cordova",
+            "district": "N/A",
+            "local_tax_rate": 6,
+            "county": "Cordova",
+            "state": "Alaska",
+            "postal_code": 99574,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Crooked Creek",
+            "state": "Alaska",
+            "postal_code": 99575,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Dillingham",
+            "district": "N/A",
+            "local_tax_rate": 6,
+            "county": "Dillingham",
+            "state": "Alaska",
+            "postal_code": 99576,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Eagle River",
+            "state": "Alaska",
+            "postal_code": 99577,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Eek",
+            "state": "Alaska",
+            "postal_code": 99578,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Lake And Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Egegik",
+            "state": "Alaska",
+            "postal_code": 99579,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Dillingham",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Ekwok",
+            "state": "Alaska",
+            "postal_code": 99580,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Wade Hampton",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Emmonak",
+            "state": "Alaska",
+            "postal_code": 99581,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Aleutians East",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "False Pass",
+            "state": "Alaska",
+            "postal_code": 99583,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Wade Hampton",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Marshall",
+            "state": "Alaska",
+            "postal_code": 99585,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Valdez Cordova",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Gakona",
+            "state": "Alaska",
+            "postal_code": 99586,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Girdwood",
+            "state": "Alaska",
+            "postal_code": 99587,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Valdez Cordova",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Glennallen",
+            "state": "Alaska",
+            "postal_code": 99588,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Goodnews Bay",
+            "state": "Alaska",
+            "postal_code": 99589,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Grayling",
+            "state": "Alaska",
+            "postal_code": 99590,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Aleutians West",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Saint George Island",
+            "state": "Alaska",
+            "postal_code": 99591,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99599,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Holy Cross",
+            "state": "Alaska",
+            "postal_code": 99602,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kenai Peninsula",
+            "district": "N/A",
+            "local_tax_rate": "4.5",
+            "county": "Homer",
+            "state": "Alaska",
+            "postal_code": 99603,
+            "state_tax_rate": 0,
+            "county_tax_rate": 3,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Wade Hampton",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Hooper Bay",
+            "state": "Alaska",
+            "postal_code": 99604,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kenai Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Hope",
+            "state": "Alaska",
+            "postal_code": 99605,
+            "state_tax_rate": 0,
+            "county_tax_rate": 3,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Lake And Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Iliamna",
+            "state": "Alaska",
+            "postal_code": 99606,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Kalskag",
+            "state": "Alaska",
+            "postal_code": 99607,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kodiak Island",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Karluk",
+            "state": "Alaska",
+            "postal_code": 99608,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Kasigluk",
+            "state": "Alaska",
+            "postal_code": 99609,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kenai Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Kasilof",
+            "state": "Alaska",
+            "postal_code": 99610,
+            "state_tax_rate": 0,
+            "county_tax_rate": 3,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kenai Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Kenai",
+            "state": "Alaska",
+            "postal_code": 99611,
+            "state_tax_rate": 0,
+            "county_tax_rate": 3,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Aleutians East",
+            "district": "N/A",
+            "local_tax_rate": 6,
+            "county": "King Cove",
+            "state": "Alaska",
+            "postal_code": 99612,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bristol Bay",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "King Salmon",
+            "state": "Alaska",
+            "postal_code": 99613,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Kipnuk",
+            "state": "Alaska",
+            "postal_code": 99614,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kodiak Island",
+            "district": "N/A",
+            "local_tax_rate": 7,
+            "county": "Kodiak",
+            "state": "Alaska",
+            "postal_code": 99615,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kodiak Island",
+            "district": "N/A",
+            "local_tax_rate": 7,
+            "county": "Kodiak",
+            "state": "Alaska",
+            "postal_code": 99619,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Wade Hampton",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Kotlik",
+            "state": "Alaska",
+            "postal_code": 99620,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Kwethluk",
+            "state": "Alaska",
+            "postal_code": 99621,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Kwigillingok",
+            "state": "Alaska",
+            "postal_code": 99622,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Matanuska Susitna",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Wasilla",
+            "state": "Alaska",
+            "postal_code": 99623,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kodiak Island",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Larsen Bay",
+            "state": "Alaska",
+            "postal_code": 99624,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Lake And Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Levelock",
+            "state": "Alaska",
+            "postal_code": 99625,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Lower Kalskag",
+            "state": "Alaska",
+            "postal_code": 99626,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Mc Grath",
+            "state": "Alaska",
+            "postal_code": 99627,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Dillingham",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Manokotak",
+            "state": "Alaska",
+            "postal_code": 99628,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Matanuska Susitna",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Wasilla",
+            "state": "Alaska",
+            "postal_code": 99629,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Mekoryuk",
+            "state": "Alaska",
+            "postal_code": 99630,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kenai Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Moose Pass",
+            "state": "Alaska",
+            "postal_code": 99631,
+            "state_tax_rate": 0,
+            "county_tax_rate": 3,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Wade Hampton",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Mountain Village",
+            "state": "Alaska",
+            "postal_code": 99632,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bristol Bay",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Naknek",
+            "state": "Alaska",
+            "postal_code": 99633,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Napakiak",
+            "state": "Alaska",
+            "postal_code": 99634,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kenai Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Nikiski",
+            "state": "Alaska",
+            "postal_code": 99635,
+            "state_tax_rate": 0,
+            "county_tax_rate": 3,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Dillingham",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "New Stuyahok",
+            "state": "Alaska",
+            "postal_code": 99636,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Toksook Bay",
+            "state": "Alaska",
+            "postal_code": 99637,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Aleutians West",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Nikolski",
+            "state": "Alaska",
+            "postal_code": 99638,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kenai Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Ninilchik",
+            "state": "Alaska",
+            "postal_code": 99639,
+            "state_tax_rate": 0,
+            "county_tax_rate": 3,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Lake And Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Nondalton",
+            "state": "Alaska",
+            "postal_code": 99640,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Nunapitchuk",
+            "state": "Alaska",
+            "postal_code": 99641,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kodiak Island",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Old Harbor",
+            "state": "Alaska",
+            "postal_code": 99643,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kodiak Island",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Ouzinkie",
+            "state": "Alaska",
+            "postal_code": 99644,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Matanuska Susitna",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Palmer",
+            "state": "Alaska",
+            "postal_code": 99645,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Lake And Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Pedro Bay",
+            "state": "Alaska",
+            "postal_code": 99647,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Lake And Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Perryville",
+            "state": "Alaska",
+            "postal_code": 99648,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Lake And Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Pilot Point",
+            "state": "Alaska",
+            "postal_code": 99649,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Wade Hampton",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Pilot Station",
+            "state": "Alaska",
+            "postal_code": 99650,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Platinum",
+            "state": "Alaska",
+            "postal_code": 99651,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Matanuska Susitna",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Big Lake",
+            "state": "Alaska",
+            "postal_code": 99652,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Lake And Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Port Alsworth",
+            "state": "Alaska",
+            "postal_code": 99653,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Matanuska Susitna",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Wasilla",
+            "state": "Alaska",
+            "postal_code": 99654,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Quinhagak",
+            "state": "Alaska",
+            "postal_code": 99655,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Red Devil",
+            "state": "Alaska",
+            "postal_code": 99656,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Wade Hampton",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Russian Mission",
+            "state": "Alaska",
+            "postal_code": 99657,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Wade Hampton",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Saint Marys",
+            "state": "Alaska",
+            "postal_code": 99658,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Nome",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Saint Michael",
+            "state": "Alaska",
+            "postal_code": 99659,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Aleutians West",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Saint Paul Island",
+            "state": "Alaska",
+            "postal_code": 99660,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Aleutians East",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Sand Point",
+            "state": "Alaska",
+            "postal_code": 99661,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Wade Hampton",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Scammon Bay",
+            "state": "Alaska",
+            "postal_code": 99662,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kenai Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Seldovia",
+            "state": "Alaska",
+            "postal_code": 99663,
+            "state_tax_rate": 0,
+            "county_tax_rate": 3,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kenai Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Seward",
+            "state": "Alaska",
+            "postal_code": 99664,
+            "state_tax_rate": 0,
+            "county_tax_rate": 3,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Shageluk",
+            "state": "Alaska",
+            "postal_code": 99665,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Wade Hampton",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Nunam Iqua",
+            "state": "Alaska",
+            "postal_code": 99666,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Matanuska Susitna",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Skwentna",
+            "state": "Alaska",
+            "postal_code": 99667,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Sleetmute",
+            "state": "Alaska",
+            "postal_code": 99668,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kenai Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Soldotna",
+            "state": "Alaska",
+            "postal_code": 99669,
+            "state_tax_rate": 0,
+            "county_tax_rate": 3,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bristol Bay",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "South Naknek",
+            "state": "Alaska",
+            "postal_code": 99670,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Nome",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Stebbins",
+            "state": "Alaska",
+            "postal_code": 99671,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kenai Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Sterling",
+            "state": "Alaska",
+            "postal_code": 99672,
+            "state_tax_rate": 0,
+            "county_tax_rate": 3,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Matanuska Susitna",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Sutton",
+            "state": "Alaska",
+            "postal_code": 99674,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Takotna",
+            "state": "Alaska",
+            "postal_code": 99675,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Matanuska Susitna",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Talkeetna",
+            "state": "Alaska",
+            "postal_code": 99676,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Valdez Cordova",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Tatitlek",
+            "state": "Alaska",
+            "postal_code": 99677,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Dillingham",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Togiak",
+            "state": "Alaska",
+            "postal_code": 99678,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Tuluksak",
+            "state": "Alaska",
+            "postal_code": 99679,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Tuntutuliak",
+            "state": "Alaska",
+            "postal_code": 99680,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Tununak",
+            "state": "Alaska",
+            "postal_code": 99681,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kenai Peninsula",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Tyonek",
+            "state": "Alaska",
+            "postal_code": 99682,
+            "state_tax_rate": 0,
+            "county_tax_rate": 3,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Matanuska Susitna",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Trapper Creek",
+            "state": "Alaska",
+            "postal_code": 99683,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Nome",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Unalakleet",
+            "state": "Alaska",
+            "postal_code": 99684,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Aleutians West",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Unalaska",
+            "state": "Alaska",
+            "postal_code": 99685,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Valdez Cordova",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Valdez",
+            "state": "Alaska",
+            "postal_code": 99686,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Matanuska Susitna",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Wasilla",
+            "state": "Alaska",
+            "postal_code": 99687,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Matanuska Susitna",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Willow",
+            "state": "Alaska",
+            "postal_code": 99688,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yakutat",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Yakutat",
+            "state": "Alaska",
+            "postal_code": 99689,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Bethel",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Nightmute",
+            "state": "Alaska",
+            "postal_code": 99690,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Nikolai",
+            "state": "Alaska",
+            "postal_code": 99691,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Aleutians West",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Dutch Harbor",
+            "state": "Alaska",
+            "postal_code": 99692,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Valdez Cordova",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Whittier",
+            "state": "Alaska",
+            "postal_code": 99693,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Matanuska Susitna",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Houston",
+            "state": "Alaska",
+            "postal_code": 99694,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Anchorage",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anchorage",
+            "state": "Alaska",
+            "postal_code": 99695,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Kodiak Island",
+            "district": "N/A",
+            "local_tax_rate": 7,
+            "county": "Kodiak",
+            "state": "Alaska",
+            "postal_code": 99697,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Fairbanks North Star",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Fairbanks",
+            "state": "Alaska",
+            "postal_code": 99701,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Fairbanks North Star",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Eielson Afb",
+            "state": "Alaska",
+            "postal_code": 99702,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Fairbanks North Star",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Fort Wainwright",
+            "state": "Alaska",
+            "postal_code": 99703,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Denali",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Clear",
+            "state": "Alaska",
+            "postal_code": 99704,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Fairbanks North Star",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "North Pole",
+            "state": "Alaska",
+            "postal_code": 99705,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Fairbanks North Star",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Fairbanks",
+            "state": "Alaska",
+            "postal_code": 99706,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Fairbanks North Star",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Fairbanks",
+            "state": "Alaska",
+            "postal_code": 99707,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Fairbanks North Star",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Fairbanks",
+            "state": "Alaska",
+            "postal_code": 99708,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Fairbanks North Star",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Fairbanks",
+            "state": "Alaska",
+            "postal_code": 99709,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Fairbanks North Star",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Fairbanks",
+            "state": "Alaska",
+            "postal_code": 99710,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Fairbanks North Star",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Fairbanks",
+            "state": "Alaska",
+            "postal_code": 99711,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Fairbanks North Star",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Fairbanks",
+            "state": "Alaska",
+            "postal_code": 99712,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Fairbanks North Star",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Salcha",
+            "state": "Alaska",
+            "postal_code": 99714,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Fairbanks North Star",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Two Rivers",
+            "state": "Alaska",
+            "postal_code": 99716,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Allakaket",
+            "state": "Alaska",
+            "postal_code": 99720,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "North Slope",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anaktuvuk Pass",
+            "state": "Alaska",
+            "postal_code": 99721,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Arctic Village",
+            "state": "Alaska",
+            "postal_code": 99722,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "North Slope",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Barrow",
+            "state": "Alaska",
+            "postal_code": 99723,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Beaver",
+            "state": "Alaska",
+            "postal_code": 99724,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Fairbanks North Star",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Ester",
+            "state": "Alaska",
+            "postal_code": 99725,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Bettles Field",
+            "state": "Alaska",
+            "postal_code": 99726,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Northwest Arctic",
+            "district": "N/A",
+            "local_tax_rate": 6,
+            "county": "Buckland",
+            "state": "Alaska",
+            "postal_code": 99727,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Denali",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Cantwell",
+            "state": "Alaska",
+            "postal_code": 99729,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Central",
+            "state": "Alaska",
+            "postal_code": 99730,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Southeast Fairbanks",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Fort Greely",
+            "state": "Alaska",
+            "postal_code": 99731,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Southeast Fairbanks",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Chicken",
+            "state": "Alaska",
+            "postal_code": 99732,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Circle",
+            "state": "Alaska",
+            "postal_code": 99733,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "North Slope",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Prudhoe Bay",
+            "state": "Alaska",
+            "postal_code": 99734,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Northwest Arctic",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Deering",
+            "state": "Alaska",
+            "postal_code": 99736,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Southeast Fairbanks",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Delta Junction",
+            "state": "Alaska",
+            "postal_code": 99737,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Southeast Fairbanks",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Eagle",
+            "state": "Alaska",
+            "postal_code": 99738,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Nome",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Elim",
+            "state": "Alaska",
+            "postal_code": 99739,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Fort Yukon",
+            "state": "Alaska",
+            "postal_code": 99740,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Galena",
+            "state": "Alaska",
+            "postal_code": 99741,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Nome",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Gambell",
+            "state": "Alaska",
+            "postal_code": 99742,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Denali",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Healy",
+            "state": "Alaska",
+            "postal_code": 99743,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Denali",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Anderson",
+            "state": "Alaska",
+            "postal_code": 99744,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Hughes",
+            "state": "Alaska",
+            "postal_code": 99745,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Huslia",
+            "state": "Alaska",
+            "postal_code": 99746,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "North Slope",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Kaktovik",
+            "state": "Alaska",
+            "postal_code": 99747,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Kaltag",
+            "state": "Alaska",
+            "postal_code": 99748,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Northwest Arctic",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Kiana",
+            "state": "Alaska",
+            "postal_code": 99749,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Northwest Arctic",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Kivalina",
+            "state": "Alaska",
+            "postal_code": 99750,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Northwest Arctic",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Kobuk",
+            "state": "Alaska",
+            "postal_code": 99751,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Northwest Arctic",
+            "district": "N/A",
+            "local_tax_rate": 6,
+            "county": "Kotzebue",
+            "state": "Alaska",
+            "postal_code": 99752,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Nome",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Koyuk",
+            "state": "Alaska",
+            "postal_code": 99753,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Koyukuk",
+            "state": "Alaska",
+            "postal_code": 99754,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Denali",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Denali National Park",
+            "state": "Alaska",
+            "postal_code": 99755,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Manley Hot Springs",
+            "state": "Alaska",
+            "postal_code": 99756,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Lake Minchumina",
+            "state": "Alaska",
+            "postal_code": 99757,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Minto",
+            "state": "Alaska",
+            "postal_code": 99758,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "North Slope",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Point Lay",
+            "state": "Alaska",
+            "postal_code": 99759,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Nenana",
+            "state": "Alaska",
+            "postal_code": 99760,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Northwest Arctic",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Noatak",
+            "state": "Alaska",
+            "postal_code": 99761,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Nome",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Nome",
+            "state": "Alaska",
+            "postal_code": 99762,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Northwest Arctic",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Noorvik",
+            "state": "Alaska",
+            "postal_code": 99763,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Southeast Fairbanks",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Northway",
+            "state": "Alaska",
+            "postal_code": 99764,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Nulato",
+            "state": "Alaska",
+            "postal_code": 99765,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "North Slope",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Point Hope",
+            "state": "Alaska",
+            "postal_code": 99766,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Rampart",
+            "state": "Alaska",
+            "postal_code": 99767,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Ruby",
+            "state": "Alaska",
+            "postal_code": 99768,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Nome",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Savoonga",
+            "state": "Alaska",
+            "postal_code": 99769,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Northwest Arctic",
+            "district": "N/A",
+            "local_tax_rate": "6.5",
+            "county": "Selawik",
+            "state": "Alaska",
+            "postal_code": 99770,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Nome",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Shaktoolik",
+            "state": "Alaska",
+            "postal_code": 99771,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Nome",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Shishmaref",
+            "state": "Alaska",
+            "postal_code": 99772,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Northwest Arctic",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Shungnak",
+            "state": "Alaska",
+            "postal_code": 99773,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Stevens Village",
+            "state": "Alaska",
+            "postal_code": 99774,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Fairbanks North Star",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Fairbanks",
+            "state": "Alaska",
+            "postal_code": 99775,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Southeast Fairbanks",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Tanacross",
+            "state": "Alaska",
+            "postal_code": 99776,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Tanana",
+            "state": "Alaska",
+            "postal_code": 99777,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Nome",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Teller",
+            "state": "Alaska",
+            "postal_code": 99778,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Southeast Fairbanks",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Tok",
+            "state": "Alaska",
+            "postal_code": 99780,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Venetie",
+            "state": "Alaska",
+            "postal_code": 99781,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "North Slope",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Wainwright",
+            "state": "Alaska",
+            "postal_code": 99782,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Nome",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Wales",
+            "state": "Alaska",
+            "postal_code": 99783,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Nome",
+            "district": "N/A",
+            "local_tax_rate": 1,
+            "county": "White Mountain",
+            "state": "Alaska",
+            "postal_code": 99784,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Nome",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Brevig Mission",
+            "state": "Alaska",
+            "postal_code": 99785,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Northwest Arctic",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Ambler",
+            "state": "Alaska",
+            "postal_code": 99786,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Yukon Koyukuk",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Chalkyitsik",
+            "state": "Alaska",
+            "postal_code": 99788,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "North Slope",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Nuiqsut",
+            "state": "Alaska",
+            "postal_code": 99789,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Fairbanks North Star",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Fairbanks",
+            "state": "Alaska",
+            "postal_code": 99790,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "North Slope",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Atqasuk",
+            "state": "Alaska",
+            "postal_code": 99791,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Juneau",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Juneau",
+            "state": "Alaska",
+            "postal_code": 99801,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Juneau",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Juneau",
+            "state": "Alaska",
+            "postal_code": 99802,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Juneau",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Juneau",
+            "state": "Alaska",
+            "postal_code": 99803,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Juneau",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Juneau",
+            "state": "Alaska",
+            "postal_code": 99811,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Juneau",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Juneau",
+            "state": "Alaska",
+            "postal_code": 99812,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Hoonah Angoon",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Angoon",
+            "state": "Alaska",
+            "postal_code": 99820,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Juneau",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Auke Bay",
+            "state": "Alaska",
+            "postal_code": 99821,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Juneau",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Douglas",
+            "state": "Alaska",
+            "postal_code": 99824,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Hoonah Angoon",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Elfin Cove",
+            "state": "Alaska",
+            "postal_code": 99825,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Hoonah Angoon",
+            "district": "N/A",
+            "local_tax_rate": 3,
+            "county": "Gustavus",
+            "state": "Alaska",
+            "postal_code": 99826,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Haines",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Haines",
+            "state": "Alaska",
+            "postal_code": 99827,
+            "state_tax_rate": 0,
+            "county_tax_rate": "5.5",
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Hoonah Angoon",
+            "district": "N/A",
+            "local_tax_rate": "6.5",
+            "county": "Hoonah",
+            "state": "Alaska",
+            "postal_code": 99829,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Hoonah Angoon",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Kake",
+            "state": "Alaska",
+            "postal_code": 99830,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Hoonah Angoon",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Pelican",
+            "state": "Alaska",
+            "postal_code": 99832,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Wrangell Petersburg",
+            "district": "N/A",
+            "local_tax_rate": 6,
+            "county": "Petersburg",
+            "state": "Alaska",
+            "postal_code": 99833,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Sitka",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Sitka",
+            "state": "Alaska",
+            "postal_code": 99835,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Prince Of Wales Hyder",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Port Alexander",
+            "state": "Alaska",
+            "postal_code": 99836,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Hoonah Angoon",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Skagway",
+            "state": "Alaska",
+            "postal_code": 99840,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Hoonah Angoon",
+            "district": "N/A",
+            "local_tax_rate": 2,
+            "county": "Tenakee Springs",
+            "state": "Alaska",
+            "postal_code": 99841,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Juneau",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Juneau",
+            "state": "Alaska",
+            "postal_code": 99850,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Ketchikan Gateway",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Ketchikan",
+            "state": "Alaska",
+            "postal_code": 99901,
+            "state_tax_rate": 0,
+            "county_tax_rate": "2.5",
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Ketchikan Gateway",
+            "district": "N/A",
+            "local_tax_rate": 7,
+            "county": "Meyers Chuck",
+            "state": "Alaska",
+            "postal_code": 99903,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Prince Of Wales Hyder",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Coffman Cove",
+            "state": "Alaska",
+            "postal_code": 99918,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Prince Of Wales Hyder",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Thorne Bay",
+            "state": "Alaska",
+            "postal_code": 99919,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Prince Of Wales Hyder",
+            "district": "N/A",
+            "local_tax_rate": 5,
+            "county": "Craig",
+            "state": "Alaska",
+            "postal_code": 99921,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Prince Of Wales Hyder",
+            "district": "N/A",
+            "local_tax_rate": 6,
+            "county": "Hydaburg",
+            "state": "Alaska",
+            "postal_code": 99922,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Prince Of Wales Hyder",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Hyder",
+            "state": "Alaska",
+            "postal_code": 99923,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Prince Of Wales Hyder",
+            "district": "N/A",
+            "local_tax_rate": "5.5",
+            "county": "Klawock",
+            "state": "Alaska",
+            "postal_code": 99925,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Prince Of Wales Hyder",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Metlakatla",
+            "state": "Alaska",
+            "postal_code": 99926,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Prince Of Wales Hyder",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Point Baker",
+            "state": "Alaska",
+            "postal_code": 99927,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Ketchikan Gateway",
+            "district": "N/A",
+            "local_tax_rate": 0,
+            "county": "Ward Cove",
+            "state": "Alaska",
+            "postal_code": 99928,
+            "state_tax_rate": 0,
+            "county_tax_rate": "2.5",
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Wrangell Petersburg",
+            "district": "N/A",
+            "local_tax_rate": 7,
+            "county": "Wrangell",
+            "state": "Alaska",
+            "postal_code": 99929,
+            "state_tax_rate": 0,
+            "county_tax_rate": 0,
+            "district_tax_rate": 0
+        }
+    },
+    {
+        "pk": null,
+        "model": "orders.TaxRate",
+        "fields": {
+            "city": "Ketchikan Gateway",
+            "district": "N/A",
+            "local_tax_rate": 4,
+            "county": "Ketchikan",
+            "state": "Alaska",
+            "postal_code": 99950,
+            "state_tax_rate": 0,
+            "county_tax_rate": "2.5",
+            "district_tax_rate": 0
+        }
+    }
+]
