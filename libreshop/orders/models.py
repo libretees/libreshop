@@ -120,8 +120,13 @@ class TaxRate(TimeStampedModel):
             self.district_tax_rate + self.state_tax_rate
         )
 
+    def __str__(self):
+        return '%s, %s %s' % (self.city, self.state, self.postal_code)
+
     class Meta:
+        verbose_name = 'Tax Rate'
         unique_together = ('state', 'district', 'county', 'city', 'postal_code')
+
 
 
 class Communication(TimeStampedModel):
