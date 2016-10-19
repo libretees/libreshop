@@ -30,7 +30,9 @@ class SupplyAdmin(admin.TabularInline):
 @admin.register(models.PurchaseOrder)
 class PurchaseOrder(admin.ModelAdmin):
     inlines = [SupplyAdmin]
-
+    list_display = (
+        'number', 'submitted', 'subtotal', 'sales_tax', 'shipping_cost', 'total'
+    )
 
 admin.site.register(models.Inventory, InventoryAdmin)
 admin.site.register(models.Location)

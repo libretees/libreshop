@@ -9,6 +9,8 @@ from django_measurement.models import MeasurementField
 from measurement.measures import Weight
 from model_utils.models import TimeStampedModel
 
+from .widgets import ConversionFactorField, UNITS_OF_MEASURE
+
 # Initialize logger.
 logger = logging.getLogger(__name__)
 
@@ -91,6 +93,26 @@ class Inventory(TimeStampedModel):
             ('oz', 'oz'),
             ('lb', 'lb')
         )
+    )
+    packed_weight = MeasurementField(
+        verbose_name='Packed Weight',
+        measurement=Weight, blank=False, null=False,
+        unit_choices=(
+            ('g', 'g'),
+            ('kg', 'kg'),
+            ('oz', 'oz'),
+            ('lb', 'lb')
+        )
+    )
+    standard_unit_of_measure = models.CharField(
+        verbose_name='Standard Unit of Measure',
+        max_length=2,
+        choices=UNITS_OF_MEASURE,
+        default='ea',
+    )
+    purchasing_conversion_factor = models.CharField(
+        verbose_name='Purchasing Conversion Factor',
+        max_length=32
     )
 
     def delete(self, *args, **kwargs):
