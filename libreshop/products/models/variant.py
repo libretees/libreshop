@@ -166,7 +166,7 @@ class Variant(TimeStampedModel):
     def weight(self):
         return sum([
             component.inventory.weight.value * float(component.quantity)
-            for component in self.component_set.all()
+            for component in self.components.all()
         ])
 
 

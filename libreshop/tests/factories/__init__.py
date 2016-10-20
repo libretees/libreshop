@@ -99,7 +99,7 @@ class ProductFactory(factory.DjangoModelFactory):
         if extracted:
             inventory = InventoryFactory()
             variant = obj.variant_set.first()
-            component = variant.component_set.first()
+            component = variant.components.first()
             component.inventory = inventory
             component.save()
 
@@ -144,7 +144,7 @@ class ProductFactory(factory.DjangoModelFactory):
         for (inventory, variant) in zip(inventory, variants):
 
             # Link Inventory item to Variant.
-            component = variant.component_set.first()
+            component = variant.components.first()
             component.inventory = inventory
             component.save()
 

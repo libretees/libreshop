@@ -24,7 +24,12 @@ class Component(TimeStampedModel):
     class Meta:
         unique_together = ('variant', 'inventory',)
 
-    variant = models.ForeignKey('products.Variant', null=False, blank=False)
+    variant = models.ForeignKey(
+        'products.Variant',
+        null=False,
+        blank=False,
+        related_name='components'
+    )
     inventory = models.ForeignKey('inventory.Inventory', blank=False, null=True)
     quantity = models.DecimalField(max_digits=8, decimal_places=2, null=False,
         blank=False, default=Decimal('0.00'))
