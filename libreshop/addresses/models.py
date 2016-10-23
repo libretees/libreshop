@@ -52,17 +52,21 @@ class Address(TimeStampedModel):
 
     def save(self, *args, **kwargs):
 
+        # Strip whitespace from the beginning & end of fields prior to lookup
+        # or save.
+        field_names = ('recipient_name', 'street_address', 'locality', 'region',
+            'postal_code')
+        for field_name in field_names:
+            value = getattr(self, field_name)
+            stripped_value = value.strip() if value else None
+            setattr(self, field_name, stripped_value)
+
         logger.debug('Retrieving Address...')
         address = None
         try:
-            address = Address.objects.get(
-                recipient_name = self.recipient_name.strip(),
-                street_address = self.street_address.strip(),
-                locality = self.locality.strip(),
-                region = self.region.strip(),
-                postal_code = self.postal_code.strip(),
-                country = self.country
-            )
+            address = Address.objects.get(**{
+                field_name:getattr(self, field_name)
+                for field_name in field_names})
         except Address.DoesNotExist as e:
             logger.debug('No address found!')
         else:
@@ -71,12 +75,6 @@ class Address(TimeStampedModel):
 
         if address is None:
             logger.debug('Creating Address...')
-
-            # Strip whitespace from the beginning & end of fields prior to save.
-            for field in ['recipient_name', 'street_address', 'locality',
-                'region', 'postal_code']:
-                setattr(self, field, getattr(self, field).strip())
-
             address = super(Address, self).save(*args, **kwargs)
             logger.debug('Created Address (%s).' % str(self))
 

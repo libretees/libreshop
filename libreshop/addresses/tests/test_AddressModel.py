@@ -436,3 +436,14 @@ class AddressModelTest(TestCase):
             any(re.search('^\s.*\s$', field, re.DOTALL)
             for field in address_fields)
         )
+
+
+    def test_model_manager_can_create_object(self):
+        '''
+        Test that the default model manager can create an Address.
+        '''
+        address = Address.objects.create(
+            street_address = '123 Test St',
+            locality = 'Test',
+            country = 'US')
+        self.assertIsNotNone(address.pk)
