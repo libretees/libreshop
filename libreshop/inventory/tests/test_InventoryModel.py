@@ -1,4 +1,5 @@
 import logging
+from decimal import Decimal
 from django.test import TestCase
 from products.models import Product, Variant, Component
 from ..models import Inventory
@@ -9,12 +10,15 @@ logger = logging.getLogger(__name__)
 # Create your tests here.
 class InventoryModelTest(TestCase):
 
+    def setUp(self):
+        self.inventory = Inventory.objects.create(name='foo')
+
+
     def test_model_has_name_field(self):
         '''
         Test that Inventory.name is present.
         '''
-        inventory = Inventory.objects.create(name='foo')
-        name = getattr(inventory, 'name', None)
+        name = getattr(self.inventory, 'name', None)
         self.assertIsNotNone(name)
 
 
@@ -22,8 +26,7 @@ class InventoryModelTest(TestCase):
         '''
         Test that Inventory.warehouses is present.
         '''
-        inventory = Inventory.objects.create(name='foo')
-        warehouses = getattr(inventory, 'warehouses', None)
+        warehouses = getattr(self.inventory, 'warehouses', None)
         self.assertIsNotNone(warehouses)
 
 
@@ -31,8 +34,7 @@ class InventoryModelTest(TestCase):
         '''
         Test that Inventory.alternatives is present.
         '''
-        inventory = Inventory.objects.create(name='foo')
-        alternatives = getattr(inventory, 'alternatives', None)
+        alternatives = getattr(self.inventory, 'alternatives', None)
         self.assertIsNotNone(alternatives)
 
 
@@ -40,8 +42,8 @@ class InventoryModelTest(TestCase):
         '''
         Test that Inventory.alternatives is present.
         '''
-        inventory = Inventory.objects.create(name='foo')
-        cost = getattr(inventory, 'cost', None)
+
+        cost = getattr(self.inventory, 'cost', None)
         self.assertIsNotNone(cost)
 
 
@@ -52,7 +54,7 @@ class InventoryModelTest(TestCase):
         inventory = Inventory(name='foo')
         inventory.save()
         num_inventory = Inventory.objects.all().count()
-        self.assertEqual(num_inventory, 1)
+        self.assertEqual(num_inventory, 2)
 
 
     def test_components_are_unlinked_when_inventory_is_deleted(self):

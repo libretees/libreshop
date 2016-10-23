@@ -25,6 +25,8 @@ class Inventory(TimeStampedModel):
     )
     weight = MeasurementField(
         measurement=Weight, blank=False, null=False,
+        default=Decimal(0.00),
+        validators=[MinValueValidator(Decimal('0.00'))],
         unit_choices=(
             ('g', 'g'),
             ('kg', 'kg'),
@@ -35,6 +37,8 @@ class Inventory(TimeStampedModel):
     packed_weight = MeasurementField(
         verbose_name='Packed Weight',
         measurement=Weight, blank=False, null=False,
+        default=Decimal(0.00),
+        validators=[MinValueValidator(Decimal('0.00'))],
         unit_choices=(
             ('g', 'g'),
             ('kg', 'kg'),

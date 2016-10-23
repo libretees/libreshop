@@ -21,13 +21,22 @@ class LocationModelTest(TestCase):
         Create common test assets prior to each individual unit test run.
         '''
         # Set up test data.
+        self.address = Address.objects.create(
+            street_address = '123 Test St',
+            locality = 'Test',
+            country = 'US')
+        self.address2 = Address.objects.create(
+            street_address = '456 Test St',
+            locality = 'Test',
+            country = 'US')
+        self.address3 = Address.objects.create(
+            street_address = '789 Test St',
+            locality = 'Test',
+            country = 'US')
         inventory = Inventory.objects.create(name='foo')
-        warehouse = Warehouse.objects.create(
-            name='foo', address=Address.objects.create()
-        )
+        warehouse = Warehouse.objects.create(name='foo', address=self.address)
         self.location = Location.objects.create(
-            inventory=inventory, warehouse=warehouse, quantity=Decimal(0.00)
-        )
+            inventory=inventory, warehouse=warehouse, quantity=Decimal(0.00))
 
 
     def test_model_string_representation(self):
@@ -44,8 +53,7 @@ class LocationModelTest(TestCase):
         Test that Location.inventory is present.
         '''
         inventory = Inventory.objects.create(name='foo')
-        warehouse = Warehouse.objects.create(name='bar',
-            address=Address.objects.create())
+        warehouse = Warehouse.objects.create(name='bar', address=self.address2)
         location = Location.objects.create(warehouse=warehouse,
             inventory=inventory, quantity=Decimal(0.00))
         inventory = getattr(location, 'inventory', None)
@@ -57,8 +65,7 @@ class LocationModelTest(TestCase):
         Test that Location.warehouse is present.
         '''
         inventory = Inventory.objects.create(name='foo')
-        warehouse = Warehouse.objects.create(name='bar',
-            address=Address.objects.create())
+        warehouse = Warehouse.objects.create(name='bar', address=self.address2)
         location = Location.objects.create(warehouse=warehouse,
             inventory=inventory, quantity=Decimal(0.00))
         warehouse = getattr(location, 'warehouse', None)
@@ -70,8 +77,7 @@ class LocationModelTest(TestCase):
         Test that Location.quantity is present.
         '''
         inventory = Inventory.objects.create(name='foo')
-        warehouse = Warehouse.objects.create(name='bar',
-            address=Address.objects.create())
+        warehouse = Warehouse.objects.create(name='bar', address=self.address2)
         location = Location.objects.create(warehouse=warehouse,
             inventory=inventory, quantity=Decimal(0.00))
         quantity = getattr(location, 'quantity', None)
@@ -83,8 +89,7 @@ class LocationModelTest(TestCase):
         Test that a Location can be successfuly saved to the database.
         '''
         inventory = Inventory.objects.create(name='foo')
-        warehouse = Warehouse.objects.create(name='bar',
-            address=Address.objects.create())
+        warehouse = Warehouse.objects.create(name='bar', address=self.address2)
         location = Location(warehouse=warehouse, inventory=inventory,
             quantity=Decimal(0.00))
         location.save()
@@ -98,10 +103,8 @@ class LocationModelTest(TestCase):
         object.
         '''
         inventory = Inventory.objects.create(name='foo')
-        warehouse1 = Warehouse.objects.create(name='bar',
-            address=Address.objects.create())
-        warehouse2 = Warehouse.objects.create(name='baz',
-            address=Address.objects.create())
+        warehouse1 = Warehouse.objects.create(name='bar', address=self.address2)
+        warehouse2 = Warehouse.objects.create(name='baz', address=self.address3)
         location1 = Location.objects.create(inventory=inventory,
             warehouse=warehouse1, quantity=Decimal(0.00))
         location2 = Location.objects.create(inventory=inventory,
@@ -117,8 +120,7 @@ class LocationModelTest(TestCase):
         Inventory object.
         '''
         inventory = Inventory.objects.create(name='foo')
-        warehouse = Warehouse.objects.create(name='bar',
-            address=Address.objects.create())
+        warehouse = Warehouse.objects.create(name='bar', address=self.address2)
         location = Location.objects.create(inventory=inventory,
             warehouse=warehouse, quantity=Decimal(0.00))
         func = Location.objects.create

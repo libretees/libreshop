@@ -19,7 +19,14 @@ class WarehouseModelTest(TestCase):
         Create common test assets prior to each individual unit test run.
         '''
         # Set up test data.
-        self.address = Address.objects.create()
+        self.address = Address.objects.create(
+            street_address = '123 Test St',
+            locality = 'Test',
+            country = 'US')
+        self.address2 = Address.objects.create(
+            street_address = '456 Test St',
+            locality = 'Test',
+            country = 'US')
         self.warehouse = Warehouse.objects.create(
             name='foo', address=self.address
         )
@@ -52,7 +59,7 @@ class WarehouseModelTest(TestCase):
         '''
         Test that a Warehouse can be successfuly saved to the database.
         '''
-        warehouse = Warehouse(name='bar', address=Address.objects.create())
+        warehouse = Warehouse(name='bar', address=self.address2)
         warehouse.save()
         num_warehouses = Warehouse.objects.filter(name='bar').count()
         self.assertEqual(num_warehouses, 1)
@@ -64,7 +71,7 @@ class WarehouseModelTest(TestCase):
         '''
         func = Warehouse.objects.create
         self.assertRaises(
-            IntegrityError, func, name=None, address=Address.objects.create()
+            IntegrityError, func, name=None, address=self.address2
         )
 
 
@@ -82,7 +89,7 @@ class WarehouseModelTest(TestCase):
         '''
         func = Warehouse.objects.create
         self.assertRaises(
-            ValidationError, func, name='foo', address=Address.objects.create()
+            ValidationError, func, name='foo', address=self.address
         )
 
 
@@ -102,7 +109,7 @@ class WarehouseModelTest(TestCase):
         '''
         func = Warehouse.objects.create
         self.assertRaises(
-            ValidationError, func, name='Foo', address=Address.objects.create()
+            ValidationError, func, name='Foo', address=self.address
         )
 
 
