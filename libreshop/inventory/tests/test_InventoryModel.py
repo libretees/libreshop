@@ -1,8 +1,12 @@
 import logging
+from datetime import datetime
 from decimal import Decimal
 from django.test import TestCase
+from django.utils import timezone
 from products.models import Product, Variant, Component
-from ..models import Inventory
+from addresses.models import Address
+from orders.models import Order, Purchase, Transaction
+from ..models import Inventory, PurchaseOrder, Supply, Warehouse
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -11,7 +15,37 @@ logger = logging.getLogger(__name__)
 class InventoryModelTest(TestCase):
 
     def setUp(self):
+        '''
+        Create common test assets prior to each individual unit test run.
+        '''
+        # Set up Inventory test data.
+        self.address = Address.objects.create(
+            street_address = '123 Test St',
+            locality = 'Test',
+            country = 'US')
         self.inventory = Inventory.objects.create(name='foo')
+        self.warehouse = Warehouse.objects.create(
+            name='foo', address=self.address)
+
+        # Set up Purchase Order test data.
+        self.purchase_order = PurchaseOrder.objects.create(
+            warehouse=self.warehouse)
+
+        # Set up Product test data.
+        product = Product.objects.create(name='foo', sku='123')
+        self.variant = Variant.objects.create(
+            product=product, name='bar', sub_sku='456')
+        component = Component.objects.create(
+            variant=self.variant, inventory=self.inventory, quantity=Decimal(1))
+
+        # Set up Purchase test data.
+        shipping_address = Address.objects.create(
+            street_address = '123 Test St',
+            locality = 'Test',
+            country = 'US')
+        self.order = Order.objects.create(shipping_address=shipping_address)
+        transaction = Transaction.objects.create(
+            order=self.order, transaction_id='bar')
 
 
     def test_model_has_name_field(self):
@@ -38,15 +72,6 @@ class InventoryModelTest(TestCase):
         self.assertIsNotNone(alternatives)
 
 
-    def test_model_has_cost_field(self):
-        '''
-        Test that Inventory.alternatives is present.
-        '''
-
-        cost = getattr(self.inventory, 'cost', None)
-        self.assertIsNotNone(cost)
-
-
     def test_saving_to_and_retrieving_inventory_from_the_database(self):
         '''
         Test that an Inventory object can be successfuly saved to the database.
@@ -62,12 +87,122 @@ class InventoryModelTest(TestCase):
         Test that any linked Components are unlinked when an Inventory object is
         deleted.
         '''
-        product = Product.objects.create(sku='foo', name='foo')
-        variant = Variant.objects.create(product=product, name='bar')
-        component = Component.objects.create(variant=variant)
+        component = Component.objects.create(variant=self.variant)
         inventory = Inventory.objects.create(name='qux')
         component.inventory = inventory
         component.save()
         inventory.delete()
-        num_components = Component.objects.filter(variant=variant).count()
+        num_components = Component.objects.filter(variant=self.variant).count()
         self.assertEqual(num_components, 1)
+
+
+    def test_model_reports_current_fifo_cost(self):
+        '''
+        Test that an Inventory object reports its current FIFO cost.
+        '''
+        # Create common test data.
+        tzinfo = timezone.get_current_timezone()
+
+        # Create a Supply from which the cost should be derived.
+        supply = Supply.objects.create(purchase_order=self.purchase_order,
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(12),
+            receipt_date=datetime(2016, 1, 1, 0, 0, 0, tzinfo=tzinfo))
+
+        # Create an extra Supply.
+        supply2 = Supply.objects.create(purchase_order=self.purchase_order,
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(24),
+            receipt_date=datetime(2016, 1, 2, 0, 0, 0, tzinfo=tzinfo))
+
+        self.assertEqual(self.inventory.fifo_cost, Decimal(1.00))
+
+
+    def test_model_reports_fifo_cost_for_partially_depleted_supply(self):
+        '''
+        Test that an Inventory object reports its current FIFO cost from a
+        partially depleted supply.
+        '''
+        # Create common test data.
+        tzinfo = timezone.get_current_timezone()
+
+        # Create a Supply from which the cost should be derived.
+        supply = Supply.objects.create(purchase_order=self.purchase_order,
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(12),
+            receipt_date=datetime(2016, 1, 1, 0, 0, 0, tzinfo=tzinfo))
+
+        # Create an extra Supply.
+        supply2 = Supply.objects.create(purchase_order=self.purchase_order,
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(24),
+            receipt_date=datetime(2016, 1, 2, 0, 0, 0, tzinfo=tzinfo))
+
+        # Make a Purchase.
+        purchase = Purchase.objects.create(
+            order=self.order, variant=self.variant)
+
+        self.assertEqual(self.inventory.fifo_cost, Decimal(1.00))
+
+
+    def test_model_reports_fifo_cost_for_fully_depleted_supply(self):
+        '''
+        Test that an Inventory object reports its current FIFO cost from a
+        fully depleted supply.
+        '''
+        # Create common test data.
+        tzinfo = timezone.get_current_timezone()
+
+        # Create a Supply that will be depleted.
+        supply = Supply.objects.create(purchase_order=self.purchase_order,
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(12),
+            receipt_date=datetime(2016, 1, 1, 0, 0, 0, tzinfo=tzinfo))
+
+        # Create a Supply from which the cost should be derived.
+        supply2 = Supply.objects.create(purchase_order=self.purchase_order,
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(24),
+            receipt_date=datetime(2016, 1, 2, 0, 0, 0, tzinfo=tzinfo))
+
+        # Deplete the first Supply.
+        for i in range(12):
+            purchase = Purchase.objects.create(
+                order=self.order, variant=self.variant)
+
+        self.assertEqual(self.inventory.fifo_cost, Decimal(2.00))
+
+
+    def test_model_reports_fifo_cost_for_no_supply(self):
+        '''
+        Test that an Inventory object reports its current FIFO cost when no
+        Supply information is available.
+        '''
+        # Make a Purchase.
+        purchase = Purchase.objects.create(
+            order=self.order, variant=self.variant)
+
+        self.assertEqual(self.inventory.fifo_cost, Decimal(0.00))
+
+
+    def test_model_reports_fifo_cost_for_a_given_date(self):
+        '''
+        Test that an Inventory object reports a FIFO cost for a specific date.
+        '''
+        # Create common test data.
+        tzinfo = timezone.get_current_timezone()
+
+        # Create a Supply for January.
+        supply = Supply.objects.create(purchase_order=self.purchase_order,
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(12),
+            receipt_date=datetime(2016, 1, 1, 0, 0, 0, tzinfo=tzinfo))
+
+        # Create a Supply for February.
+        supply2 = Supply.objects.create(purchase_order=self.purchase_order,
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(24),
+            receipt_date=datetime(2016, 2, 1, 0, 0, 0, tzinfo=tzinfo))
+
+        # Deplete the Supply received in January.
+        purchase_date = datetime(2016, 1, 31, tzinfo=tzinfo)
+        for i in range(12):
+            purchase = Purchase.objects.create(
+                order=self.order, variant=self.variant, created=purchase_date)
+
+        # Determine the FIFO cost for the end of the month of January.
+        fifo_cost = self.inventory.get_fifo_cost(for_date=purchase_date)
+
+        self.assertEqual(fifo_cost, Decimal(1.00))

@@ -18,5 +18,5 @@ class InventoryCreationForm(forms.ModelForm):
 
     class Meta:
         model = Inventory
-        fields = ('name', 'alternatives', 'cost', 'weight', 'packed_weight',
+        fields = ('name', 'alternatives', 'weight', 'packed_weight',
             'conversion_factor')
