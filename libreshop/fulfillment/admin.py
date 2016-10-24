@@ -14,13 +14,19 @@ logger = logging.getLogger(__name__)
 class FulfillmentPurchaseInline(admin.TabularInline):
 
     model = FulfillmentPurchase
-    fields = ('purchase', 'subtotal', 'shipping_cost', 'tax', 'fees', 'total')
+    fields = ('_purchase', 'subtotal', 'shipping_cost', 'tax', 'fees', 'total')
     readonly_fields = fields
     can_delete = False
     extra = 0
 
     def get_max_num(self, request, obj=None, **kwargs):
         return FulfillmentPurchase.objects.filter(order=obj).count()
+
+    def _purchase(self, instance):
+        return '%s on Order %s' % (
+            instance.purchase.variant.name, instance.purchase.order.token)
+    _purchase.short_description = 'Purchase'
+    _purchase.admin_order_field = 'purchase__variant__name'
 
 
 @admin.register(FulfillmentOrder)

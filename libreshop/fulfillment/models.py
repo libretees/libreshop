@@ -117,7 +117,10 @@ class FulfillmentOrder(TimeStampedModel):
 class FulfillmentPurchase(TimeStampedModel):
 
     order = models.ForeignKey('FulfillmentOrder', null=False, blank=False)
-    purchase = models.ForeignKey('orders.Purchase', null=False, blank=False)
+    purchase = models.OneToOneField('orders.Purchase',
+        null=False,
+        blank=False,
+        related_name='fulfillment_purchase')
 
     subtotal = models.DecimalField(
         max_digits=8, decimal_places=2, null=False, blank=False,
