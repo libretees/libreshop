@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db import transaction
+from django.db.models import BooleanField, Case, Count, When
 from model_utils.models import TimeStampedModel
 from .component import Component
 
@@ -68,14 +69,22 @@ class AttributeValue(TimeStampedModel):
         return self.attribute.name
 
 
+class VariantManager(models.Manager):
+    def get_queryset(self):
+        queryset = super(VariantManager, self).get_queryset()
+        queryset = queryset.annotate(
+            variant_settings=Count('fulfillmentsettingvalue'),
+            product_settings=Count('product__fulfillmentsettingvalue'))
+        queryset = queryset.annotate(
+            drop_shipped=Case(
+                When(variant_settings__gt=0, then=True),
+                When(product_settings__gt=0, then=True),
+                default=False,
+                output_field=BooleanField()))
+        return queryset
+
+
 class Variant(TimeStampedModel):
-
-    class Meta:
-        unique_together = (
-            ('product', 'name',),
-            ('product', 'sub_sku',),
-        )
-
 
     class Price(object):
         major_units = None
@@ -111,6 +120,13 @@ class Variant(TimeStampedModel):
     )
     enabled = models.BooleanField(default=True)
 
+    objects = VariantManager()
+
+    class Meta:
+        unique_together = (
+            ('product', 'name',),
+            ('product', 'sub_sku',),
+        )
 
     def __init__(self, *args, **kwargs):
         super(Variant, self).__init__(*args, **kwargs)

@@ -2,6 +2,7 @@ from decimal import Decimal
 from random import randrange
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
+from django.db.models import BooleanField, Case, Count, When
 from django.utils import timezone
 from model_utils.models import TimeStampedModel
 
@@ -87,6 +88,21 @@ class Transaction(TimeStampedModel):
         get_latest_by = 'created_at'
 
 
+class PurchaseManager(models.Manager):
+    def get_queryset(self):
+        queryset = super(PurchaseManager, self).get_queryset()
+        queryset = queryset.annotate(
+            variant_settings=Count('variant__fulfillmentsettingvalue'),
+            product_settings=Count('variant__product__fulfillmentsettingvalue'))
+        queryset = queryset.annotate(
+            drop_shipped=Case(
+                When(variant_settings__gt=0, then=True),
+                When(product_settings__gt=0, then=True),
+                default=False,
+                output_field=BooleanField()))
+        return queryset
+
+
 class Purchase(TimeStampedModel):
     order = models.ForeignKey(
         'orders.Order', null=False, related_name='purchases')
@@ -94,6 +110,8 @@ class Purchase(TimeStampedModel):
     price = models.DecimalField(max_digits=8, decimal_places=2, null=False,
             blank=False, default=Decimal('0.00'))
     fulfilled = models.BooleanField(default=False)
+
+    objects = PurchaseManager()
 
 
 class TaxRate(TimeStampedModel):
