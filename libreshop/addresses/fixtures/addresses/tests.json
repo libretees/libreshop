@@ -1,0 +1,20 @@
+[
+    {
+        "pk": null,
+        "model": "addresses.Address",
+        "fields": {
+            "street_address": "Duplicate Address Test",
+            "locality": "Test",
+            "country": "US"
+        }
+    },
+    {
+        "pk": null,
+        "model": "addresses.Address",
+        "fields": {
+            "street_address": "Duplicate Address Test",
+            "locality": "Test",
+            "country": "US"
+        }
+    }
+]

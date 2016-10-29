@@ -1,4 +1,5 @@
 import logging
+from django.core.exceptions import MultipleObjectsReturned
 from django.db import models
 from django.utils.safestring import mark_safe
 from model_utils.models import TimeStampedModel
@@ -69,13 +70,17 @@ class Address(TimeStampedModel):
                 for field_name in field_names})
         except Address.DoesNotExist as e:
             logger.debug('No address found!')
+        except MultipleObjectsReturned as e:
+            logger.debug('Multiple records found!')
+            address = Address.objects.filter(**{
+                field_name:getattr(self, field_name)
+                for field_name in field_names}).last()
         else:
             logger.debug('Address found (%s)!' % str(address))
-            self.pk = address.pk
+        finally:
+            self.pk = getattr(address, 'pk', None)
 
         if address is None:
             logger.debug('Creating Address...')
-            address = super(Address, self).save(*args, **kwargs)
+            super(Address, self).save(*args, **kwargs)
             logger.debug('Created Address (%s).' % str(self))
-
-        return address

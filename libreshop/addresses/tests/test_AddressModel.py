@@ -5,6 +5,8 @@ from ..models import Address
 # Create your tests here.
 class AddressModelTest(TestCase):
 
+    fixtures = ['addresses/tests.json']
+
     def test_model_plural_name_is_addresses(self):
         '''
         Test that Address model has 'addresses' set as its plural name.
@@ -426,8 +428,8 @@ class AddressModelTest(TestCase):
         )
         address.save()
 
-        # Load Address from database.
-        address = Address.objects.first()
+        # Reload Address from database.
+        address = Address.objects.get(pk=address.pk)
         address_fields = [
             address.recipient_name, address.street_address, address.locality,
             address.region, address.postal_code]
@@ -447,3 +449,23 @@ class AddressModelTest(TestCase):
             locality = 'Test',
             country = 'US')
         self.assertIsNotNone(address.pk)
+
+
+    def test_model_does_not_permit_duplicate_records_to_be_created(self):
+        '''
+        Test that the Address model does not permit duplicate records to be
+        created.
+        '''
+        address = Address(
+            street_address = 'Duplicate Address Test',
+            locality = 'Test',
+            country = 'US')
+        address.save()
+
+        address2 = Address(
+            street_address = 'Duplicate Address Test',
+            locality = 'Test',
+            country = 'US')
+        address2.save()
+
+        self.assertEqual(address.pk, address2.pk)
