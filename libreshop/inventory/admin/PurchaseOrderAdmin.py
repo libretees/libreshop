@@ -4,13 +4,19 @@ from decimal import Decimal
 from django.contrib import admin
 from django.db.models import (
     Case, Count, DecimalField, ExpressionWrapper, F, IntegerField, Sum, When)
-from . import SupplyAdmin
+from ..models import Supply
 
 # Initialize logger
 logger = logging.getLogger(__name__)
 
+class SupplyTabularInline(admin.TabularInline):
+    model = Supply
+    exclude = ['landed_cost', 'units_received']
+    min_num = 1
+    extra = 0
+
 class PurchaseOrderAdmin(admin.ModelAdmin):
-    inlines = [SupplyAdmin]
+    inlines = [SupplyTabularInline]
     list_display = (
         'number', 'submitted', '_subtotal', 'sales_tax', 'shipping_cost',
         '_total', '_status'
@@ -21,12 +27,10 @@ class PurchaseOrderAdmin(admin.ModelAdmin):
     _subtotal.short_description = 'Subtotal'
     _subtotal.admin_order_field = 'subtotal'
 
-
     def _total(self, instance):
         return instance.total
     _total.short_description = 'Total'
     _total.admin_order_field = 'total_order_field'
-
 
     def _status(self, instance):
         status = None
