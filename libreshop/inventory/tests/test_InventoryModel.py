@@ -6,6 +6,7 @@ from django.utils import timezone
 from products.models import Product, Variant, Component
 from addresses.models import Address
 from orders.models import Order, Purchase, Transaction
+from measurement.measures import Weight
 from ..models import Inventory, PurchaseOrder, Supply, Warehouse
 
 # Initialize logger.
@@ -23,7 +24,8 @@ class InventoryModelTest(TestCase):
             street_address = '123 Test St',
             locality = 'Test',
             country = 'US')
-        self.inventory = Inventory.objects.create(name='foo')
+        self.inventory = Inventory.objects.create(
+            name='foo', weight=Weight(g=1.0))
         self.warehouse = Warehouse.objects.create(
             name='foo', address=self.address)
 
@@ -105,13 +107,17 @@ class InventoryModelTest(TestCase):
 
         # Create a Supply from which the cost should be derived.
         supply = Supply.objects.create(purchase_order=self.purchase_order,
-            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(12),
-            receipt_date=datetime(2016, 1, 1, 0, 0, 0, tzinfo=tzinfo))
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(12))
 
         # Create an extra Supply.
         supply2 = Supply.objects.create(purchase_order=self.purchase_order,
-            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(24),
-            receipt_date=datetime(2016, 1, 2, 0, 0, 0, tzinfo=tzinfo))
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(24))
+
+        supply.receipt_date = datetime(2016, 1, 1, 0, 0, 0, tzinfo=tzinfo)
+        supply.save()
+
+        supply2.receipt_date = datetime(2016, 1, 2, 0, 0, 0, tzinfo=tzinfo)
+        supply2.save()
 
         self.assertEqual(self.inventory.fifo_cost, Decimal(1.00))
 
@@ -126,13 +132,17 @@ class InventoryModelTest(TestCase):
 
         # Create a Supply from which the cost should be derived.
         supply = Supply.objects.create(purchase_order=self.purchase_order,
-            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(12),
-            receipt_date=datetime(2016, 1, 1, 0, 0, 0, tzinfo=tzinfo))
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(12))
 
         # Create an extra Supply.
         supply2 = Supply.objects.create(purchase_order=self.purchase_order,
-            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(24),
-            receipt_date=datetime(2016, 1, 2, 0, 0, 0, tzinfo=tzinfo))
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(24))
+
+        supply.receipt_date = datetime(2016, 1, 1, 0, 0, 0, tzinfo=tzinfo)
+        supply.save()
+
+        supply2.receipt_date=datetime(2016, 1, 2, 0, 0, 0, tzinfo=tzinfo)
+        supply2.save()
 
         # Make a Purchase.
         purchase = Purchase.objects.create(
@@ -151,13 +161,17 @@ class InventoryModelTest(TestCase):
 
         # Create a Supply that will be depleted.
         supply = Supply.objects.create(purchase_order=self.purchase_order,
-            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(12),
-            receipt_date=datetime(2016, 1, 1, 0, 0, 0, tzinfo=tzinfo))
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(12))
 
         # Create a Supply from which the cost should be derived.
         supply2 = Supply.objects.create(purchase_order=self.purchase_order,
-            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(24),
-            receipt_date=datetime(2016, 1, 2, 0, 0, 0, tzinfo=tzinfo))
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(24))
+
+        supply.receipt_date = datetime(2016, 1, 1, 0, 0, 0, tzinfo=tzinfo)
+        supply.save()
+
+        supply2.receipt_date=datetime(2016, 1, 2, 0, 0, 0, tzinfo=tzinfo)
+        supply2.save()
 
         # Deplete the first Supply.
         for i in range(12):
@@ -188,16 +202,53 @@ class InventoryModelTest(TestCase):
 
         # Create a Supply for January.
         supply = Supply.objects.create(purchase_order=self.purchase_order,
-            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(12),
-            receipt_date=datetime(2016, 1, 1, 0, 0, 0, tzinfo=tzinfo))
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(12))
 
         # Create a Supply for February.
         supply2 = Supply.objects.create(purchase_order=self.purchase_order,
-            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(24),
-            receipt_date=datetime(2016, 2, 1, 0, 0, 0, tzinfo=tzinfo))
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(24))
+
+        supply.receipt_date = datetime(2016, 1, 1, 0, 0, 0, tzinfo=tzinfo)
+        supply.save()
+
+        supply2.receipt_date = datetime(2016, 2, 1, 0, 0, 0, tzinfo=tzinfo)
+        supply2.save()
 
         # Deplete the Supply received in January.
         purchase_date = datetime(2016, 1, 31, tzinfo=tzinfo)
+        for i in range(12):
+            purchase = Purchase.objects.create(
+                order=self.order, variant=self.variant, created=purchase_date)
+
+        # Determine the FIFO cost for the end of the month of January.
+        fifo_cost = self.inventory.get_fifo_cost(for_date=purchase_date)
+
+        self.assertEqual(fifo_cost, Decimal(1.00))
+
+
+    def test_model_reports_fifo_cost_when_supplies_are_backordered(self):
+        '''
+        Test that an Inventory object reports a FIFO cost for a specific date.
+        '''
+        # Create common test data.
+        tzinfo = timezone.get_current_timezone()
+
+        # Create a Supply for January.
+        supply = Supply.objects.create(purchase_order=self.purchase_order,
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(12))
+
+        # Create a Supply for February.
+        supply2 = Supply.objects.create(purchase_order=self.purchase_order,
+            inventory=self.inventory, quantity=Decimal(12), cost=Decimal(24))
+
+        supply.receipt_date = datetime(2016, 1, 1, 0, 0, 0, tzinfo=tzinfo)
+        supply.save()
+
+        supply2.receipt_date = datetime(2016, 2, 1, 0, 0, 0, tzinfo=tzinfo)
+        supply2.save()
+
+        # Deplete the Supply received in January.
+        purchase_date = datetime(2016, 1, 1, tzinfo=tzinfo)
         for i in range(12):
             purchase = Purchase.objects.create(
                 order=self.order, variant=self.variant, created=purchase_date)

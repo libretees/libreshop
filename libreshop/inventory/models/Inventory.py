@@ -87,7 +87,7 @@ class Inventory(TimeStampedModel):
         supplies_received = [
             supply for supply
             in Supply.objects.filter(inventory=self,
-                receipt_date__lte=for_date).order_by('receipt_date')]
+            receipt_date__lte=for_date).order_by('receipt_date')]
 
         logger.debug('%i supply shipments have been received by this date.' % (
             len(supplies_received)))
@@ -95,12 +95,10 @@ class Inventory(TimeStampedModel):
         # Determine which Supply the Inventory originates from.
         fifo_cost = Decimal(0.00)
         for supply in supplies_received:
-            units_received = supply.quantity * supply.inventory.conversion_factor
-            inventory_needed -= units_received
-            fifo_cost = supply.cost / units_received
+            inventory_needed -= supply.units_received
+            fifo_cost = supply.unit_cost
             if inventory_needed < 0:
                 break
-
         logger.info('The FIFO cost for %s is %d.' % (self.name, fifo_cost))
 
         return fifo_cost

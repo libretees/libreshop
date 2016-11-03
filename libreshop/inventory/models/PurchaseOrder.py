@@ -2,37 +2,11 @@ import logging
 from decimal import Decimal
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.db.models import (
-    Case, Count, DecimalField, ExpressionWrapper, F, IntegerField, Sum, When)
 from django.utils import timezone
 from model_utils.models import TimeStampedModel
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
-
-class PurchaseOrderManager(models.Manager):
-    def get_queryset(self):
-        queryset = super(PurchaseOrderManager, self).get_queryset()
-        queryset = queryset.annotate(
-            subtotal=Sum('supplies__cost'),
-            total=Sum('supplies__cost') + F('sales_tax') + F('shipping_cost'),
-            supplies_ordered=Count('supplies'),
-            supplies_received=Sum(
-                Case(
-                    When(supplies__receipt_date__isnull=False, then=1),
-                    default=0,
-                    output_field=IntegerField()
-                )
-            )
-        )
-        queryset = queryset.annotate(
-            percent_received=ExpressionWrapper(
-                Decimal('1.0')*F('supplies_received')/F('supplies_ordered'),
-                output_field=DecimalField()
-            )
-        )
-
-        return queryset
 
 class PurchaseOrder(TimeStampedModel):
 
@@ -46,7 +20,17 @@ class PurchaseOrder(TimeStampedModel):
     submitted = models.DateTimeField(default=timezone.now)
     warehouse = models.ForeignKey('Warehouse', null=False, blank=False)
 
-    objects = PurchaseOrderManager()
+    @property
+    def weight(self):
+        return sum(supply.weight for supply in self.supplies.all())
+
+    @property
+    def total(self):
+        calculated_total = (
+            sum(supply.cost for supply in self.supplies.all()) +
+            self.sales_tax +
+            self.shipping_cost)
+        return calculated_total
 
     class Meta:
         verbose_name = 'Purchase Order'
