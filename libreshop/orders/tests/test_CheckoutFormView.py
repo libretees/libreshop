@@ -1,3 +1,4 @@
+import logging
 from decimal import Decimal
 from importlib import import_module
 from django.conf import settings
@@ -17,6 +18,14 @@ except ImportError as e:
     # Otherwise, import from the `mock` project dependency.
     from mock import patch
 
+# Map the Python 2 `__builtin__` module to the Python 3 equivalent.
+try:
+    import __builtin__ as builtins
+except ImportError as e:
+    import builtins
+
+# Initialize logger.
+logger = logging.getLogger(__name__)
 
 class CheckoutFormViewTest(TestCase):
 
@@ -245,15 +254,17 @@ class CheckoutFormViewTest(TestCase):
 
 
     @patch('django.core.mail.backends.locmem.EmailBackend')
-    def test_view_can_load_and_retrieve_shipping_cost_from_valid_backend(self, shipping_api_mock):
+    @patch('orders.views.get_shipping_rate')
+    def test_view_can_load_and_retrieve_shipping_cost_from_valid_backend(self, shipping_api_mock, get_shipping_rate_mock):
         '''
         Test that the CheckoutFormView can successfully load and retrieve a
         shipping cost from an API.
         '''
-        settings.SHIPPING_APIS = (
-            'django.core.mail.backends.locmem.EmailBackend',
-        )
+        settings.SHIPPING_APIS = {
+            'Foo': 'django.core.mail.backends.locmem.EmailBackend'}
         shipping_api_mock.return_value = Decimal(1.00)
+
+        get_shipping_rate_mock.return_value = Decimal(1.00)
 
         session = self.client.session
         cart = SessionCart(session)
@@ -281,15 +292,18 @@ class CheckoutFormViewTest(TestCase):
         )
 
 
+    @patch.object(builtins, 'sum')
     @patch.object(views, 'settings')
-    def test_view_can_load_and_retrieve_shipping_cost_from_invalid_backend(self, settings_mock):
+    @patch('orders.views.get_shipping_rate')
+    def test_view_can_load_and_retrieve_shipping_cost_from_invalid_backend(self, sum_mock, settings_mock, get_shipping_rate_mock):
         '''
         Test that the CheckoutFormView can successfully load and retrieve a
         shipping cost from an API.
         '''
-        settings_mock.SHIPPING_APIS = (
-            'foo',
-        )
+        sum_mock.return_value = Decimal(0.00)
+        get_shipping_rate_mock.return_value = Decimal(0.00)
+
+        settings_mock.SHIPPING_APIS = {'Foo': 'foo'}
 
         session = self.client.session
         cart = SessionCart(session)
@@ -317,15 +331,19 @@ class CheckoutFormViewTest(TestCase):
         )
 
 
+    @patch.object(builtins, 'sum')
     @patch.object(views, 'settings')
-    def test_view_can_load_and_retrieve_shipping_cost_from_invalid_backend_attribute(self, settings_mock):
+    @patch('orders.views.get_shipping_rate')
+    def test_view_can_load_and_retrieve_shipping_cost_from_invalid_backend_attribute(self, sum_mock, settings_mock, get_shipping_rate_mock):
         '''
-        Test that the CheckoutFormView can successfully load and retrieve a
-        shipping cost from an API.
+        Test that the CheckoutFormView can recover from a badly-formed package
+        import or missing module.
         '''
-        settings_mock.SHIPPING_APIS = (
-            'django.core.mail.backends.locmem.foo',
-        )
+        sum_mock.return_value = Decimal(0.00)
+        get_shipping_rate_mock.return_value = Decimal(0.00)
+
+        settings_mock.SHIPPING_APIS = {
+            'Foo': 'django.core.mail.backends.locmem.foo'}
 
         session = self.client.session
         cart = SessionCart(session)
@@ -342,15 +360,11 @@ class CheckoutFormViewTest(TestCase):
             'country': 'US'
         }
 
-        shipping_api = settings.SHIPPING_APIS[0]
-        with patch(shipping_api) as shipping_api_mock:
-            shipping_api_mock.return_value = Decimal(1.00)
-
-            response = self.client.post(
-                self.view_url,
-                data=request_data,
-                follow=True
-            )
+        response = self.client.post(
+            self.view_url,
+            data=request_data,
+            follow=True
+        )
 
         self.assertNotIn(
             'shipping', self.client.session[views.UUID]

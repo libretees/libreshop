@@ -50,7 +50,6 @@ class ConfirmationViewTest(TestCase):
         # Perform test.
         response = self.client.get(self.view_url)
         rendered_html = response.content.decode()
-        print(rendered_html)
 
         self.assertEqual(response.status_code, 200)
 
