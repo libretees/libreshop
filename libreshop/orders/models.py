@@ -143,13 +143,15 @@ class Purchase(TimeStampedModel):
         cost = Decimal(0.00)
 
         # Determine whether or not this is a drop-shipped Purchase.
-        try:
-            # Try to get the total cost of a backend drop-shipment Purchase.
-            cost = self.fulfillment_purchase.total
-            logger.debug('Purchase is drop-shipped to customer.')
-        except FulfillmentPurchase.DoesNotExist as e:
-            logger.debug('Purchase is manufactured in-house.')
+        if self.variant.fulfillment_settings:
+            try:
+                # Try to get the total cost of a backend drop-shipment Purchase.
+                cost = self.fulfillment_purchase.total
+                logger.debug('Purchase has been submitted for fulfillment.')
+            except FulfillmentPurchase.DoesNotExist as e:
+                logger.debug('Purchase has been not submitted for fulfillment.')
 
+        else:
             # Determine the amount of each respective raw material in Inventory
             # that is consumed to produce this Purchase.
 
@@ -253,9 +255,9 @@ class Purchase(TimeStampedModel):
                     if inventory_consumed[inventory] <= 0:
                         break
 
-                logger.info(
-                    'Cost of the "%s" Purchase is: %s' %
-                    (self.variant.name, cost))
+        logger.info(
+            'Cost of the "%s" Purchase under Order "%s" is %s.' %
+            (self.variant.name, self.order.token, cost))
 
         return cost
 

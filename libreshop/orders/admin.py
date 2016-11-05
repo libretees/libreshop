@@ -65,7 +65,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 
     def _cost_of_goods_sold(self, instance):
-        return Decimal(
+        return ('%s' if instance.fulfilled else '~%s') % Decimal(
             instance.cost.quantize(Decimal('.01'), rounding=ROUND_CEILING))
     _recipient.short_description = 'COGS'
 
