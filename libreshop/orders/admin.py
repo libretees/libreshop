@@ -1,3 +1,4 @@
+from decimal import Decimal, ROUND_CEILING
 from django.contrib import admin
 from django.db.models.aggregates import Count, Sum, IntegerField
 from django.db.models.expressions import Case, F, When
@@ -35,7 +36,8 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = (PurchaseInline, TransactionInline)
     list_display = (
         'token', '_recipient', '_purchases', '_fulfilled_purchases', 'subtotal',
-        'sales_tax', 'shipping_cost', 'total', 'created', '_fulfilled'
+        'sales_tax', 'shipping_cost', 'total', '_cost_of_goods_sold', 'created',
+        '_fulfilled'
     )
 
 
@@ -60,6 +62,12 @@ class OrderAdmin(admin.ModelAdmin):
         return instance.shipping_address.recipient_name
     _recipient.short_description = 'Recipient'
     _recipient.admin_order_field = 'shipping_address__recipient_name'
+
+
+    def _cost_of_goods_sold(self, instance):
+        return Decimal(
+            instance.cost.quantize(Decimal('.01'), rounding=ROUND_CEILING))
+    _recipient.short_description = 'COGS'
 
 
     def get_queryset(self, request):
