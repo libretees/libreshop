@@ -91,9 +91,12 @@ class CustomerAdmin(UserAdmin):
         super(CustomerAdmin, self).__init__(*args, **kwargs)
 
         # Collapse all auth.User fields except for the Username and Password fields.
-        UserAdmin.fieldsets = ([(name, field_options.update({'classes': ('collapse',)}) if name else field_options)
-                              for (name, field_options)
-                               in UserAdmin.fieldsets])
+        UserAdmin.fieldsets = [(
+            name,
+            field_options.update({'classes': ('collapse',)}) if name
+            else field_options)
+            for (name, field_options) in UserAdmin.fieldsets
+        ]
 
     fieldsets = UserAdmin.fieldsets + (
         (('Cart'), {'fields': ('selected_variants',)}),

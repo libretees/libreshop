@@ -3,10 +3,10 @@ from datetime import datetime
 from decimal import Decimal
 from django.test import TestCase
 from django.utils import timezone
-from products.models import Product, Variant, Component
+from measurement.measures import Weight
 from addresses.models import Address
 from orders.models import Order, Purchase, Transaction
-from measurement.measures import Weight
+from products.models import Product, Variant, Component
 from ..models import Inventory, PurchaseOrder, Supply, Warehouse
 
 # Initialize logger.
