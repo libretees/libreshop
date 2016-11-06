@@ -10,7 +10,7 @@ from django.db import models
 from django.db import transaction
 from django.db.models import BooleanField, Case, Count, When
 from model_utils.models import TimeStampedModel
-from .component import Component
+from .Component import Component
 
 # Initialize logger.
 logger = logging.getLogger(__name__)
@@ -203,7 +203,7 @@ class Variant(TimeStampedModel):
 
 
     def validate_unique(self, *args, **kwargs):
-        from .product import Product
+        from .Product import Product
         super(Variant, self).validate_unique(*args, **kwargs)
 
         validation_errors = {}
@@ -267,7 +267,7 @@ class Variant(TimeStampedModel):
 
 
     def delete(self, *args, **kwargs):
-        from .product import Product
+        from .Product import Product
         super(Variant, self).delete(*args, **kwargs)
 
         product = Product.objects.get(id=self.product_id)

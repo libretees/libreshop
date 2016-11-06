@@ -4,8 +4,8 @@ from django.db import models, transaction
 from django.template.defaultfilters import slugify
 from model_utils.models import TimeStampedModel
 from versatileimagefield.fields import PPOIField, VersatileImageField
-from . import Image
-from .variant import Variant
+from .Image import Image
+from .Variant import Variant
 
 # Initialize logger.
 logger = logging.getLogger(__name__)

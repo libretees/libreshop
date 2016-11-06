@@ -1,5 +1,5 @@
-from .category import Category
-from .component import Component, ComponentManager
-from .image import Image
-from .product import Product, ProductManager
-from .variant import Attribute, AttributeValue, Variant
+from .Category import Category
+from .Component import Component, ComponentManager
+from .Image import Image
+from .Product import Product, ProductManager
+from .Variant import Attribute, AttributeValue, Variant
