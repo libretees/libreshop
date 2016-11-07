@@ -196,7 +196,7 @@ class Command(BaseCommand):
 
         if unfulfilled_purchases:
             fulfillment_backend = supplier.load_fulfillment_backend()
-            orders = fulfillment_backend(unfulfilled_purchases)
+            orders = fulfillment_backend.submit_order(unfulfilled_purchases)
 
             for order in orders:
                 purchase_order = FulfillmentOrder.objects.create(

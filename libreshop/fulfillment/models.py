@@ -28,20 +28,14 @@ class Supplier(TimeStampedModel):
 
     def load_fulfillment_backend(self):
 
-        backend = self.fulfillment_backend
-        index = backend.rfind('.')
-        module_name, attribute_name = backend[:index], backend[index+1:]
-        module, attribute = None, None
+        module = None
         try:
-            module = importlib.import_module(module_name)
-            attribute = getattr(module, attribute_name)
+            module = importlib.import_module(self.fulfillment_backend)
         except ImportError as e:
-            logger.critical('Unable to import module \'%s\'.' % module_name)
-        except AttributeError as e:
-            logger.critical('\'%s\' module has no attribute \'%s\'.' %
-                (module_name, attribute_name))
+            logger.critical('Unable to import module \'%s\'.' %
+                self.fulfillment_backend)
 
-        return attribute
+        return module
 
 
     def __str__(self):

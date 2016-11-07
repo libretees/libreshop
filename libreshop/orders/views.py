@@ -131,36 +131,23 @@ def calculate_shipping_cost(*args, **kwargs):
     products = kwargs.pop('products', [])
 
     results = []
-    for supplier, api_name in settings.SHIPPING_APIS.items():
+    for api_name, supplier in settings.FULFILLMENT_BACKENDS:
         kwargs.update({
             'products': [
                 product for product in products if supplier in product.suppliers
             ]
         })
-
-        index = api_name.rfind('.')
-        module_name, attribute_name = api_name[:index], api_name[index+1:]
-        module, function = None, None
         try:
-            module = importlib.import_module(module_name)
-            logger.debug(
-                'Getting attribute \'%s\' from \'%s\'...' %
-                (attribute_name, module_name)
-            )
-            function = getattr(module, attribute_name)
-            logger.debug('Calling \'%s.%s\'...' % (module_name, attribute_name))
-            result = function(*args, **kwargs)
-            logger.debug('Called \'%s.%s\'.' % (module_name, attribute_name))
+            module = importlib.import_module(api_name)
+            logger.debug('Calling \'%s.get_shipping_rate\'...' % api_name)
+            result = module.get_shipping_rate(*args, **kwargs)
+            logger.debug('Called \'%sget_shipping_rate\'.' % api_name)
         except ImportError as e:
-            logger.critical('Unable to import module \'%s\'.' % module_name)
-        except AttributeError as e:
-            logger.critical('\'%s\' module has no attribute \'%s\'.' %
-                (module_name, attribute_name))
+            logger.critical('Unable to import module \'%s\'.' % api_name)
         except KeyError as e:
             logger.critical(
                 'KeyError within \'%s.%s\' backend: %s' %
-                (module_name, attribute_name, e)
-            )
+                (module_name, attribute_name, e))
         else:
             results.append(result)
 

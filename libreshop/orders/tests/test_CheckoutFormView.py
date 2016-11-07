@@ -1,7 +1,6 @@
 import logging
 from decimal import Decimal
 from importlib import import_module
-from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
@@ -253,17 +252,21 @@ class CheckoutFormViewTest(TestCase):
         self.assertNotIn('shipping', self.client.session[views.UUID])
 
 
+    @patch.object(builtins, 'sum')
+    @patch.object(views, 'settings')
     @patch('django.core.mail.backends.locmem.EmailBackend')
     @patch('orders.views.get_shipping_rate')
-    def test_view_can_load_and_retrieve_shipping_cost_from_valid_backend(self, shipping_api_mock, get_shipping_rate_mock):
+    def test_view_can_load_and_retrieve_shipping_cost_from_valid_backend(
+        self, sum_mock, settings_mock, shipping_api_mock, get_shipping_rate_mock):
         '''
         Test that the CheckoutFormView can successfully load and retrieve a
         shipping cost from an API.
         '''
-        settings.SHIPPING_APIS = {
-            'Foo': 'django.core.mail.backends.locmem.EmailBackend'}
+        settings_mock.FULFILLMENT_BACKENDS = [(
+            'django.core.mail.backends.locmem.EmailBackend', 'Foo')]
         shipping_api_mock.return_value = Decimal(1.00)
 
+        sum_mock.return_value = Decimal(0.00)
         get_shipping_rate_mock.return_value = Decimal(1.00)
 
         session = self.client.session
@@ -295,7 +298,8 @@ class CheckoutFormViewTest(TestCase):
     @patch.object(builtins, 'sum')
     @patch.object(views, 'settings')
     @patch('orders.views.get_shipping_rate')
-    def test_view_can_load_and_retrieve_shipping_cost_from_invalid_backend(self, sum_mock, settings_mock, get_shipping_rate_mock):
+    def test_view_can_load_and_retrieve_shipping_cost_from_invalid_backend(
+        self, sum_mock, settings_mock, get_shipping_rate_mock):
         '''
         Test that the CheckoutFormView can successfully load and retrieve a
         shipping cost from an API.
@@ -303,7 +307,7 @@ class CheckoutFormViewTest(TestCase):
         sum_mock.return_value = Decimal(0.00)
         get_shipping_rate_mock.return_value = Decimal(0.00)
 
-        settings_mock.SHIPPING_APIS = {'Foo': 'foo'}
+        settings_mock.FULFILLMENT_BACKENDS = [('foo', 'Foo')]
 
         session = self.client.session
         cart = SessionCart(session)
@@ -342,8 +346,8 @@ class CheckoutFormViewTest(TestCase):
         sum_mock.return_value = Decimal(0.00)
         get_shipping_rate_mock.return_value = Decimal(0.00)
 
-        settings_mock.SHIPPING_APIS = {
-            'Foo': 'django.core.mail.backends.locmem.foo'}
+        settings_mock.FULFILLMENT_BACKENDS = [(
+            'django.core.mail.backends.locmem.foo', 'Foo')]
 
         session = self.client.session
         cart = SessionCart(session)

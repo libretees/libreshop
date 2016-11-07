@@ -1,9 +1,11 @@
 import re
+import importlib
 import logging
 from ast import literal_eval
 from collections import OrderedDict
 from decimal import Decimal
 from operator import itemgetter
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -132,6 +134,40 @@ class Variant(TimeStampedModel):
         super(Variant, self).__init__(*args, **kwargs)
         self._meta.get_field('sub_sku').verbose_name = 'Sub-SKU'
         self._meta.get_field('sub_sku').verbose_name_plural = 'Sub-SKUs'
+
+
+    def get_quote(self):
+
+        results = []
+        for api_name, supplier in settings.FULFILLMENT_BACKENDS:
+            if supplier not in self.suppliers:
+                continue
+
+            try:
+                module = importlib.import_module(api_name)
+                logger.debug('Calling \'%s.get_quote\'...' % api_name)
+                result = module.get_quote(self)
+                logger.debug('Called \'%s.get_quote\'.' % api_name)
+            except ImportError as e:
+                logger.critical('Unable to import module \'%s\'.' % api_name)
+            except KeyError as e:
+                logger.critical(
+                    'KeyError within \'%s.get_quote\' backend: %s' %
+                    (api_name, e))
+            else:
+                results.append(result)
+
+        return min(results)
+
+
+    @property
+    def cost(self):
+        '''
+        '''
+        return (
+            self.get_quote() if self.suppliers else
+            sum([component.quantity * component.inventory.fifo_cost
+                for component in self.components.all()]))
 
 
     @property

@@ -71,8 +71,8 @@ class Inventory(TimeStampedModel):
         if not for_date:
             for_date = timezone.now()
 
-        logger.info('Getting FIFO cost for %s...' %
-            for_date.strftime('%Y-%m-%d %H:%M:%S'))
+        logger.info('Getting FIFO cost for "%s" %s...' %
+            (self.name, for_date.strftime('%Y-%m-%d %H:%M:%S')))
 
         # Determine the amount of inventory needed up to the date specified.
         inventory_needed = sum(
@@ -99,7 +99,7 @@ class Inventory(TimeStampedModel):
             fifo_cost = supply.unit_cost
             if inventory_needed < 0:
                 break
-        logger.info('The FIFO cost for %s is %d.' % (self.name, fifo_cost))
+        logger.info('The FIFO cost for "%s" is %s.' % (self.name, fifo_cost))
 
         return fifo_cost
 

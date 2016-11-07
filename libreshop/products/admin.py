@@ -132,14 +132,18 @@ class ComponentInline(admin.TabularInline):
     extra = 0
 
 
-class VariantAdmin(UnindexedAdmin, admin.ModelAdmin):
+class VariantAdmin(admin.ModelAdmin):
 
     add_form = VariantCreationForm
+    list_display = ('name', '_cost', 'price')
     inlines = [AttributeAdmin, ComponentInline, FulfillmentSettingValueInline]
 
     def __init__(self, *args, **kwargs):
         super(VariantAdmin, self).__init__(*args, **kwargs)
 
+    def _cost(self, instance):
+        return instance.cost
+    _cost.short_description = 'Cost'
 
     def get_form(self, request, obj=None, **kwargs):
         defaults = {}
@@ -149,6 +153,7 @@ class VariantAdmin(UnindexedAdmin, admin.ModelAdmin):
             )
         defaults.update(kwargs)
         return super(VariantAdmin, self).get_form(request, obj, **defaults)
+
 
 
 # Register your models here.
