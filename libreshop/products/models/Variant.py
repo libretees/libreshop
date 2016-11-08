@@ -3,7 +3,7 @@ import importlib
 import logging
 from ast import literal_eval
 from collections import OrderedDict
-from decimal import Decimal
+from decimal import Decimal, ROUND_CEILING
 from operator import itemgetter
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -164,10 +164,16 @@ class Variant(TimeStampedModel):
     def cost(self):
         '''
         '''
-        return (
+        return (Decimal(
             self.get_quote() if self.suppliers else
             sum([component.quantity * component.inventory.fifo_cost
-                for component in self.components.all()]))
+            for component in self.components.all()])).
+            quantize(Decimal('1.00'), rounding=ROUND_CEILING))
+
+
+    @property
+    def margin(self):
+        return (self.price - self.cost)
 
 
     @property

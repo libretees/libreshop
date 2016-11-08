@@ -98,6 +98,26 @@ class Product(TimeStampedModel):
 
 
     @property
+    def margin(self):
+        minimum_margin = self.minimum_margin
+        maximum_margin = self.maximum_margin
+
+        return (
+            (minimum_margin, maximum_margin) if minimum_margin != maximum_margin
+            else (minimum_margin, minimum_margin))
+
+
+    @property
+    def maximum_margin(self):
+        return max([variant.margin for variant in self.variants])
+
+
+    @property
+    def minimum_margin(self):
+        return min([variant.margin for variant in self.variants])
+
+
+    @property
     def salable(self):
         return bool(self.variants)
 

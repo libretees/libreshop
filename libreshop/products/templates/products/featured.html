@@ -1,4 +1,5 @@
 {% extends 'products/base.html' %}
+{% load render %}
 {% load widget_tweaks %}
 
 {% block products_content %}
@@ -34,7 +35,7 @@
         </div>
         <div class='jumbotron-content col-md-6'>
           <h1 id='product-name'>{{ product.name }}</h1>
-          <p>{{ product.description|safe }}</p>
+          <p>{% render product.description %}</p>
 
           <form method='POST'>
           {% csrf_token %}
