@@ -44,7 +44,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
                 ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
-                ('token', models.CharField(default=orders.models.get_token, max_length=8, unique=True)),
+                ('token', models.CharField(default=orders.models.order.get_token, max_length=8, unique=True)),
                 ('subtotal', models.DecimalField(decimal_places=2, default=Decimal('0.00'), max_digits=8)),
                 ('sales_tax', models.DecimalField(decimal_places=2, default=Decimal('0.00'), max_digits=8)),
                 ('shipping_cost', models.DecimalField(decimal_places=2, default=Decimal('0.00'), max_digits=8)),

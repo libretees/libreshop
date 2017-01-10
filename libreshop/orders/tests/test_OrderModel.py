@@ -3,6 +3,8 @@ from django.test import TestCase
 from addresses.models import Address
 from products.models import Product, Variant
 from ..models import Order, Purchase, Transaction
+
+
 try:
     # Try to import from the Python 3.3+ standard library.
     from unittest.mock import patch
@@ -44,7 +46,7 @@ class OrderModelTest(TestCase):
         )
 
 
-    @patch('orders.models.randrange')
+    @patch('orders.models.order.randrange')
     def test_model_generates_unique_random_order_token(self, randrange_mock):
         '''
         Test that the orders.Order model generates a unique order token.
