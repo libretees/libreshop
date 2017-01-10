@@ -47,6 +47,8 @@ class Order(TimeStampedModel):
         null=False, blank=False, default=Decimal('0.00'))
     total = models.DecimalField(max_digits=8, decimal_places=2, null=False,
         blank=False, default=Decimal('0.00'))
+    cost_of_goods_sold = models.DecimalField(max_digits=8, decimal_places=2,
+        null=True, blank=True)
 
     objects = OrderManager()
 
@@ -57,11 +59,11 @@ class Order(TimeStampedModel):
 
     @property
     def cost(self):
-        return self.cost_of_goods_sold
+        if (self.cost_of_goods_sold is None) or not self.fulfilled:
+            self.cost_of_goods_sold = sum(
+                purchase.cost for purchase in self.purchases.all())
 
-    @property
-    def cost_of_goods_sold(self):
-        return sum(purchase.cost for purchase in self.purchases.all())
+        return self.cost_of_goods_sold
 
     def __str__(self):
         return self.token
