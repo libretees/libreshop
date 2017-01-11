@@ -54,8 +54,7 @@ class Order(TimeStampedModel):
 
     @property
     def fulfilled(self):
-        purchases = Purchase.objects.filter(order=self)
-        return all(purchase.fulfilled for purchase in purchases)
+        return all(purchase.fulfilled for purchase in self.purchases.all())
 
     @property
     def cost(self):
