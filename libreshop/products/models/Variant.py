@@ -3,14 +3,17 @@ import importlib
 import logging
 from ast import literal_eval
 from collections import OrderedDict
+from datetime import datetime, timedelta
 from decimal import Decimal, ROUND_CEILING
 from operator import itemgetter
+from random import random
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db import transaction
 from django.db.models import BooleanField, Case, Count, When
+from django.utils import timezone
 from model_utils.models import TimeStampedModel
 from .Component import Component
 
@@ -88,38 +91,27 @@ class VariantManager(models.Manager):
 
 class Variant(TimeStampedModel):
 
-    class Price(object):
-        major_units = None
-        minor_units = None
-
-        def __init__(self, price):
-            major_units, minor_units = itemgetter(0, 1)(str(price).split('.'))
-            self.major_units = major_units
-            self.minor_units = minor_units
-
-        def __str__(self):
-            return '.'.join([self.major_units, self.minor_units])
-
-
     product = models.ForeignKey('products.Product', null=False, blank=False)
     name = models.CharField(max_length=64, null=False, blank=False)
     sub_sku = models.CharField(max_length=8, null=True, blank=False)
     price = models.DecimalField(
         max_digits=8, decimal_places=2, default=Decimal('0.00'),
-        validators=[
-            MinValueValidator(Decimal('0.00'))
-        ]
-    )
+        validators=[MinValueValidator(Decimal('0.00'))])
     attributes = models.ManyToManyField(
         'Attribute', through='AttributeValue',
-        through_fields=('inventory', 'attribute')
-    )
+        through_fields=('inventory', 'attribute'))
     _fulfillment_settings = models.ManyToManyField(
         'fulfillment.FulfillmentSetting',
         through='fulfillment.FulfillmentSettingValue',
         through_fields=('variant', 'setting'),
-        blank=True
-    )
+        blank=True)
+    _cost = models.DecimalField(
+        max_digits=8, decimal_places=2, default=Decimal('0.00'),
+        validators=[MinValueValidator(Decimal('0.00'))])
+    _cost_cache_expiration = models.DateTimeField(
+        timezone.make_aware(datetime.utcfromtimestamp(0)),
+        null=False,
+        blank=False)
     enabled = models.BooleanField(default=True)
 
     objects = VariantManager()
@@ -164,11 +156,17 @@ class Variant(TimeStampedModel):
     def cost(self):
         '''
         '''
-        return (Decimal(
-            self.get_quote() if self.suppliers else
-            sum([component.quantity * component.inventory.fifo_cost
-            for component in self.components.all()])).
-            quantize(Decimal('1.00'), rounding=ROUND_CEILING))
+        if self._cost_cache_expiration < timezone.now():
+            self._cost = (
+                Decimal(self.get_quote() if self.suppliers else
+                    sum([component.quantity * component.inventory.fifo_cost
+                    for component in self.components.all()])).
+                quantize(Decimal('1.00'), rounding=ROUND_CEILING))
+            self._cost_cache_expiration = (
+                timezone.now() + timedelta(days=1, hours=24*random()))
+            self.save()
+
+        return self._cost
 
 
     @property
@@ -237,11 +235,6 @@ class Variant(TimeStampedModel):
         }
 
         return attributes
-
-
-    @property
-    def split_price(self):
-        return self.Price(self.price)
 
 
     def validate_unique(self, *args, **kwargs):

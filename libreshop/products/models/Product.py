@@ -99,13 +99,7 @@ class Product(TimeStampedModel):
 
     @property
     def margin(self):
-        minimum_margin = self.minimum_margin
-        maximum_margin = self.maximum_margin
-
-        return (
-            (minimum_margin, maximum_margin) if minimum_margin != maximum_margin
-            else (minimum_margin, minimum_margin))
-
+        return (self.minimum_margin, self.maximum_margin)
 
     @property
     def maximum_margin(self):
