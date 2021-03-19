@@ -27,7 +27,7 @@ EasyProcess==0.1.9
 factory-boy==2.5.2
 flake8==2.5.4
 geoip2==2.2.0
-Jinja2==2.8
+Jinja2==2.11.3
 kombu==3.0.33
 libretees==0.1a1
 lockfile==0.12.2
