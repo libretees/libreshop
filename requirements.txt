@@ -43,7 +43,7 @@ pep8==1.7.0
 Pillow==2.9.0
 py==1.4.31
 pyflakes==1.0.0
-Pygments==2.0.2
+Pygments==2.7.4
 PyJWT==1.4.0
 pytest==2.8.5
 pytest-django==2.9.1
