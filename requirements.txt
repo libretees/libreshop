@@ -40,7 +40,7 @@ oauthlib==1.0.3
 parse==1.6.6
 parse-type==0.3.4
 pep8==1.7.0
-Pillow==2.9.0
+Pillow==8.2.0
 py==1.4.31
 pyflakes==1.0.0
 Pygments==2.0.2
