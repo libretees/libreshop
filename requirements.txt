@@ -10,7 +10,7 @@ braintree==3.23.0
 captcha==0.2
 coverage==4.0.3
 defusedxml==0.4.1
-Django==1.9
+Django==2.2.24
 django-braces==1.8.1
 django-countries==3.4.1
 django-extensions==1.6.7
