@@ -31,7 +31,7 @@ Jinja2==2.8
 kombu==3.0.33
 libretees==0.1a1
 lockfile==0.12.2
-lxml==3.5.0
+lxml==4.6.5
 MarkupSafe==0.23
 maxminddb==1.2.0
 mccabe==0.4.0
